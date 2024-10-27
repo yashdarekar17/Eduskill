@@ -1,2 +1,2 @@
 this is a education website
-author <yash darekar>
+author :-yash darekar
