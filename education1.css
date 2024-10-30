@@ -23,6 +23,9 @@ body{
     flex-direction: row;
     
 }
+.text{
+    color: black;
+}
 
 .nav{
     
