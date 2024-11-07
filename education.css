@@ -248,6 +248,7 @@ color: #FF6643;
     margin-top: 200px;
     margin: auto;
     display: flex;
+    justify-content: space-between;
     gap: 1rem;
     text-align: center;
     border-radius: 20px;
