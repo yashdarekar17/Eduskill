@@ -100,6 +100,9 @@ a{
     font-size: 30px;
     color: #FF6643;
 }
+.text{
+    color: black;
+}
 
 #line2{
     font-size: 85px;
@@ -332,7 +335,8 @@ color: #FF6643;
     margin: auto;
     margin-top: 10px;
     display: flex;
-    gap: 16rem;
+    justify-content: space-around;
+    
     
 }
 
@@ -343,6 +347,8 @@ color: #FF6643;
     background-color: #FF6643;
     font-weight: bolder;
     border-style: none;
+    display: flex;
+    gap: 17rem;
 
 }
 
