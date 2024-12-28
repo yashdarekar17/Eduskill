@@ -19,7 +19,12 @@ app.use(express.static(path.join(__dirname,'public')));
 
 const profileroutes = require('./routes/profileroutes')
 app.use('/Profile',profileroutes)
-app.listen(5000 ,()=>{
-    console.log('port 5000 running successfully')
+// app.listen(5000 ,()=>{
+//     console.log('port 5000 running successfully')
     
-  })
+//   })
+
+module.exports = (req, res) => {
+  // Vercel expects the handler to be exported as a function
+  app(req, res);
+};
