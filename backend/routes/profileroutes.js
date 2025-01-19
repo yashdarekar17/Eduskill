@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Profile = require('../models/profile');
-const { jwtwebmiddleware, generatetoken } = require('./../jwt');
+const { jwtwebmiddleware, generatetoken } = require('../jwt');
 const path = require('path');
 
 
