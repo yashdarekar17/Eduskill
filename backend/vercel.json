@@ -1,9 +1,16 @@
 {
   "version": 2,
-  "routes": [
+  "builds": [
     {
-      "src": "/api/(.*)",
-      "dest": "/index.js"
+      "src": "backend/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "**/*"
+      }
     }
-  ]
+  ],
+  "env": {
+    "GIT_SUBMODULE": "true"
+  },
+  "buildCommand": "git submodule update --init --recursive && npm run build"
 }
