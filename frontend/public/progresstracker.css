@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container{
+   max-width: 95vw;
+   margin: auto;
+    display: flex;
+    margin-top: 20px;
+    position: sticky;
+    top: 0;
+    background-color: rgb(248,247, 243);
+    justify-content: space-between;
+  } 
+  .navigation{
+    display: flex;
+   flex-direction: row;
+    
+    
+}
+
+
+.edu{
+    font-size: xx-large;
+    color: #FF6643;
+}
+
+.logo4{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.add{
+    display: flex;
+    justify-content: space-between;
+}
+.buy1{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:  10px 24px;
+    border-radius: 20px;
+    border:none;
+    background-color: #FF6643;
+    color: white;
+    margin-left: 65rem;
+    height: 60px;
+    width: 100px;
+}
+
+body {
+    font-family:"Inter", sans-serif;
+    background-color: rgb(248,247, 243);
+    padding: 20px;
+}
+
+.tracker {
+    max-width: 85vw;
+    margin: 20px auto;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.tracker h2 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
+    color: #FF6643;
+}
+
+.progress-container {
+    background: #e0e0e0;
+    border-radius: 25px;
+    position: relative;
+    height: 30px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: #4caf50;
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease-in-out;
+    color:black;
+    text-align: center;
+    line-height: 30px;
+    font-size: 0.9em;
+    border-radius: 25px 0 0 25px;
+}
+
+.details {
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: black
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+}
+

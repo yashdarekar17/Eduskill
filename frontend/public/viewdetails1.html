@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduskill-web dev</title>
+    <link rel="stylesheet" href="/education1.css">
+    <link rel="shortcut icon" href="/assets/logo5.png" type="image/x-icon">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <div class="logo4">
+                <img src="/assets/pngaaa.com-3314970.png" alt="" class="logoimg"  height="70px">
+                <b>EDUSKILL</b>
+            </div>
+            <div class="add">
+                <button class="buy1" onclick="initiatePayment()">Buy course</button>
+            </div>
+            
+           
+        </div>
+    </div>
+    <div class="webdev">
+
+        <h1>Web Development Course</h1>
+        <p class="content1">
+            Web Development courses teach fundamental skills for creating and maintaining websites. They cover topics like building engaging and functional sites, web design principles, and UX/UI design, which are essential for careers in web design, development, and UX/UI
+
+        </p>
+        <br>
+        <div class="content">
+            <h1>Content to learn</h1>
+            <p class="content1">
+               1. HTML
+                Forms and input types
+                Accessibility (ARIA roles)
+                <br>
+                2. CSS (Cascading Style Sheets)
+                CSS syntax and selectors
+                Box model (margin, border, padding)
+                Flexbox and Grid layout
+                Responsive design (media queries)
+                Animations and transitions
+                Preprocessors (Sass, LESS)
+                <br>
+                3. JavaScript
+                Basics of JavaScript (variables, data types, operators)
+                Control structures (loops, conditionals)
+                Functions and scope
+                DOM manipulation
+                Event handling
+                Asynchronous JavaScript (Promises, async/await)
+                ES6+ features (arrow functions, destructuring, modules)
+                <br>
+                4. Version Control
+                Git basics (repositories, commits, branches)
+                GitHub usage (collaborating on projects)
+                Understanding pull requests and merging
+                <br>
+                5. Responsive Web Design
+                Mobile-first design principles
+                Fluid layouts and media queries
+                CSS frameworks (Bootstrap, Tailwind CSS)
+                <br>
+                6. Front-End Frameworks
+                React, Vue.js, or Angular basics
+                Component-based architecture
+                State management (Redux, Context API for React)
+                <br>
+                7. Back-End Development
+                Understanding server-side languages (Node.js, Python, Ruby)
+                RESTful APIs and Web APIs
+                Database basics (SQL vs. NoSQL)
+                Introduction to frameworks (Express for Node.js, Django for Python)
+                <br>
+                8. Deployment and Hosting
+                Understanding how web hosting works
+                Deploying applications (Netlify, Vercel, Heroku)
+                Domain registration and DNS basics
+                <br>
+            </p>
+
+        </div>
+        <div>
+            <h1>Requirements</h1>
+            <ul class="content1">
+                <li >There are no skill prerequisites for this course although it's helpful if you are familiar with operating your computer and using the internet
+
+                </li>
+                <li>You can take this course using a Mac, PC or LInux machine.</li>
+                <li>It is recommended that you download the free Komodo text editor.</li>
+            </ul>
+        </div>
+        <br>
+        <div class="products">
+            <button class="buy" onclick="initiatePayment()">Buy course</button>
+        </div>
+        <footer id="contactus">
+            <div class="footer1">
+                Questions? Call <a href="#">000-800-919-1694</a>
+            </div>
+            <div class="footer2">
+                <ul>
+                    <li class="a1"><a href="#">FAQ</a></li>
+                    <li><a href="#">Investor Relations</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Speed Test</a></li>
+                    <li><select class="select1" value="english" id="">english
+                        <option value="english">English</option>
+                        <option value="hindi">hindi</option>
+                    </select></li>
+                    <li><a href="#" class="net">Eduskill</a></li>
+                    
+                </ul>
+                <ul>
+                    <li><a href="#">help centre</a></li>
+                    <li><a href="#">media centre</a></li>
+                    <li><a href="#">jobs</a></li>
+                    <li><a href="#">terms of use</a></li>
+        
+                </ul>
+                <ul>
+                    <li><a href="#">account</a></li>
+                    <li><a href="#">benefits of courses</a></li>
+                    <li><a href="#">corporate information</a></li>
+                    <li><a href="#">only on Eduskill</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">media centre2</a></li>
+                    <li><a href="#">terms of use</a></li>
+                    <li><a href="#">contact us</a></li>
+                    
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <script>
+        // Add Razorpay Payment Handler
+    async function initiatePayment() {
+    // Fetch the Razorpay key from the backend
+    const response = await fetch('/razorpay-key');
+    const { key } = await response.json();
+
+    // Create an order in the backend
+    const orderResponse = await fetch('/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            amount: 50, // Amount in paise (₹500)
+            currency: "INR",
+            receipt: "receipt#1"
+        })
+    });
+
+    const order = await orderResponse.json();
+
+    // Razorpay options
+    const options = {
+        key: key, // Razorpay Key ID fetched from backend
+        amount: order.amount, // Amount in paise
+        currency: order.currency,
+        name: "Eduskill",
+        description: "Purchase Data Science Course",
+        image: "/assets/logo5.png",
+        order_id: order.id, // Order ID from backend
+        handler: async function (response) {
+            // Send payment details to the backend for verification
+            const verificationResponse = await fetch('/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature,
+                })
+            });
+
+            const verificationResult = await verificationResponse.json();
+
+            if (verificationResult.status === 'success') {
+                alert('Payment successful and verified!');
+            } else {
+                alert('Payment verification failed!');
+                console.log(Error);
+            }
+        },
+        prefill: {
+            name: "Your Name",
+            email: "youremail@example.com",
+            contact: "9999999999"
+        },
+        theme: {
+            color: "#F37254" 
+        }
+    };
+
+    // Open the Razorpay payment modal
+    const rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+            // const response = await fetch('/razorpay-key'); // Fetch key from the backend
+            // const { key } = await response.json();
+            // const options = {
+            //     key:key, // Replace with your Razorpay Key ID
+            //     amount: 500, // Amount in paise (e.g., 50000 = ₹500)
+            //     currency: "INR",
+            //     name: "Eduskill",
+            //     description: "Data Science Course Purchase",
+            //     image: "/assets/logo5.png", // Optional logo
+            //     receipt:"dyash8608@gmail.com",
+            //     handler: function (response) {
+            //         // Handle successful payment
+            //         alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+            //         // Send response to the backend for verification (optional)
+            //     },
+            //     prefill: {
+            //         name: "hitesh sharma",
+            //         email: "hitesh12342@gmail.com",
+                    
+            //     },
+            //     theme: {
+            //         color: "#F37254" // Customize the popup color
+            //     }
+            // };
+
+            // const rzp = new Razorpay(options);
+            // rzp.open();
+        
+
+        // Attach payment handler to buttons
+        document.getElementById('buy-now').addEventListener('click', initiatePayment);
+        document.getElementById('buy-course').addEventListener('click', initiatePayment);
+    </script>
+    
+    
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2025/02/02/16/20250202160648-KBQAJWAD.js"></script>
+    
+    
+</body>
+</html>

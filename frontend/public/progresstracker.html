@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduskill-progress-trackers</title>
+    <link rel="stylesheet" href="progresstracker.css">
+    <link rel="shortcut icon" href="assets/logo5.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <div class="logo4">
+                <img src="assets/pngaaa.com-3314970.png" alt="" class="logoimg"  height="80px">
+                <b class="edu">EDUSKILL</b>
+            </div>
+            <div class="add">
+                <a href=".../index.html"><button class="buy1">Checkout courses</button></a>
+                
+            </div>
+            
+           
+        </div>
+    </div>
+    <div class="tracker">
+        <h2 class="h2">Web Development</h2>
+        <div class="progress-container">
+            <div class="progress-bar" id="web-dev-bar">0%</div>
+        </div>
+        <div class="details">
+            Learn HTML
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 10 : -10)"> 
+            </div>
+        </div>
+        <div class="details">
+             CSS
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 10 : -10)"> 
+            </div>
+        </div>
+        <div class="details">
+           JavaScript
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 30 : -30)"> 
+            </div>
+        </div>
+        <div class="details">
+             frameworks like React or Angular
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 20 : -20)"> 
+            </div>
+        </div>
+        <div class="details">
+            learn backend node.js
+           <div class="checkbox-container">
+               <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 10 : -10)"> 
+           </div>
+       </div>
+       <div class="details">
+        learn sql and no-sql databases
+       <div class="checkbox-container">
+           <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 10 : -10)"> 
+       </div>
+       <div class="details">
+        deploy at Vercel or aws
+       <div class="checkbox-container">
+           <input type="checkbox" onclick="updateProgress('web-dev', this.checked ? 10 : -10)"> 
+       </div>
+   </div>
+   </div>
+       
+       
+       
+   </div>
+       
+    </div>
+
+    <div class="tracker">
+        <h2>App Development</h2>
+        <div class="progress-container">
+            <div class="progress-bar" id="app-dev-bar">0%</div>
+        </div>
+        <div class="details">
+            learn basic web dev 
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('app-dev',this.checked ? 40 : -40)"> 
+            </div>
+        </div>
+        <div class="details">
+            Develop mobile apps 
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('app-dev',this.checked ? 30 : -30)"> 
+            </div>
+        </div>
+        <div class="details">
+             learn Flutter or React Native.
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('app-dev',this.checked ? 30 : -30)"> 
+            </div>
+        </div>
+      
+    </div>
+
+    <div class="tracker">
+        <h2>Data Science</h2>
+        <div class="progress-container">
+            <div class="progress-bar" id="data-science-bar">0%</div>
+        </div>
+        <div class="details">
+            Learn Python
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('data-science', this.checked ? 25 : -25)">
+            </div>
+        </div>
+        <div class="details">
+             data visualization
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('data-science', this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+        <div class="details">
+             machine learning
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('data-science', this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+        <div class="details">
+           learn Artificial Inteligence
+            <div class="checkbox-container">
+                <input type="checkbox" onclick="updateProgress('data-science',this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="tracker">
+        <h2>UI/UX</h2>
+        <div class="progress-container">
+            <div class="progress-bar" id="ui-ux-bar">0%</div>
+        </div>
+        <div class="details">
+            Study user research
+            <div class="checkbox-container">
+                <input type="checkbox" onchange="updateProgress('ui-ux', this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+        <div class="details">
+             wireframing
+            <div class="checkbox-container">
+                <input type="checkbox" onchange="updateProgress('ui-ux', this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+        <div class="details">
+             prototyping
+            <div class="checkbox-container">
+                <input type="checkbox" onchange="updateProgress('ui-ux', this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+        <div class="details">
+             design principles.
+            <div class="checkbox-container">
+                <input type="checkbox" onchange="updateProgress('ui-ux', this.checked ? 25 : -25)"> 
+            </div>
+        </div>
+       
+    </div>
+
+    <script>
+        function updateProgress(topic, change) {
+            const progressBar = document.getElementById(`${topic}-bar`);
+            let currentProgress = parseInt(progressBar.style.width) || 0;
+            let newProgress = currentProgress + change;
+
+            if (newProgress < 0) newProgress = 0;
+            if (newProgress > 100) newProgress = 100;
+
+            progressBar.style.width = newProgress + '%';
+            progressBar.textContent = newProgress + '%';
+        }
+        
+    </script>
+</body>
+</html>

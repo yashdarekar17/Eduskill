@@ -9,6 +9,7 @@
     "mongoose": "^8.9.2",
     "nodemon": "^3.1.9",
     "params": "^0.1.1",
+    "razorpay": "^2.9.5",
     "salt": "^0.5.5",
     "typed.js": "^2.1.0"
   },
