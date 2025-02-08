@@ -18,7 +18,7 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.set('views', path.join(__dirname, '../frontend/views'));
 const corsoptions ={
-  origin:"*",
+  origin:"https://eduskill-kgep.onrender.com",
   Credential:true
 }
 app.use(cors(corsoptions));
@@ -81,6 +81,11 @@ app.post('/create-order', async (req, res) => {
 
 const profileroutes = require('./routes/profileroutes')
 app.use('/Profile',profileroutes)
+
+app.get("/", (req, res) => {
+  res.render('index.html');
+});
+
 app.listen(PORT ,()=>{
     console.log('port 5000 running successfully')
     
