@@ -1,17 +1,27 @@
+require('dotenv').config()
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  console.error("❌ ERROR: Razorpay API keys are missing!");
+  process.exit(1); // Stop execution
+}
 const express = require("express");
 const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
+const cors =require('cors')
 const db = require('./db')
 const path = require('path')
 const Razorpay = require('razorpay')
-require('dotenv').config()
 app.engine('html',require('ejs').renderFile)
 app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.set('views', path.join(__dirname, '../frontend/views'));
+const corsoptions ={
+  origin:"*",
+  Credential:true
+}
+app.use(cors(corsoptions));
 
 
 
@@ -67,10 +77,11 @@ app.post('/create-order', async (req, res) => {
 // app.get('/paymentController', paymentController.renderProductPage);
 // app.post('/createOrder', paymentController.createOrder);
 
- const port = process.env.port
+ const PORT =  process.env.PORT || 5000;
+
 const profileroutes = require('./routes/profileroutes')
 app.use('/Profile',profileroutes)
-app.listen(port ,()=>{
+app.listen(PORT ,()=>{
     console.log('port 5000 running successfully')
     
   })

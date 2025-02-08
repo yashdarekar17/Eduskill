@@ -4,7 +4,9 @@ const Profile = require('../models/profile');
 const { jwtwebmiddleware, generatetoken } = require('../jwt');
 const path = require('path');
 
-
+router.get('/index', (req, res) => {
+  res.render('index.html');
+});
 // Route to render the login page
 router.get('/login', (req, res) => {
   res.render('login.html');
