@@ -1,7 +1,7 @@
 const mongoose= require('mongoose');
 
 // const mongoUrl= 'mongodb://localhost:27017/eduskill2'
-const mongodburl='mongodb+srv://dyash8608:yash123@cluster0.huzxl.mongodb.net/'
+const mongodburl='mongodb+srv://dyash8608:yash123@cluster0.huzxl.mongodb.net/test'
 
 mongoose.connect( mongodburl, 
     //  { useNewUrlParser: true,
