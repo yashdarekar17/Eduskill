@@ -19,7 +19,7 @@
   "description": "",
   "main": "education.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon backend/index.js",
     "build": "npm install && npm run build",
     "start": "nodemon backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
