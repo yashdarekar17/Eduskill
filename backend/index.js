@@ -18,7 +18,7 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.set('views', path.join(__dirname, '../frontend/views'));
 const corsoptions ={
-  origin:"https://eduskill-kgep.onrender.com",
+  origin:"*",
   Credential:true
 }
 app.use(cors(corsoptions));
@@ -84,6 +84,14 @@ app.use('/Profile',profileroutes)
 
 app.get("/", (req, res) => {
   res.render('index.html');
+});
+app.get('/Profile/login', (req, res) => {
+  res.render('login.html');
+});
+
+// Route to render the signup page
+app.get('/Profile/signup', (req, res) => {
+  res.render('signup.html');
 });
 
 app.listen(PORT ,()=>{

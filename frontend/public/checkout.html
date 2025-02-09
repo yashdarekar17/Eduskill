@@ -13,7 +13,7 @@
     <script>
         // Fetch products from the backend
         async function fetchProducts() {
-            const response = await fetch('https://eduskill-kgep.onrender.com/products');
+            const response = await fetch('http://localhost:5000/products');
             const products = await response.json();
             const productsDiv = document.getElementById('products');
 
@@ -32,7 +32,7 @@
 
         // Buy Now function
         async function buyNow(productId) {
-            const response = await fetch('https://eduskill-kgep.onrender.com/create-order', {
+            const response = await fetch('http://localhost:5000/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ productId })
@@ -41,14 +41,14 @@
 
             // Razorpay options
             const options = {
-                key: 'rzp_test_gTP8vXXFSw9d8R', // Replace with Razorpay Key ID
+                key: 'rzp_live_6LpDZfFVVBQ2RS', // Replace with Razorpay Key ID
                 amount: order.amount,
                 currency: order.currency,
                 name: 'E-commerce Checkout',
                 description: `Buying ${product.name}`,
                 order_id: order.id, // Order ID from Razorpay
                 handler: function (response) {
-                    fetch('https://eduskill-kgep.onrender.com/verify-payment', {
+                    fetch('http://localhost:5000/verify-payment', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(response)
