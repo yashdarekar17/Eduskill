@@ -1,22 +1,20 @@
-const mongoose= require('mongoose');
+const mongoose = require("mongoose");
 
-const mongoUrl= 'mongodb://localhost:27017/eduskill2'
-// const mongodburl=process.env.MONGO_URI;
+const mongoUrl = process.env.MONGO_URI;
 
-mongoose.connect( mongoUrl, 
-    //  { useNewUrlParser: true,
-    //   useUnifiedTopology: true }
-     )
+const connectDB = async () => {
+  try {
+    await mongoose.connect(mongoUrl, {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true,
+      tls: true,  // Ensure TLS is enabled
+      tlsAllowInvalidCertificates: true,  // Allow invalid certificates (for testing)
+    });
+    console.log("✅ MongoDB Connected Successfully");
+  } catch (error) {
+    console.error("❌ MongoDB Connection Error:", error);
+    process.exit(1);
+  }
+};
 
-const db= mongoose.connection;
-
-db.on('connected',()=>{
- console.log("your db is connected to eduskill2.0 website")
-})
-
-db.on('error',()=>{
-    console.log('error');
-})
-
-
-module.exports= db;
+connectDB();
