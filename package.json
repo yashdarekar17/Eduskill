@@ -20,7 +20,7 @@
   "main": "education.js",
   "scripts": {
     "dev": "node backend/index.js",
-    "build": "npm install",
+    "build": "npm install ",
     "start": "node backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
