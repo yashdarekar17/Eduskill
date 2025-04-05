@@ -14,6 +14,8 @@ const path = require('path')
 const Razorpay = require('razorpay')
 app.engine('html',require('ejs').renderFile)
 app.set('view engine', 'html');
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.set('views', path.join(__dirname, '../frontend/views'));
@@ -63,7 +65,8 @@ app.post('/create-order', async (req, res) => {
     });
 
     // Send the order details to the frontend
-    res.status(200).json({ success: true, order });
+    res.status(200).json(order);
+
   } catch (error) {
     console.error('Error creating Razorpay order:', error.message);
     res.status(500).json({ success: false, error: error.message });

@@ -41,7 +41,7 @@ router.post('/signup', async (req, res) => {
     
   //  res.status(200).json({ Response: response, Token: token });
   console.log(response)
-   res.render('login')
+  res.redirect('login');
   
   } catch (err) {
     console.log(err);
@@ -52,44 +52,58 @@ router.post('/signup', async (req, res) => {
 // Route for login
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+      const { username, password } = req.body;
+      const profile = await Profile.findOne({ username });
 
-    // Use findOne instead of findById
-    const profile = await Profile.findOne({ username: username });
+      if (!profile || !(await profile.comparePassword(password))) {
+          return res.status(401).json({ error: "Invalid username or password" });
+      }
 
-    
-    if (!profile || !(await profile.camparePassword(password))) {
-      return res.status(401).json({ error: 'Invalid username or password' });
-    }else{
-      res.render('index')
-    }
+      const payload = { id: profile.id };
+      const token = generatetoken(payload);
 
-    const payload = {
-      id: profile.id, // Use profile.id here
-    };
+      // ✅ Store token in HTTP-Only Cookie
+      res.cookie("token", token, {
+          httpOnly: true, 
+          secure: false, // Change to true in production with HTTPS
+          sameSite: "Lax"
+      });
 
-    console.log(JSON.stringify(payload));
-
-    const token = generatetoken(payload);
-    console.log("Token is:", token);
-
-    // Send only one response
-   // res.status(200).json({ Response: profile, Token: token });
+      console.log("✅ Token Set:", token); // Debugging
+      res.redirect('index');
+      // res.json({ message: "Login successful", token: token });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: 'Internal server error' });
+      console.error(err);
+      // res.status(500).json({ error: "Internal server error" });
   }
 });
 
 
+router.get('/check-session', jwtwebmiddleware, async (req, res) => {
+  try {
+      if (!req.user) {
+          return res.status(401).json({ loggedIn: false, message: "Unauthorized" });
+      }
 
-router.post('/logout',async(res,req) =>{
-  try{
-      
-  }catch(err){
-    console.log(err='internal server error')
+      const profile = await Profile.findById(req.user.id);
+      if (!profile) {
+          return res.status(401).json({ loggedIn: false, message: "User not found" });
+      }
+
+      res.json({ loggedIn: true, username: profile.username });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ loggedIn: false, message: "Internal server error" });
   }
-
-})
+});
+router.post('/logout', async (req, res) => {
+  try {
+      res.clearCookie("token");
+      res.redirect('index')
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;

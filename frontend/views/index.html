@@ -6,7 +6,7 @@
     <title>Eduskill-learn and build</title>
     <link rel="stylesheet" href="/education.css">
     <link rel="shortcut icon" href="/assets/logo5.png" type="image/x-icon">
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 </head>
 <body class="eduskill">
     <div class="container">
@@ -22,7 +22,18 @@
                     <a href="/progresstracker.html">progresstracker</a>
                     <a href="#roadmaps">Roadmaps</a>
                     <a href="#contactus">contact us</a>
-                    <a href="/Profile/login"><button id="btn1" >Login</button></a>
+                    <div class="but"><a href="/Profile/login" id="loginLink">
+                        <button id="btn1">Login</button>
+                    </a></div>
+                    
+                    <div class="profile-container">
+                        <div class="profile-circle" id="profileCircle" onclick="toggleLogoutBox()" style="display: none;">U</div>
+                        <div class="logout-box" id="logoutBox" style="display: none;">
+                            <button id="btn3" onclick="logout()">Logout</button>
+                        </div>
+                    </div>
+                </div>
+                    <!-- <button class="mode" >mode</button> -->
                     
             </nav>
         </div>
@@ -240,6 +251,77 @@
         </ul>
     </div>
 </footer>
-<script src="/education.js"></script>
+<script src="/education2.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        checkUserSession();
+    });
+    
+    async function checkUserSession() {
+    try {
+        let token = localStorage.getItem("token"); // 🛑 Ensure token is stored
+        console.log("🔍 Sending Token:", token); // Debugging
+
+        let response = await fetch("http://localhost:5000/Profile/check-session", { 
+            method: "GET",
+            credentials: "include", // 🔥 Required for cookies
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token ? `Bearer ${token}` : ""
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Session check failed: ${response.status}`);
+        }
+
+        let data = await response.json();
+        console.log("✅ Session Data:", data);
+
+        if (data.loggedIn) {
+            showUserProfile(data.username);
+        }
+    } catch (err) {
+        console.error("❌ Session check failed:", err);
+    }
+}
+
+    
+    async function logout(){
+        try {
+            let response = await fetch("/Profile/logout", { method: "POST", credentials: "include" });
+    
+            if (!response.ok) {
+                throw new Error("Logout failed: " + response.status);
+            }
+    
+            window.location.href = "/";
+        } catch(err) {
+            console.error("Logout failed:", err);
+        }
+    }
+    
+    function showUserProfile(username) {
+        let profileCircle = document.getElementById("profileCircle");
+        let loginBtn = document.getElementById("btn1");
+        let loginLink = document.getElementById("loginLink");
+    
+        if (profileCircle) {
+            profileCircle.innerText = username.charAt(0).toUpperCase();
+            profileCircle.style.display = "flex";
+        }
+        
+        if (loginBtn) loginBtn.style.display = "none";
+        if (loginLink) loginLink.style.display = "none";
+    }
+    
+    // Toggle logout box visibility
+    function toggleLogoutBox() {
+        let logoutBox = document.getElementById("logoutBox");
+        if (logoutBox) {
+            logoutBox.style.display = (logoutBox.style.display === "none") ? "block" : "none";
+        }
+    }
+    </script>
 </body>
 </html>

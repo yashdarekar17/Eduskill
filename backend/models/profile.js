@@ -63,15 +63,9 @@ ProfileSchema.pre('save', async function(next) {
 
 
 
-ProfileSchema.methods.camparePassword = async function(candidatePassword){
-    try{
-      const isMatch = await bcrypt.compare(candidatePassword,this.password)
-      return isMatch
-    }
-    catch(err){
-       throw err;
+ ProfileSchema.methods.comparePassword = async function (enteredPassword) {
+    return bcrypt.compare(enteredPassword, this.password);
+};
 
-    }
-}
-const Profile = mongoose.model('Profile',ProfileSchema)
-module.exports=Profile;
+const Profile = mongoose.model("Profile", ProfileSchema);
+module.exports = Profile;
