@@ -262,7 +262,7 @@
         let token = localStorage.getItem("token"); // 🛑 Ensure token is stored
         console.log("🔍 Sending Token:", token); // Debugging
 
-        let response = await fetch("http://localhost:5000/Profile/check-session", { 
+        let response = await fetch("https://eduskill-kgep.onrender.com/Profile/check-session", { 
             method: "GET",
             credentials: "include", // 🔥 Required for cookies
             headers: {
