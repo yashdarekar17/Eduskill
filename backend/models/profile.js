@@ -17,7 +17,7 @@ const ProfileSchema= new mongoose.Schema({
     Branch:{
       type:String,
       required:true,
-      enum:['computer','aids','csds']
+      enum:['Computer','AIDS','Computer science(data science)']
     },
     
 
