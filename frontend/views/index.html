@@ -247,50 +247,7 @@
     </div>
 </footer>
 <script src="/education2.js"></script>
-<script>
-     function isloggedin(){
-    return localStorage.getItem("isLoggedIn")==="true";
- }
-
- function checklogin(){
-    if(!isloggedin()){
-        window.location.href="/viewdetails1.html";
-    }else{
-        window.location.href="/Profile/login";
-    }
- }
-    document.addEventListener("DOMContentLoaded", function(){
-        checkUserSession();
-    });
-    
-    async function checkUserSession() {
-    try {
-        let token = localStorage.getItem("token"); // 🛑 Ensure token is stored
-        console.log("🔍 Sending Token:", token); // Debugging
-
-        let response = await fetch("https://eduskill-kgep.onrender.com/Profile/check-session", { 
-            method: "GET",
-            credentials: "include", // 🔥 Required for cookies
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": token ? `Bearer ${token}` : ""
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Session check failed: ${response.status}`);
-        }
-
-        let data = await response.json();
-        console.log("✅ Session Data:", data);
-
-        if (data.loggedIn) {
-            showUserProfile(data.username);
-        }
-    } catch (err) {
-        console.error("❌ Session check failed:", err);
-    }
-}
+<script>  
 
     
     async function logout(){
