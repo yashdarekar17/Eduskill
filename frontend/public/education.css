@@ -54,11 +54,19 @@ body{
 
 .profile-circle{
     margin-right: 50px;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
     border-radius:10px;
     background-color: #FF6643;
     color: white;
+}
+
+.logout-box{
+    background-color:#ff9843;
+    color: white;
+    width: 30px;
+    border-radius: 10px;
 }
 
 #btn1{
