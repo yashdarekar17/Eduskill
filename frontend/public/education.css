@@ -52,22 +52,45 @@ body{
    
  }
 
-.profile-circle{
+.profile-circle {
     margin-right: 50px;
     width: 40px;
     height: 40px;
     text-align: center;
-    border-radius:10px;
+    line-height: 40px; 
+    border-radius: 50%;
     background-color: #FF6643;
     color: white;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.logout-box{
-    background-color:#ff9843;
+.logout-box {
+    background-color: #ff9843;
     color: white;
-    width: 30px;
     border-radius: 10px;
+    padding: 10px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.logout-box button {
+    background: white;
+    color: #ff9843;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.logout-box button:hover {
+    background: #ffe3c3;
+}
+
 
 #btn1{
     
