@@ -20,7 +20,7 @@ body{
 }
 
 
-.navigation, .profile-container{
+.navigation{
     
     /* max-width:85vw;
     margin: auto; */
@@ -37,7 +37,6 @@ body{
     gap: 3rem;
     font-family: "Inter", sans-serif;
     font-weight: bolder;
-    margin-top: 10px;
     
 }
 .logo4{
@@ -61,7 +60,6 @@ body{
     width: 150px;
     padding: 10px;
     border-radius: 20px;
-    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -69,10 +67,7 @@ body{
     color: white;
 }
 
-.but{
-    margin-left:100px;
-    margin-top: 30px;
-}
+
 
 .logoimg{
     width:150px;
@@ -170,17 +165,7 @@ a{
 }
 
 
-.mode{
-    height: 35px;
-    width: 150px;
-    padding: 10px;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FF6643;
-    color: white;
-}
+
 
 
 /* Reset some default styles */
@@ -415,63 +400,9 @@ color: #FF6643;
     width: 300px;
     border: 1px solid black;
     display: flex;
-    margin-left: 0;
+    margin-left: 30px;
     justify-content: end;
     gap: 1rem;
-}
-/* /* /* .profile-container {
-    margin-right: 30px;
-    /* margin-left: 30px;
-} */
-.profile-circle{
-    width: 40px;
-    height: 40px;
-    background-color: #FF6643;
-    border-radius: 25%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 0;
-    margin-right: 60px;
-    border: none;
-}
-#profileCircle{
-    margin-top: 0;
-}
-
-#btn1 {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-}
-#btn3{
-    height: 35px;
-    width: 150px;
-    padding: 10px;
-    border-radius: 20px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FF6643;
-    color: white;
-}
-.profile-circle {
-    display: none;
-    margin-top: 10px;
-}
-.logout-box {
-    display: none;
-    position: absolute;
-    top: 50px;
-    right: 0;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
  
 .btn2{
@@ -634,37 +565,10 @@ ul{
 }
 
 
-    @media screen and (max-width: 400px) {
-        body{
-         height: 350rem;
-        }
+    @media screen and (max-width: 600px) {
         .navigation {
             flex-direction: column;
             align-items: center;
-        }
-
-        #search1{
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 15px;
-            padding-bottom:15px ;
-            border-radius: 40px;
-            font-weight: bolder;
-            border: 1px solid white;
-            color: gray;
-            
-        }
-        #btn2{
-            
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-top: 15px;
-            padding-bottom: 15px;
-            border-radius: 40px;
-            border: 1px solid white;
-            color: white;
-            background-color: #FF6643;
-            font-weight: bolder;
         }
     
         .nav {
@@ -682,57 +586,22 @@ ul{
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
-            padding: 1rem;
+            padding: 1.5rem;
             display: flex;
             align-items: center;
         }
         
         .feature .icon {
-            margin-right: 30px;
+            margin-right: 1.5rem;
         }
         
         .feature img {
             width: 50px;
             height: 50px;
         }
-         h1, h2, p {
-            margin: 0;
-            padding: 0;
-        }
-        
-        /* Basic styling */
-        .ourprogram {
-            max-width: 100%;
-            margin: auto;
-            font-family:"Inter", sans-serif ;
-            line-height: 1;
-            color: #333;
-            background-color: #f4f4f4;
-            border-radius: 20px;
-        }
         
         .feature h2 {
             margin-top: 0;
-            height: 10px;
-        }
-         
-        .para{
-            margin-top: 10px;
-            font-size: 16px;
-            line-height: 20px;
-            color: #666;
-            margin-left: 10px;
-        }
-
-        .bulb{
-            max-width:90vw;
-            margin: auto;
-            margin-top: 150px;
-            height: 85vh;
-            border: 1px solid white;
-            background-color: whitesmoke;
-            border-radius: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     
         .img2 img {
@@ -740,29 +609,21 @@ ul{
             position: relative;
             bottom: 0;
         }
-
-        .img3 img{
-            width: 100px;
-            height: 200px;
-        }
     
         .box {
-            flex-direction:column;
+            flex-direction: column;
             gap: 2rem;
         }
     
         .box1, .box2, .box3, .box4 {
-            width: 100%;
+            width: 85vw;
             margin: auto;
-            margin-top: 40px;
-        }
-        .overlay{
-            margin-left: 0;;
+            margin-top: 20px;
         }
     
         .title {
             flex-direction: column;
-            gap: 1rem;
+            gap: 2rem;
         }
         .sec1{
             display: block;
@@ -780,7 +641,11 @@ ul{
             color: #FF6643;
             
         }
-        
+        body{
+   
+            background-color: rgb(248,247, 243);
+            height: 500rem;
+        }
         #t2{
          font-weight: bolder;
          font-size: 30px;
@@ -795,7 +660,7 @@ ul{
 
         footer{
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
         }
         .text5{
             font-family: "Inter", sans-serif;
@@ -830,80 +695,15 @@ ul{
             margin-top: 100px;
             
         }
-
-        .sec1{
-            margin-top: 1000px;
-            text-align: center;
-            font-family:"Inter", sans-serif ;
-            line-height: 54px;
-        
-        }
-        
-        #line1{
-            font-weight: 600;
-            font-size: 30px;
-            color: #FF6643;
-        }
-        .text{
-            color: black;
-            font-size: 20px;
-            font-weight: 300;
-        }
-         
-        .button{
-            max-width: 100%;
-            margin-top: 60px;
+        .bulb{
+            max-width:90vw;
             margin: auto;
-            height: 100px;
+            margin-top: 150px;
+            height: 95vh;
             border: 1px solid white;
-            border-radius: 90px;
-            display: flex;
-            justify-content: end;
-            align-items: center;
-            background: #654ea3;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #eaafc8, #654ea3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-            ;
-            box-shadow: 3px 3px black, -1em 0 .4em,black;
-            
-        }
-
-        .line4{
-           
-            display: flex;
-           
-            box-shadow: 3px 3px black, -1em 0 .4em,black;
-            
-        }
-        
-        .text5{
-            font-family: "Inter", sans-serif;
-            font-weight: bolder;
-            font-size: 10px;
-        
-        }
-
-        #search1{
-            padding-left: 1px;
-            padding-right: 1px;
-            padding-top: 10px;
-            padding-bottom:10px ;
+            background-color: whitesmoke;
             border-radius: 20px;
-            font-weight: bolder;
-            border: 1px solid white;
-            color: gray;
-        }
-        #btn2{
-            
-            padding-left: 1px;
-            padding-right: 1px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            border-radius: 20px;
-            border: 1px solid white;
-            color: white;
-            background-color: #FF6643;
-            font-weight: bolder;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         
         

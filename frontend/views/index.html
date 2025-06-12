@@ -44,11 +44,12 @@
             <div id="line2">Learning courses by top teachers.</div>
             <div id="line1">Learn <span class="text"></span></div>
            
-            
-            <div id="line3">
+<!--             
+            <div id="line3" class="search-box">
                 <input type="search" name="search1" id="search1" placeholder="search courses,subjects">
                 <button id="btn2">search</button>
-            </div>
+            </div> -->
+           
 
            
         </span>
@@ -116,36 +117,30 @@
     <span class="tip3">even if you are not ready with paid courses,there are varirty of free courses are available for you</span>
 
 </div>
-<div class="box">
-    <div class="box1" >
-        <img src="/assets/Gemini_Generated_Image_94qy0h94qy0h94qy.jpeg"  class="" width="300px" height="270px">
-       <span ><a href="/viewdetails1.html"><button class="overlay">view details</button></a></span>
-       
+  <!-- Items Container -->
+  <div class="box" id="itemsContainer">
+    <div class="box1">
+        <img src="/assets/Gemini_Generated_Image_94qy0h94qy0h94qy.jpeg" alt="web development Course" class="" width="300px" height="270px">
+        <span><button class="overlay" onclick="checklogin('/viewdetails1.html')">view details</button></a></span>
     </div>
-    <div class="box2">
-        <img src="/assets/Gemini_Generated_Image_t0a8jst0a8jst0a8.jpeg" alt="" width="300px" height="270px">
-        <span ><a href="/viewdetails2.html"><button  class="overlay"> view details </button></a></span>
-      
-        
-        
-    </div>
-    <div class="box3">
-        <img src="/assets/Gemini_Generated_Image_v108apv108apv108.jpeg" alt="" width="300px" height="270px">
-        <span><a href="/viewdetails3.html"><button  class="overlay"> view details </button></a></span>
-        
-        
-        
-
-    </div>
-    <div class="box4">
-        <img src="/assets/Gemini_Generated_Image_wf2791wf2791wf27.jpeg" alt="" width="300px" height="270px">
-        <span><a href="/viewdetails4.html"><button  class="overlay"> view details </button></a></span>
-        
     
-
+    <div class="box2">
+        <img src="/assets/Gemini_Generated_Image_t0a8jst0a8jst0a8.jpeg" alt="app development Course" width="300px" height="270px">
+        <span><button class="overlay"onclick="checklogin('/viewdetails2.html')">view details</button></a></span>
     </div>
-
+    
+    <div class="box3">
+        <img src="/assets/Gemini_Generated_Image_v108apv108apv108.jpeg" alt="ui/ux Course" width="300px" height="270px">
+        <span><button class="overlay"onclick="checklogin('/viewdetails3.html')">view details</button></a></span>
+    </div>
+    
+    <div class="box4">
+        <img src="/assets/Gemini_Generated_Image_wf2791wf2791wf27.jpeg" alt="data science Course" width="300px" height="270px">
+        <span><button class="overlay"onclick="checklogin('/viewdetails4.html')">view details</button></a></span>
+    </div>
 </div>
+
+
 <!-- <div class="title3">
     <span><a href="viewdetails1.html"><button  class="btn5"> view details </button></a></span>
     <span><a href="viewdetails2.html"><button  class="btn5"> view details </button></a></span>
@@ -162,7 +157,7 @@
   <div class="box">
     <div class="box1" >
         <img src="/assets/Gemini_Generated_Image_7j17r77j17r77j17.jpeg" alt="" width="300px" height="300px">
-        <span><a href="/viewdetails5.html"><button  class="overlay">get free </button></a></span>
+        <span><a href="/viewdetails5.html"><button onclick="checklogin()" class="overlay">get free </button></a></span>
         
     </div>
     <div class="box2">
@@ -253,6 +248,17 @@
 </footer>
 <script src="/education2.js"></script>
 <script>
+     function isloggedin(){
+    return localStorage.getItem("isLoggedIn")==="true";
+ }
+
+ function checklogin(){
+    if(!isloggedin()){
+        window.location.href="/viewdetails1.html";
+    }else{
+        window.location.href="/Profile/login";
+    }
+ }
     document.addEventListener("DOMContentLoaded", function(){
         checkUserSession();
     });
@@ -262,7 +268,7 @@
         let token = localStorage.getItem("token"); // 🛑 Ensure token is stored
         console.log("🔍 Sending Token:", token); // Debugging
 
-        let response = await fetch("http://localhost:5000/Profile/check-session", { 
+        let response = await fetch("https://eduskill-kgep.onrender.com/Profile/check-session", { 
             method: "GET",
             credentials: "include", // 🔥 Required for cookies
             headers: {
@@ -322,6 +328,96 @@
             logoutBox.style.display = (logoutBox.style.display === "none") ? "block" : "none";
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search1');
+            const searchButton = document.getElementById('btn2');
+            const itemsContainer = document.getElementById('itemsContainer');
+            const noResults = document.getElementById('noResults');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            // Function to fetch items from backend
+            async function fetchItems(searchTerm = '') {
+                loadingIndicator.classList.remove('hidden');
+                itemsContainer.classList.add('hidden');
+                noResults.classList.add('hidden');
+
+                try {
+                    const endpoint = searchTerm 
+                        ? `/api/search?q=${encodeURIComponent(searchTerm)}`
+                        : '/api/items';
+                    
+                    const response = await fetch(endpoint);
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching items:', error);
+                    return [];
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+
+            // Function to render items
+            function renderItems(items) {
+                itemsContainer.innerHTML = '';
+
+                if (items.length === 0) {
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+
+                items.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `box${index % 4 + 1}`; // Cycle through box1-box4 classes
+                    
+                    itemDiv.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.title}" width="300px" height="270px">
+                        <span><a href="${item.detailsLink}"><button class="overlay">view details</button></a></span>
+                    `;
+                    
+                    itemsContainer.appendChild(itemDiv);
+                });
+
+                itemsContainer.classList.remove('hidden');
+            }
+
+            // Main search handler
+            async function handleSearch() {
+                const searchTerm = searchInput.value.trim();
+                const items = await fetchItems(searchTerm);
+                renderItems(items);
+            }
+
+            // Initial load of all items
+            async function initialize() {
+                const items = await fetchItems();
+                renderItems(items);
+            }
+
+            // Event listeners
+            searchButton.addEventListener('click', handleSearch);
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+
+            // Real-time search with debounce
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(handleSearch, 300);
+            });
+
+            // Initialize the page
+            initialize();
+        });
     </script>
 </body>
 </html>

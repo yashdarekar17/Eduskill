@@ -56,7 +56,6 @@
 
 // Set button state on page load
 
-
 window.onload = function () {
   const loginBtn = document.getElementById("loginBtn");
 

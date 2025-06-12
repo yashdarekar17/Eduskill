@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Profile = require('../models/profile');
+const Courses=require('../models/courses')
 const { jwtwebmiddleware, generatetoken } = require('../jwt');
 const path = require('path');
 
@@ -77,6 +78,34 @@ router.post('/login', async (req, res) => {
       // res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.get('/search',async(res,req)=>{
+    try {
+      const searchTerm = req.query.name;
+      if (!searchTerm) {
+        return res.status(400).json({ message: 'Name query parameter is required' });
+      }
+      const regex = new RegExp(`^${searchTerm}$`, 'i');
+      const food = await Courses.findOne({ name: { $regex: regex } });
+      if (!food) {
+        return res.status(404).json({ message: 'No foods found matching your search' });
+      }
+      res.json(food);
+  }catch(err){
+    console.log(err);
+  }
+})
+
+router.post('/courses',async(res,req)=>{
+  try{
+   const data =req.body;
+   const newCourse=new Courses(data)
+   const response = await newCourse.save();
+   res.json(response);
+  }catch{
+    console.log(err);
+  }
+})
 
 
 router.get('/check-session', jwtwebmiddleware, async (req, res) => {
