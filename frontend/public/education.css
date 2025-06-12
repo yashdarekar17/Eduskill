@@ -58,7 +58,7 @@ body{
     height: 40px;
     text-align: center;
     line-height: 40px; 
-    border-radius: 50%;
+    border-radius: 10px;
     background-color: #FF6643;
     color: white;
     font-weight: bold;
