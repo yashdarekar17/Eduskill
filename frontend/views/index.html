@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 </head>
 <body class="eduskill">
-    <div class="container">
+   <div class="container">
         <div class="navigation">
             <div class="logo4">
                 <img src="/assets/pngaaa.com-3314970.png" alt="" class="logoimg"  height="70px">
@@ -18,24 +18,28 @@
             
             <nav class="nav">
                 
-                    <a href="#courses">courses</a>
-                    <a href="/progresstracker.html">progresstracker</a>
-                    <a href="#roadmaps">Roadmaps</a>
-                    <a href="#contactus">contact us</a>
-                    <div class="but"><a href="/Profile/login" id="loginLink">
-                        <button id="btn1">Login</button>
+                    <a href="#courses"  class="hideonmobile">courses</a>
+                    <a href="/progresstracker.html" class="hideonmobile">progresstracker</a>
+                    <a href="#roadmaps" class="hideonmobile">Roadmaps</a>
+                    <a href="#contactus" class="hideonmobile">contact us</a>
+                    <div class="but hideonmobile"><a href="/Profile/login" id="loginLink">
+                        <button class="hideonmobile" id ="btn1">Login</button>
                     </a></div>
                     
-                    <div class="profile-container">
+                    
+                    <div class="profile-container hideonmobile " >
                         <div class="profile-circle" id="profileCircle" onclick="toggleLogoutBox()" style="display: none;">U</div>
                         <div class="logout-box" id="logoutBox" style="display: none;">
                             <button id="btn3" onclick="logout()">Logout</button>
                         </div>
                     </div>
-                </div>
+                    <a href="" onclick=" event.preventDefault(); showSidebar()" class="menu-btn"><svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#000"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a>
+                
+        
+        
                     <!-- <button class="mode" >mode</button> -->
                     
-            </nav>
+            
         </div>
     </div>
     <div class="container2">
@@ -57,6 +61,28 @@
             <img src="/assets/code.png" alt="">
         </div>
        
+    </div>
+    <div class="sidebar">
+        <div class="navigation2">
+            <a href="" onclick=" event.preventDefault(); hideSidebar()"><svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#000"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a>
+            
+            <nav class="nav2">
+                
+                    <a href="#courses">courses</a>
+                    <a href="/progresstracker.html">progresstracker</a>
+                    <a href="#roadmaps">Roadmaps</a>
+                    <a href="#contactus">contact us</a>
+                    <div class="but2"><a href="/Profile/login" id="loginLink">
+                        <button id="btn1">Login</button>
+                    </a></div>
+                    
+                    <div class="profile-container2">
+                        <div class="profile-circle2" id="profileCircle" onclick="toggleLogoutBox()" style="display: none;">U</div>
+                        <div class="logout-box2" id="logoutBox" style="display: none;">
+                            <button id="btn3" onclick="logout()">Logout</button>
+                        </div>
+                    </div>
+                </div>
     </div>
     <div class="ourprogram">
         <!-- <div id="p1">
@@ -318,6 +344,14 @@
         }
     }
 
+      function showSidebar(){
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display='flex';
+        }
+        function hideSidebar(){
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display='none';
+        }
 
     </script>
 </body>
