@@ -44,7 +44,7 @@ body{
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
-  margin-top: 5px;
+  margin-top: 0;
 }
 
 .profile-circle:hover {
