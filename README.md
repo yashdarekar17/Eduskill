@@ -33,7 +33,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/eduskill.git
+   git clone[ https://github.com/your-username/eduskill.git](https://github.com/yashdarekar17/Eduskill.git)
    npm run build
    npm run dev
 
