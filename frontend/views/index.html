@@ -280,12 +280,12 @@
     
     async function checkUserSession() {
     try {
-        let token = localStorage.getItem("token"); // 🛑 Ensure token is stored
-        console.log("🔍 Sending Token:", token); // Debugging
+        let token = localStorage.getItem("token"); 
+        console.log("🔍 Sending Token:", token); 
 
         let response = await fetch("https://eduskill-kgep.onrender.com/Profile/check-session", { 
             method: "GET",
-            credentials: "include", // 🔥 Required for cookies
+            credentials: "include", 
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": token ? `Bearer ${token}` : ""
