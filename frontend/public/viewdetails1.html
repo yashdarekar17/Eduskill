@@ -16,7 +16,7 @@
                 <b>EDUSKILL</b>
             </div>
             <div class="add">
-                <button class="buy1" onclick="initiatePayment()">Buy course</button>
+                <button class="buy1" id="buy2" onclick="initiatePayment()">Buy course</button>
             </div>
             
            
@@ -95,8 +95,16 @@
         </div>
         <br>
         <div class="products">
-            <button class="buy" onclick="initiatePayment()">Buy course</button>
+            <button class="buy" id="b1" onclick="initiatePayment()">Buy webd chatbot</button>
         </div>
+
+        <div id="chatbot-container" style="display: none;">
+            <iframe
+              src="https://cdn.botpress.cloud/webchat/v3.0/shareable.html?configUrl=https://files.bpcontent.cloud/2025/02/02/16/20250202160648-VCUOL1UL.json"
+              frameborder="0"
+              style="width: 85vw; height: 600px; border: none;">
+            </iframe>
+          </div>
         <footer id="contactus">
             <div class="footer1">
                 Questions? Call <a href="#">000-800-919-1694</a>
@@ -161,7 +169,7 @@
         key: key, // Razorpay Key ID fetched from backend
         amount: order.amount, // Amount in paise
         currency: order.currency,
-        name: "Eduskill",
+        name: " eduskill- web development course",
         description: "Purchase Data Science Course",
         image: "/assets/logo5.png",
         order_id: order.id, // Order ID from backend
@@ -181,6 +189,9 @@
 
             if (verificationResult.status === 'success') {
                 alert('Payment successful and verified!');
+                document.getElementById("chatbot-container").style.display = "block";
+                document.getElementById('b1').style.display = "none"; // ✅ Corrected line
+                document.getElementById('buy2').innerText = "Continue learning";
             } else {
                 alert('Payment verification failed!');
                 console.log(Error);
@@ -233,11 +244,11 @@
         // Attach payment handler to buttons
         document.getElementById('buy-now').addEventListener('click', initiatePayment);
         document.getElementById('buy-course').addEventListener('click', initiatePayment);
+
     </script>
     
     
-    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2025/02/02/16/20250202160648-KBQAJWAD.js"></script>
+    <!-- https://cdn.botpress.cloud/webchat/v3.0/shareable.html?configUrl=https://files.bpcontent.cloud/2025/02/02/16/20250202160648-VCUOL1UL.json -->
     
     
 </body>
