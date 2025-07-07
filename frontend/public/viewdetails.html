@@ -16,7 +16,7 @@
                 <b>EDUSKILL</b>
             </div>
             <div class="add">
-                <button class="buy1" onclick="initiatePayment" id="buy-now">Buy course</button>
+                <button class="buy1" id="buy2" onclick="initiatePayment" id="buy-now">Buy course</button>
             </div>
             
            
@@ -106,7 +106,14 @@ Engaging in coding communities and forums.
             </ul>
         </div>
         <br>
-        <button class="buy" onclick="initiatePayment" id="buy-now">Buy course</button>
+        <button class="buy" id="b1"onclick="initiatePayment()" id="buy-now">Buy appd bot</button>
+        <div id="chatbot-container" style="display: none;">
+            <iframe
+              src="https://cdn.botpress.cloud/webchat/v3.0/shareable.html?configUrl=https://files.bpcontent.cloud/2025/02/09/08/20250209083535-NK1R4RHP.json"
+              frameborder="0"
+              style="width: 85vw; height: 600px; border: none;">
+            </iframe>
+          </div>
         <footer id="contactus">
             <div class="footer1">
                 Questions? Call <a href="#">000-800-919-1694</a>
@@ -171,8 +178,8 @@ Engaging in coding communities and forums.
         key: key, // Razorpay Key ID fetched from backend
         amount: order.amount, // Amount in paise
         currency: order.currency,
-        name: "Eduskill",
-        description: "Purchase Data Science Course",
+        name: "Eduskill-App development course",
+        description: "Purchase App development course",
         image: "/assets/logo5.png",
         order_id: order.id, // Order ID from backend
         handler: async function (response) {
@@ -191,6 +198,9 @@ Engaging in coding communities and forums.
 
             if (verificationResult.status === 'success') {
                 alert('Payment successful and verified!');
+                document.getElementById("chatbot-container").style.display = "block";
+                document.getElementById('b1').style.display = "none"; 
+                document.getElementById('buy2').innerText = "Continue learning";
             } else {
                 alert('Payment verification failed!');
                 console.log(Error);
@@ -250,9 +260,7 @@ Engaging in coding communities and forums.
 
 
 
-<script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2025/02/09/08/20250209083535-ILQ3FQJE.js"></script>
-    
+
     
     
 </body>
