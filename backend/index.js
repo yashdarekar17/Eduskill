@@ -15,7 +15,9 @@ const Razorpay = require('razorpay')
 app.engine('html',require('ejs').renderFile)
 app.set('view engine', 'html');
 const cookieParser = require("cookie-parser");
+const crypto = require('crypto');
 app.use(cookieParser());
+
 
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.set('views', path.join(__dirname, '../frontend/views'));
@@ -70,6 +72,27 @@ app.post('/create-order', async (req, res) => {
   } catch (error) {
     console.error('Error creating Razorpay order:', error.message);
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/verify-payment', (req, res) => {
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature
+  } = req.body;
+
+  const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+  const expectedSignature = crypto
+    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+    .update(body.toString())
+    .digest('hex');
+
+  if (expectedSignature === razorpay_signature) {
+    return res.status(200).json({ status: 'success', message: 'Payment verified' });
+  } else {
+    return res.status(400).json({ status: 'failed', message: 'Invalid signature' });
   }
 });
 
