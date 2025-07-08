@@ -106,11 +106,11 @@ Handle missing values, outliers, and perform data transformations.
         // Add Razorpay Payment Handler
     async function initiatePayment() {
     // Fetch the Razorpay key from the backend
-    const response = await fetch('/razorpay-key');
+    const response = await fetch('https://eduskill-kgep.onrender.com/razorpay-key');
     const { key } = await response.json();
 
     // Create an order in the backend
-    const orderResponse = await fetch('/create-order', {
+    const orderResponse = await fetch('https://eduskill-kgep.onrender.com/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -133,7 +133,7 @@ Handle missing values, outliers, and perform data transformations.
         order_id: order.id, // Order ID from backend
         handler: async function (response) {
             // Send payment details to the backend for verification
-            const verificationResponse = await fetch('/verify-payment', {
+            const verificationResponse = await fetch('https://eduskill-kgep.onrender.com/verify-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
