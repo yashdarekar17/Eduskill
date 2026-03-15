@@ -1,13 +1,18 @@
 import { Request, Response } from 'express';
-import Profile from '../models/Profile';
+import { pool } from '../config/db';
+import { createUser, comparePassword } from '../models/Profile';
 import { generateToken } from '../middleware/jwt';
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, name, Branch, Email, password } = req.body;
 
-    // Validate input
-    if (!username || !name || !Branch || !Email || !password) {
+    // Map frontend field names to lowercase for DB
+    const branch = Branch;
+    const email = Email;
+
+    // Validate input (mobileno is optional)
+    if (!username || !name || !branch || !email || !password) {
       res.status(400).json({
         success: false,
         message: 'All fields are required',
@@ -16,8 +21,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Check if user already exists
-    const existingUser = await Profile.findOne({ Email });
-    if (existingUser) {
+    const existingUser = await pool.query(
+      'SELECT id FROM profiles WHERE email = $1',
+      [email]
+    );
+    if (existingUser.rows.length > 0) {
       res.status(409).json({
         success: false,
         message: 'Email already in use',
@@ -26,23 +34,21 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Create new profile
-    const newProfile = new Profile({
-      username,
+    const newProfile = await createUser({
       name,
-      Branch,
-      Email,
+      username,
+      branch,
+      email,
       password,
     });
-
-    await newProfile.save();
 
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
       user: {
-        id: newProfile._id,
+        id: newProfile.id,
         username: newProfile.username,
-        email: newProfile.Email,
+        email: newProfile.email,
       },
     });
   } catch (error) {
@@ -69,7 +75,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Find user by username
-    const user = await Profile.findOne({ username });
+    const result = await pool.query(
+      'SELECT * FROM profiles WHERE username = $1',
+      [username]
+    );
+    const user = result.rows[0];
+
     if (!user) {
       res.status(401).json({
         success: false,
@@ -79,7 +90,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Compare passwords
-    const isPasswordMatch = await user.comparePassword(password);
+    const isPasswordMatch = await comparePassword(password, user.password);
     if (!isPasswordMatch) {
       res.status(401).json({
         success: false,
@@ -90,9 +101,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     // Generate JWT token
     const token = generateToken({
-      id: user._id,
+      id: user.id,
       username: user.username,
-      email: user.Email,
+      email: user.email,
+      name: user.name,
     });
 
     // Set cookie
@@ -108,9 +120,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       message: 'Login successful',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         username: user.username,
-        email: user.Email,
+        email: user.email,
         name: user.name,
       },
     });
@@ -137,7 +149,13 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const user = await Profile.findById(userId).select('-password');
+    // Select all columns EXCEPT password
+    const result = await pool.query(
+      'SELECT id, name, username, branch, email, created_at FROM profiles WHERE id = $1',
+      [userId]
+    );
+    const user = result.rows[0];
+
     if (!user) {
       res.status(404).json({
         success: false,

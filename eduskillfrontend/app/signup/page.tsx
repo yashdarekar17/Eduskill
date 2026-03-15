@@ -32,8 +32,10 @@ export default function SignupPage() {
     try {
       const response = await api.signup(formData);
       alert('Account created successfully! Please login.');
+      console.log(response);
       router.push('/login');
     } catch (err) {
+      console.log(err);
       setError(
         err instanceof Error ? err.message : 'Signup failed. Please try again.'
       );

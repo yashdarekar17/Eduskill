@@ -22,6 +22,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userInitial');
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
     setShowLogoutBox(false);
     router.push('/');
@@ -29,7 +30,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-[#f8f7f3] py-4 shadow-sm">
-      <div className="max-w-[85vw] mx-auto flex justify-between items-center">
+      <div className="max-w-screen-xl mx-auto px-6 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/assets/pngaaa.com-3314970.png"
@@ -47,11 +48,11 @@ export default function Header() {
           <Link href="/#courses" className="hover:text-[#FF6643] transition-colors capitalize">
             courses
           </Link>
-          <Link href="/progresstracker" className="hover:text-[#FF6643] transition-colors capitalize">
-            progresstracker
-          </Link>
           <Link href="/#roadmaps" className="hover:text-[#FF6643] transition-colors capitalize">
             Roadmaps
+          </Link>
+          <Link href="/about" className="hover:text-[#FF6643] transition-colors capitalize">
+            About us
           </Link>
           <Link href="/#contactus" className="hover:text-[#FF6643] transition-colors capitalize">
             contact us
@@ -113,6 +114,9 @@ export default function Header() {
           </Link>
           <Link href="/#roadmaps" className="block hover:text-[#FF6643] transition-colors capitalize">
             Roadmaps
+          </Link>
+          <Link href="/about" className="block hover:text-[#FF6643] transition-colors capitalize">
+            About us
           </Link>
           <Link href="/#contactus" className="block hover:text-[#FF6643] transition-colors capitalize">
             contact us

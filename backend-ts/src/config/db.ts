@@ -1,21 +1,21 @@
-import mongoose from 'mongoose';
+import { Pool } from "pg";
 
-const mongoUrl = process.env.MONGO_URI;
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL environment variable is not defined");
+}
+
+export const pool = new Pool({
+  connectionString: databaseUrl,
+});
 
 export const connectDB = async (): Promise<void> => {
   try {
-    if (!mongoUrl) {
-      throw new Error('MONGO_URI environment variable is not defined');
-    }
-
-    await mongoose.connect(mongoUrl, {
-      tls: true,
-      tlsAllowInvalidCertificates: true,
-    });
-    
-    console.log('✅ MongoDB Connected Successfully');
+    await pool.connect();
+    console.log("✅ PostgreSQL Connected Successfully");
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error);
+    console.error("❌ PostgreSQL Connection Error:", error);
     process.exit(1);
   }
 };

@@ -22,6 +22,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userInitial');
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
     setShowLogoutBox(false);
     router.push('/');
@@ -38,23 +39,23 @@ export default function Header() {
             height={40}
             className="h-[40px] w-auto"
           />
-          <h1 className="text-[25px] font-semibold text-[#FF6643] tracking-tight">
+          <h1 className="text-[25px] font-bold text-[#FF6643] tracking-tight">
             EDUSKILL
           </h1>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-[2.5rem] font-semibold text-gray-800">
-          <Link href="/#courses" className="hover:text-[#FF6643] transition-colors capitalize">
-            courses
+          <Link href="/#courses" className="hover:text-[#FF6643] transition-colors">
+            Courses
           </Link>
-          <Link href="/progresstracker" className="hover:text-[#FF6643] transition-colors capitalize">
-            progresstracker
-          </Link>
-          <Link href="/#roadmaps" className="hover:text-[#FF6643] transition-colors capitalize">
+          <Link href="/#roadmaps" className="hover:text-[#FF6643] transition-colors">
             Roadmaps
           </Link>
-          <Link href="/#contactus" className="hover:text-[#FF6643] transition-colors capitalize">
-            contact us
+          <Link href="/about" className="hover:text-[#FF6643] transition-colors">
+            About Us
+          </Link>
+          <Link href="/#contactus" className="hover:text-[#FF6643] transition-colors">
+            Contact Us
           </Link>
 
           {!isLoggedIn ? (
@@ -105,17 +106,17 @@ export default function Header() {
       {/* Mobile Sidebar */}
       {showSidebar && (
         <div className="lg:hidden mt-4 p-4 border-t border-gray-200 space-y-4">
-          <Link href="/#courses" className="block hover:text-[#FF6643] transition-colors capitalize">
-            courses
+          <Link href="/#courses" className="block hover:text-[#FF6643] transition-colors">
+            Courses
           </Link>
-          <Link href="/progresstracker" className="block hover:text-[#FF6643] transition-colors capitalize">
-            progresstracker
-          </Link>
-          <Link href="/#roadmaps" className="block hover:text-[#FF6643] transition-colors capitalize">
+          <Link href="/#roadmaps" className="block hover:text-[#FF6643] transition-colors">
             Roadmaps
           </Link>
-          <Link href="/#contactus" className="block hover:text-[#FF6643] transition-colors capitalize">
-            contact us
+          <Link href="/about" className="block hover:text-[#FF6643] transition-colors">
+            About Us
+          </Link>
+          <Link href="/#contactus" className="block hover:text-[#FF6643] transition-colors">
+            Contact Us
           </Link>
           {!isLoggedIn ? (
             <Link href="/login">

@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
+import { api } from '@/lib/api';
 
 const courseData = [
   {
@@ -21,13 +22,13 @@ const courseData = [
   },
   {
     id: 3,
-    title: 'UI/UX Design',
+    title: 'Data Science',
     image: '/assets/Gemini_Generated_Image_v108apv108apv108.jpeg',
     link: '/viewdetails/3',
   },
   {
     id: 4,
-    title: 'Data Science',
+    title: 'Machine Learning',
     image: '/assets/Gemini_Generated_Image_wf2791wf2791wf27.jpeg',
     link: '/viewdetails/4',
   },
@@ -48,29 +49,71 @@ const roadmapData = [
   },
   {
     id: 7,
-    title: 'UI/UX Design Roadmap',
+    title: 'Data Science Roadmap',
     image: '/assets/Gemini_Generated_Image_9z60pk9z60pk9z60.jpeg',
     link: '/viewdetails/7',
   },
   {
     id: 8,
-    title: 'Data Science Roadmap',
+    title: 'Machine Learning Roadmap',
     image: '/assets/Gemini_Generated_Image_cxsn3rcxsn3rcxsn.jpeg',
     link: '/viewdetails/8',
   },
 ];
 
+const COURSE_ID_MAP: Record<number, string> = {
+  5: 'webdev',
+  6: 'appdev',
+  7: 'datascience',
+  8: 'ml',
+};
+
 const TYPING_TEXTS = [
   'Web development',
   'App development',
-  'UI/UX',
-  'Data science',
+  'Data Science',
+  'Machine Learning',
 ];
 
 export default function Home() {
   const [text, setText] = useState('');
   const indexRef = useRef(0);
   const charIndexRef = useRef(0);
+  const [purchasedIds, setPurchasedIds] = useState<number[]>([]);
+  const [startedRoadmaps, setStartedRoadmaps] = useState<string[]>([]);
+  const [debugMsg, setDebugMsg] = useState('Fetching...');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+
+    if (token && loggedIn) {
+      api.getPurchasedCourses(token)
+        .then((res) => {
+          if (res.success) {
+            setPurchasedIds(res.purchasedCourseIds);
+          }
+        })
+        .catch(() => { });
+
+      api.getStartedRoadmaps(token)
+        .then((res) => {
+          if (res.success) {
+            setStartedRoadmaps(res.startedCourses);
+            setDebugMsg('Success: ' + JSON.stringify(res.startedCourses));
+          } else {
+            setDebugMsg('API Failed: ' + JSON.stringify(res));
+          }
+        })
+        .catch((err) => { 
+          setDebugMsg('Catch Error: ' + err.message);
+        });
+    } else {
+      setDebugMsg('Not logged in or no token');
+    }
+  }, []);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -104,6 +147,19 @@ export default function Home() {
       clearTimeout(timeoutId);
     };
   }, []);
+
+  const getButtonLabel = (courseId: number) => {
+    if (!isLoggedIn) return 'View Details';
+    if (purchasedIds.includes(courseId)) return 'Continue Learning';
+    return 'Buy Course';
+  };
+
+  const getButtonStyle = (courseId: number) => {
+    if (isLoggedIn && purchasedIds.includes(courseId)) {
+      return 'w-full mt-4 bg-white text-[#FF6643] font-bold py-3 rounded-[20px] hover:bg-gray-200 transition-all shadow-md';
+    }
+    return 'w-full mt-4 bg-[#FF6643] text-white font-bold py-3 rounded-[20px] hover:bg-[#e65c00] transition-colors';
+  };
 
   return (
     <div>
@@ -209,8 +265,8 @@ export default function Home() {
                 />
               </div>
               <Link href={course.link}>
-                <button className="w-full mt-4 bg-[#FF6643] text-white font-bold py-3 rounded-[20px] hover:bg-[#e65c00] transition-colors">
-                  View Details
+                <button className={getButtonStyle(course.id)}>
+                  {getButtonLabel(course.id)}
                 </button>
               </Link>
             </div>
@@ -242,8 +298,14 @@ export default function Home() {
                 />
               </div>
               <Link href={roadmap.link}>
-                <button className="w-full mt-4 bg-[#FF6643] text-white font-bold py-3 rounded-[20px] hover:bg-[#e65c00] transition-colors">
-                  Get Free
+                <button
+                  className={`w-full mt-4 font-bold py-3 rounded-[20px] transition-colors ${
+                    isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id])
+                      ? 'bg-white text-[#FF6643] hover:bg-gray-100 shadow-sm border border-gray-200'
+                      : 'bg-[#FF6643] text-white hover:bg-[#e65c00]'
+                  }`}
+                >
+                  {isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id]) ? 'Continue' : 'Get Free'}
                 </button>
               </Link>
             </div>
@@ -275,13 +337,13 @@ export default function Home() {
       {/* CTA Section */}
       <div className="max-w-[80vw] mx-auto h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-12 shadow-[13px_13px_0_0_#000] mb-20">
         <div className="text-white font-bold text-3xl">
-          Join now & get the certificate
+          Join now &amp; get the certificate
         </div>
         <div className="flex gap-2">
           <input
             type="search"
             placeholder="Search courses..."
-            className="px-6 py-3 rounded-full w-64 md:w-96 outline-none"
+            className="px-6 py-3 bg-white rounded-full w-64 md:w-96 outline-none"
           />
           <button className="bg-[#FF6643] text-white px-8 py-3 rounded-full font-bold hover:bg-[#e65c00] transition-colors">
             Search

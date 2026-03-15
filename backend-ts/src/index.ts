@@ -6,6 +6,11 @@ import bodyParser from 'body-parser';
 import { connectDB } from './config/db';
 import profileRoutes from './routes/profileRoutes';
 import paymentRoutes from './routes/paymentRoutes';
+import courseRoutes from './routes/courseRoutes';
+import progressRoutes from './routes/progressRoutes';
+import quizRoutes from './routes/quizRoutes';
+import roadmapRoutes from './routes/roadmapRoutes';
+import certificateRoutes from './routes/certificate';
 
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
@@ -44,6 +49,11 @@ app.use(cookieParser());
 // ===== Routes =====
 app.use('/Profile', profileRoutes);
 app.use('/', paymentRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/quizzes', quizRoutes);
+app.use('/api/roadmap', roadmapRoutes);
+app.use('/api/certificate', certificateRoutes);
 
 // ===== Health Check =====
 app.get('/health', (_req, res) => {

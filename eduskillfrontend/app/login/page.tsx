@@ -25,7 +25,15 @@ export default function LoginPage() {
       const response = await api.login(formData);
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userInitial', formData.username[0].toUpperCase());
+      if (response.user && response.user.name) {
+        localStorage.setItem('userName', response.user.name);
+        localStorage.setItem('userId', response.user.id.toString());
+      }
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+      }
       router.push('/');
+      console.log(response);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Login failed. Please try again.'
