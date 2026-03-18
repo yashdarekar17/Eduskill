@@ -8,6 +8,9 @@ if (!databaseUrl) {
 
 export const pool = new Pool({
   connectionString: databaseUrl,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 export const connectDB = async (): Promise<void> => {
