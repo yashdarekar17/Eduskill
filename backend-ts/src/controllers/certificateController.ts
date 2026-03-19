@@ -36,24 +36,44 @@ export const generateCertificate = async (req: any, res: Response) => {
 
     const html = certificateTemplate(name, course, certificateId);
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"]
-    });
+    console.log("🚀 Launching Browser...");
+    let browser;
+    try {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-gpu",
+          "--disable-dev-shm-usage"
+        ],
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      });
+    } catch (launchError: any) {
+      console.error("❌ Failed to launch Puppeteer:", launchError);
+      throw new Error(`Failed to launch PDF engine: ${launchError.message}`);
+    }
 
+    console.log("📄 Opening New Page...");
     const page = await browser.newPage();
     
-    // Set content and wait for network to be idle to ensure fonts load
-    await page.setContent(html, { waitUntil: "networkidle0" });
+    console.log("📝 Setting Content (networkidle2)...");
+    await page.setContent(html, { 
+      waitUntil: "networkidle2",
+      timeout: 30000 
+    });
 
+    console.log("🖨️ Generating PDF Buffer...");
     const pdf = await page.pdf({
       format: "A4",
       printBackground: true,
-      landscape: true, // Certificates are usually landscape
+      landscape: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' }
     });
 
-    await browser.close();
+    console.log("🧹 Closing Browser...");
+    if (browser) await browser.close();
+    console.log("✅ PDF Generation Complete. Size:", pdf.length);
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
@@ -62,12 +82,13 @@ export const generateCertificate = async (req: any, res: Response) => {
     );
 
     res.send(Buffer.from(pdf));
-  } catch (error) {
-    console.error("Certificate Generation Error:", error);
+  } catch (error: any) {
+    console.error("❌ Certificate Generation Error:", error);
     res.status(500).json({ 
       success: false, 
       message: "Failed to generate certificate", 
-      error: error instanceof Error ? error.message : "Internal Server Error" 
+      error: error.message || "Internal Server Error",
+      stack: error.stack
     });
   }
 };
