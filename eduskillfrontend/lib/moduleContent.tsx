@@ -19,29 +19,29 @@ const CodeBlock = ({ code, language = 'javascript' }: { code: string, language?:
 );
 
 const MainHeading = ({ children }: { children: React.ReactNode }) => (
-    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-12 mb-6 tracking-tight">{children}</h1>
+    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mt-12 mb-6 tracking-tight">{children}</h1>
 );
 
 const SectionHeading = ({ children, id }: { children: React.ReactNode, id?: string }) => (
-    <h2 id={id} className="text-3xl font-bold text-gray-800 mt-12 mb-6 pb-2 border-b-2 border-orange-100 flex items-center gap-3">
-        <span className="text-[#FF6643] text-4xl leading-none">•</span>
+    <h2 id={id} className="text-2xl font-bold text-gray-800 mt-12 mb-6 pb-2 border-b-2 border-orange-100 flex items-center gap-3">
+        <span className="text-[#FF6643] text-3xl leading-none">•</span>
         {children}
     </h2>
 );
 
 const SubHeading = ({ children }: { children: React.ReactNode }) => (
-    <h3 className="text-2xl font-bold text-gray-800 mt-8 mb-4">{children}</h3>
+    <h3 className="text-xl font-bold text-gray-800 mt-8 mb-4">{children}</h3>
 );
 
 const Text = ({ children }: { children: React.ReactNode }) => (
-    <p className="mb-6 text-gray-700 leading-loose text-lg text-justify">{children}</p>
+    <p className="mb-6 text-gray-700 leading-normal text-base text-justify">{children}</p>
 );
 
 const List = ({ items, ordered = false }: { items: React.ReactNode[], ordered?: boolean }) => {
     const Tag = ordered ? 'ol' : 'ul';
     const listClass = ordered ? 'list-decimal' : 'list-disc';
     return (
-        <Tag className={`${listClass} pl-8 mb-6 text-gray-700 leading-loose text-lg space-y-2`}>
+        <Tag className={`${listClass} pl-8 mb-6 text-gray-700 leading-normal text-base space-y-2`}>
             {items.map((item, i) => <li key={i}>{item}</li>)}
         </Tag>
     );
@@ -49,15 +49,15 @@ const List = ({ items, ordered = false }: { items: React.ReactNode[], ordered?: 
 
 const ImportantNote = ({ children, title = "Note" }: { children: React.ReactNode, title?: string }) => (
     <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl my-8 text-green-900 shadow-sm">
-        <strong className="font-bold flex items-center gap-2 mb-2 text-green-700 text-lg">📝 {title}</strong>
-        <p className="text-base leading-relaxed m-0">{children}</p>
+        <strong className="font-bold flex items-center gap-2 mb-2 text-green-700 text-base">📝 {title}</strong>
+        <p className="text-sm leading-relaxed m-0">{children}</p>
     </div>
 );
 
 const WarningAlign = ({ children }: { children: React.ReactNode }) => (
     <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl my-8 text-red-900 shadow-sm">
-        <strong className="font-bold flex items-center gap-2 mb-2 text-red-700 text-lg">⚠️ Warning</strong>
-        <p className="text-base leading-relaxed m-0">{children}</p>
+        <strong className="font-bold flex items-center gap-2 mb-2 text-red-700 text-base">⚠️ Warning</strong>
+        <p className="text-sm leading-relaxed m-0">{children}</p>
     </div>
 );
 

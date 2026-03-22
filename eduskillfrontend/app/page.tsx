@@ -107,7 +107,7 @@ export default function Home() {
             setDebugMsg('API Failed: ' + JSON.stringify(res));
           }
         })
-        .catch((err) => { 
+        .catch((err) => {
           setDebugMsg('Catch Error: ' + err.message);
         });
     } else {
@@ -299,11 +299,10 @@ export default function Home() {
               </div>
               <Link href={roadmap.link}>
                 <button
-                  className={`w-full mt-4 font-bold py-3 rounded-[20px] transition-colors ${
-                    isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id])
+                  className={`w-full mt-4 font-bold py-3 rounded-[20px] transition-colors ${isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id])
                       ? 'bg-white text-[#FF6643] hover:bg-gray-100 shadow-sm border border-gray-200'
                       : 'bg-[#FF6643] text-white hover:bg-[#e65c00]'
-                  }`}
+                    }`}
                 >
                   {isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id]) ? 'Continue' : 'Get Free'}
                 </button>
@@ -335,17 +334,17 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <div className="max-w-[80vw] mx-auto h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-12 shadow-[13px_13px_0_0_#000] mb-20">
-        <div className="text-white font-bold text-3xl">
+      <div className="max-w-[80vw] mx-auto py-8 md:py-0 min-h-[200px] h-auto md:h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-6 md:px-12 shadow-[13px_13px_0_0_#000] mb-20 gap-6 md:gap-0">
+        <div className="text-white font-bold text-3xl text-center md:text-left">
           Join now &amp; get the certificate
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3 items-center">
           <input
             type="search"
             placeholder="Search courses..."
-            className="px-6 py-3 bg-white rounded-full w-64 md:w-96 outline-none"
+            className="px-6 py-3 bg-white rounded-full w-full sm:w-64 md:w-96 outline-none text-black"
           />
-          <button className="bg-[#FF6643] text-white px-8 py-3 rounded-full font-bold hover:bg-[#e65c00] transition-colors">
+          <button className="bg-[#FF6643] text-white px-8 py-3 rounded-full font-bold w-full sm:w-auto hover:bg-[#e65c00] transition-colors whitespace-nowrap">
             Search
           </button>
         </div>

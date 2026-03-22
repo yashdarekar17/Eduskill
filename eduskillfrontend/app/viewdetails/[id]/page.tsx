@@ -469,26 +469,26 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
                         return (
                           <div key={phase.id} className="mb-4">
-                            <button 
+                            <button
                               onClick={() => togglePhase(phase.id)}
                               className="w-full flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all text-left group"
                             >
                               <span className="font-bold text-gray-800 text-lg">{phase.title}</span>
-                              
+
                               <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-3">
                                   <span className="text-sm font-medium text-gray-400">
                                     {completedInPhase}/{totalModulesInPhase}
                                   </span>
                                   <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden hidden sm:block">
-                                    <div 
+                                    <div
                                       className="h-full bg-[#FF6643] transition-all duration-500"
                                       style={{ width: `${progressPercent}%` }}
                                     />
                                   </div>
                                 </div>
-                                <ChevronDown 
-                                  size={18} 
+                                <ChevronDown
+                                  size={18}
                                   className={`text-gray-300 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                                 />
                               </div>
