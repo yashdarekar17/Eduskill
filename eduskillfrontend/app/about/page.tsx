@@ -23,17 +23,17 @@ import { motion } from 'framer-motion';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
 };
 
 const fadeInLeft = {
   hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
 };
 
 const zoomIn = {
   hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } }
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" as const, delay: 0.2 } }
 };
 
 export default function About() {
