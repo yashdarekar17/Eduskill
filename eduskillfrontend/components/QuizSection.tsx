@@ -3,6 +3,17 @@
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { Brain, Target, Lightbulb, Loader2, AlertTriangle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+};
 
 interface QuizQuestion {
     id: number;
@@ -143,7 +154,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
     // UI when quiz is not started yet
     if (!started) {
         return (
-            <div className="bg-white/80 backdrop-blur-md rounded-[24px] border border-orange-100 p-8 text-center">
+            <motion.div initial="hidden" animate="visible" variants={itemVariants} className="rounded-[24px] p-8 text-center">
                 <div className="flex items-center justify-center gap-2 mb-3">
                     <Brain size={28} className="text-[#FF6643]" />
                     <h3 className="text-2xl font-bold text-gray-800">Knowledge Check</h3>
@@ -159,7 +170,9 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                     </div>
                 )}
 
-                <button
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={handleStartQuiz}
                     disabled={loadingQuiz}
                     className="flex items-center gap-2 mx-auto px-8 py-3 bg-[#FF6643] text-white font-bold rounded-xl hover:bg-[#e65c00] transition-colors disabled:opacity-60"
@@ -175,20 +188,20 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                             Start Quiz
                         </>
                     )}
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
         );
     }
 
     return (
-        <div className="bg-white/80 backdrop-blur-md rounded-[24px] border border-orange-100 p-6 md:p-8">
-            <div className="flex items-center gap-2 mb-6">
+        <motion.div initial="hidden" animate="visible" variants={containerVariants} className="rounded-[24px] p-6 md:p-8">
+            <motion.div variants={itemVariants} className="flex items-center gap-2 mb-6">
                 <Brain size={24} className="text-[#FF6643]" />
                 <h3 className="text-2xl font-bold text-gray-800">Quiz for {moduleTitle}</h3>
-            </div>
+            </motion.div>
 
             {/* Questions List */}
-            <div className="space-y-8">
+            <motion.div variants={containerVariants} className="space-y-8">
                 {questions.map((q, idx) => {
                     // Try parsing options if stringified JSON
                     let optionsObj: any = q.options;
@@ -201,7 +214,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                     }
 
                     return (
-                        <div key={q.id} className="p-5 bg-white border border-gray-100 shadow-sm rounded-2xl">
+                        <motion.div variants={itemVariants} key={q.id} className="py-5 rounded-2xl">
                             <h4 className="font-bold text-gray-800 mb-4 text-base md:text-lg">
                                 {idx + 1}. {q.question_text}
                             </h4>
@@ -230,20 +243,23 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                                     );
                                 })}
                             </div>
-                        </div>
+                        </motion.div>
                     );
                 })}
-            </div>
+            </motion.div>
 
             {/* Actions & Results */}
             {!submitted ? (
-                <button
+                <motion.button
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleSubmit}
                     disabled={submitting || Object.keys(answers).length < questions.length}
                     className="mt-8 w-full py-4 bg-[#FF6643] text-white font-bold rounded-xl hover:bg-[#e65c00] transition-colors disabled:opacity-50 flex items-center justify-center gap-2 text-lg"
                 >
                     {submitting ? <Loader2 size={20} className="animate-spin" /> : 'Submit Quiz'}
-                </button>
+                </motion.button>
             ) : result && (
                 <div className="mt-8 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className={`p-6 rounded-2xl text-center border-2
@@ -261,7 +277,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
 
                     {/* Topic Weakness Analysis */}
                     {result.weaknesses.length > 0 && (
-                        <div className="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
+                        <div className="py-6 rounded-2xl">
                             <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
                                 <Lightbulb size={20} className="text-[#FF6643]" />
                                 Your Weakness Analysis
@@ -288,7 +304,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
 
                     {/* Detailed Answer Breakdown */}
                     {result.detailedResults && result.detailedResults.length > 0 && (
-                        <div className="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
+                        <div className="py-6 rounded-2xl">
                             <h4 className="font-bold text-gray-800 text-lg mb-6 border-b pb-4">Detailed Review</h4>
                             <div className="space-y-8">
                                 {questions.map((q, idx) => {
@@ -366,6 +382,6 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                     </button>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 }

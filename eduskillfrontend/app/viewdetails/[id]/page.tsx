@@ -12,6 +12,12 @@ import { api } from '@/lib/api';
 import Script from 'next/script';
 import { Clock, Sparkles, Loader2, ShoppingCart, CheckCircle, ArrowRight, Lock, PartyPopper, ChevronDown } from 'lucide-react';
 import CompanyRoadmap from '@/components/CompanyRoadmap';
+import { motion } from 'framer-motion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
 
 declare global {
   interface Window {
@@ -347,7 +353,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
           src="https://checkout.razorpay.com/v1/checkout.js"
         />
 
-        <main className="max-w-[85vw] mx-auto py-12">
+        <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="max-w-[85vw] mx-auto py-12">
           {/* ===== Modern Course Description Hero ===== */}
           <div className="relative mb-12 rounded-[30px] overflow-hidden bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] p-8 md:p-12">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF6643]/10 rounded-full blur-3xl" />
@@ -386,13 +392,15 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                     <div className="text-3xl font-extrabold text-white">
                       ₹{desc?.price || 499}
                     </div>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => initiatePayment(courseData.title)}
                       disabled={isProcessing}
                       className="flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-[#FF6643] to-[#ff8a65] text-white text-lg font-bold rounded-2xl hover:from-[#e65c00] hover:to-[#FF6643] transition-all shadow-lg shadow-[#FF6643]/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {isProcessing ? <><Loader2 size={20} className="animate-spin" /> Processing...</> : <><ShoppingCart size={20} /> Buy Course</>}
-                    </button>
+                    </motion.button>
                   </>
                 ) : (
                   <div className="flex items-center gap-4">
@@ -402,9 +410,13 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                     </div>
                     {courseData.phases?.[0]?.modules?.[0] && (
                       <Link href={`/modules/${courseData.phases[0].modules[0].id}`}>
-                        <button className="flex items-center gap-2 px-10 py-4 bg-[#FF6643] text-white text-lg font-bold rounded-2xl hover:bg-[#e65c00] transition-all shadow-lg hover:-translate-y-0.5">
+                        <motion.button 
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="flex items-center gap-2 px-10 py-4 bg-[#FF6643] text-white text-lg font-bold rounded-2xl hover:bg-[#e65c00] transition-all shadow-lg hover:-translate-y-0.5"
+                        >
                           <ArrowRight size={20} /> Continue Learning
-                        </button>
+                        </motion.button>
                       </Link>
                     )}
                   </div>
@@ -613,7 +625,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
           )}
-        </main>
+        </motion.main>
 
         <Footer />
       </div>
@@ -642,7 +654,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     <div>
       <Header2 />
 
-      <main className="max-w-[85vw] mx-auto py-12">
+      <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="max-w-[85vw] mx-auto py-12">
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
             {staticCourse.title}
@@ -654,7 +666,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
         {/* Interactive Company-Type Roadmap */}
         <CompanyRoadmap courseId={courseId} />
-      </main>
+      </motion.main>
 
       <Footer />
     </div>

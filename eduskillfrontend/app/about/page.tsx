@@ -19,6 +19,22 @@ import {
     Sparkles,
     ArrowRight
 } from "lucide-react";
+import { motion } from 'framer-motion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+};
+
+const fadeInLeft = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+};
+
+const zoomIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } }
+};
 
 export default function About() {
     return (
@@ -28,7 +44,7 @@ export default function About() {
             {/* Hero Section */}
             <section className="relative pt-10 pb-32 overflow-hidden border-b border-gray-100">
                 <div className="max-w-screen-xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16 relative z-10">
-                    <div className="flex-1 space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+                    <motion.div initial="hidden" animate="visible" variants={fadeInLeft} className="flex-1 space-y-8">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6643]/10 text-[#FF6643] rounded-full font-bold text-sm tracking-widest uppercase">
                             <Sparkles className="w-4 h-4" />
                             Technical Deep Dive
@@ -54,8 +70,8 @@ export default function About() {
                                 </button>
                             </Link>
                         </div>
-                    </div>
-                    <div className="flex-1 relative animate-in fade-in zoom-in duration-1000 delay-200">
+                    </motion.div>
+                    <motion.div initial="hidden" animate="visible" variants={zoomIn} className="flex-1 relative">
                         <div className="absolute -top-20 -right-20 w-60 h-60 bg-[#FF6643]/5 rounded-full blur-3xl" />
                         
                         <div className="relative z-20 bg-white/40 backdrop-blur-2xl border border-white/40 p-5 rounded-[50px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)]">
@@ -68,12 +84,12 @@ export default function About() {
                                 priority
                             />
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
             {/* Platform Core Architecture */}
-            <section className="py-24 bg-white">
+            <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={fadeInUp} className="py-24 bg-white">
                 <div className="max-w-screen-xl mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
                         <div className="space-y-12">
@@ -171,10 +187,10 @@ export default function About() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Design Philosophy */}
-            <section className="py-24 bg-[#FF6643] rounded-[60px] mx-4 my-20 relative overflow-hidden shadow-2xl shadow-[#FF6643]/20">
+            <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={fadeInUp} className="py-24 bg-[#FF6643] rounded-[60px] mx-4 my-20 relative overflow-hidden shadow-2xl shadow-[#FF6643]/20">
                 <div className="max-w-screen-xl mx-auto px-6 text-center relative z-10 space-y-8">
                     <h2 className="text-5xl lg:text-6xl font-black text-white tracking-tight">Engineered for Humans.</h2>
                     <p className="text-white/80 text-lg max-w-4xl mx-auto leading-relaxed">
@@ -207,10 +223,10 @@ export default function About() {
                         <rect width="100%" height="100%" fill="url(#grid)" />
                     </svg>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Project Goal Section */}
-            <section className="py-24 bg-white">
+            <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={fadeInUp} className="py-24 bg-white">
                 <div className="max-w-screen-xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-20">
                     <div className="flex-1 space-y-10 order-2 lg:order-1">
                         <div className="space-y-6">
@@ -247,10 +263,10 @@ export default function About() {
                         />
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* CTA / Contact Section */}
-            <div className="max-w-screen-xl mx-auto px-6 pb-30 pt-10">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={zoomIn} className="max-w-screen-xl mx-auto px-6 pb-30 pt-10">
                 <div className="bg-gray-950 rounded-[70px] p-24 text-center space-y-10 relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-tr from-[#FF6643]/10 via-transparent to-blue-500/10 transition-transform duration-1000 group-hover:scale-110"></div>
                     <h2 className="text-5xl lg:text-6xl font-black text-white relative z-10 leading-tight tracking-tighter">
@@ -273,7 +289,7 @@ export default function About() {
                         </Link>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             <Footer />
         </div>

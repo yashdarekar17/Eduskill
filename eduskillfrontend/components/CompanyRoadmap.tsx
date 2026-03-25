@@ -4,6 +4,23 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, Check, Briefcase, Building2, Rocket, Star, Sparkles, X, Loader2, AlertCircle } from 'lucide-react';
 import { api } from '@/lib/api';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring" as const, duration: 0.5, bounce: 0.3 } },
+  exit: { opacity: 0, scale: 0.95, y: 20, transition: { duration: 0.2 } }
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+};
 
 // ===== COURSE DEFINITIONS =====
 const COURSES = [
@@ -199,8 +216,8 @@ function StuckModal({ topicName, subtopicName, onClose, onGenerate, isGenerating
   const [reason, setReason] = useState('');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-      <div className="bg-white rounded-[24px] shadow-2xl w-full max-w-md p-6 relative animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit" className="bg-white rounded-[24px] shadow-2xl w-full max-w-md p-6 relative">
         {/* Close */}
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
           <X size={20} />
@@ -250,8 +267,8 @@ function StuckModal({ topicName, subtopicName, onClose, onGenerate, isGenerating
         {reason.trim().length < 10 && reason.length > 0 && (
           <p className="text-xs text-orange-500 mt-2 text-center">Please describe your confusion in a bit more detail</p>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -420,15 +437,18 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
   return (
     <div className="w-full">
       {/* Stuck Modal */}
-      {stuckModal && (
-        <StuckModal
-          topicName={stuckModal.topicName}
-          subtopicName={stuckModal.subtopicName}
-          onClose={() => setStuckModal(null)}
-          onGenerate={handleGenerate}
-          isGenerating={isGenerating}
-        />
-      )}
+      <AnimatePresence>
+        {stuckModal && (
+          <StuckModal
+            key="stuck-modal"
+            topicName={stuckModal.topicName}
+            subtopicName={stuckModal.subtopicName}
+            onClose={() => setStuckModal(null)}
+            onGenerate={handleGenerate}
+            isGenerating={isGenerating}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Header — only show if no courseId (standalone mode) */}
       {!fixedCourse && (
@@ -523,14 +543,14 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
                   Click &quot;I&apos;m Stuck&quot; on any subtopic in other tabs to regenerate
                 </p>
                 {/* AI Topics */}
-                <div className="space-y-3">
+                <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-3">
                   {aiTopics.map((topic, idx) => {
                     const isExpanded = expandedTopics.has(topic.name);
                     const count = topic.subtopics.length;
                     const done = getTopicProgress(topic);
                     const pct = count > 0 ? Math.round((done / count) * 100) : 0;
                     return (
-                      <div key={idx} className="rounded-2xl border border-purple-100 overflow-hidden transition-all hover:border-purple-200">
+                      <motion.div variants={itemVariants} key={idx} className="rounded-2xl border border-purple-100 overflow-hidden transition-all hover:border-purple-200">
                         <button
                           onClick={() => toggleTopic(topic.name)}
                           className="w-full flex items-center justify-between px-5 md:px-6 py-4 bg-gradient-to-r from-purple-50/50 to-white hover:from-purple-50 hover:to-white transition-all"
@@ -575,10 +595,10 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
                             </div>
                           </div>
                         )}
-                      </div>
+                      </motion.div>
                     );
                   })}
-                </div>
+                </motion.div>
               </div>
             )}
           </>
@@ -586,7 +606,7 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
 
         {/* Regular Topics List (Startup / Service / Product / FAANG) */}
         {activeTab !== 'ai_personalized' && (
-          <div className="p-4 md:p-6 space-y-3">
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="p-4 md:p-6 space-y-3">
             {topics.map((topic, idx) => {
               const isExpanded = expandedTopics.has(topic.name);
               const count = topic.subtopics.length;
@@ -594,8 +614,9 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
               const pct = count > 0 ? Math.round((done / count) * 100) : 0;
 
               return (
-                <div
-                  key={`${activeTab}-${idx}`}
+                <motion.div
+                  variants={itemVariants}
+                  key={`${activeTab}-${topic.name}`}
                   className="rounded-2xl border border-gray-100 overflow-hidden transition-all hover:border-orange-200"
                 >
                   {/* Topic Header Row */}
@@ -667,10 +688,10 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
                       </div>
                     </div>
                   )}
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         )}
 
         {/* Error message for generate */}

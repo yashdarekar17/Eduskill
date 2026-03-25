@@ -9,6 +9,12 @@ import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getStaticModuleContent } from '@/lib/moduleContent';
 import { Award, Download, Loader2, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
 
 export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -199,7 +205,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                 <Header2 />
                 <div className="min-h-screen bg-white flex flex-col">
 
-                    <main className="flex-grow max-w-[85vw] mx-auto w-full">
+                    <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="flex-grow max-w-[85vw] mx-auto w-full">
                         <div className="flex flex-col items-center text-center p-10 md:p-14 relative">
                             {/* <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500" /> */}
                             <div className="absolute top-10 right-10 opacity-5">
@@ -251,7 +257,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                                 </Link>
                             </div>
                         </div>
-                    </main>
+                    </motion.main>
                     <Footer />
                 </div>
             </>
@@ -262,7 +268,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
     return (
         <div>
             <Header2 />
-            <main className="max-w-[85vw] mx-auto py-12">
+            <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="max-w-[85vw] mx-auto py-12">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
                     <Link href="/" className="hover:text-[#FF6643] transition-colors">Home</Link>
@@ -303,13 +309,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                             </button>
                         )}
 
-                        {nextModuleId && (
-                            <Link href={`/modules/${nextModuleId}?courseId=${moduleData.course_id}`} className="w-full">
-                                <button className="w-full px-6 py-4 bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-black transition-all shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
-                                    Next Module →
-                                </button>
-                            </Link>
-                        )}
+
                     </div>
                 </div>
 
@@ -320,6 +320,16 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                     </div>
                 </div>
 
+                {/* Quiz Section */}
+                <div className="my-16 border-t border-gray-100 pt-16">
+                    <QuizSection 
+                        moduleId={moduleId}
+                        courseId={moduleData.course_id}
+                        moduleTitle={moduleData.title}
+                        onSubmit={handleQuizSubmit}
+                    />
+                </div>
+
                 {/* Navigation Footer */}
                 <div className="flex justify-between items-center mt-20 pt-10 border-t border-gray-100">
                     <Link href={`/viewdetails/${moduleData.course_id}`}>
@@ -327,8 +337,15 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                             ← Back to Course Directory
                         </button>
                     </Link>
+                    {nextModuleId && (
+                        <Link href={`/modules/${nextModuleId}?courseId=${moduleData.course_id}`}>
+                            <button className="text-gray-500 font-semibold hover:text-[#FF6643] transition-colors flex items-center gap-2">
+                                Next Module →
+                            </button>
+                        </Link>
+                    )}
                 </div>
-            </main>
+            </motion.main>
 
             <Footer />
         </div>

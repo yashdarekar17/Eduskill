@@ -7,29 +7,49 @@ import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { api } from '@/lib/api';
 
+import { motion } from 'framer-motion';
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
+};
+
 const courseData = [
   {
     id: 1,
     title: 'Web Development',
-    image: '/assets/Gemini_Generated_Image_94qy0h94qy0h94qy.jpeg',
+    image: '/assets/course_web_dev.png',
     link: '/viewdetails/1',
   },
   {
     id: 2,
     title: 'App Development',
-    image: '/assets/Gemini_Generated_Image_t0a8jst0a8jst0a8.jpeg',
+    image: '/assets/course_app_dev.png',
     link: '/viewdetails/2',
   },
   {
     id: 3,
     title: 'Data Science',
-    image: '/assets/Gemini_Generated_Image_v108apv108apv108.jpeg',
+    image: '/assets/course_data_science.png',
     link: '/viewdetails/3',
   },
   {
     id: 4,
     title: 'Machine Learning',
-    image: '/assets/Gemini_Generated_Image_wf2791wf2791wf27.jpeg',
+    image: '/assets/course_ml.png',
     link: '/viewdetails/4',
   },
 ];
@@ -38,25 +58,25 @@ const roadmapData = [
   {
     id: 5,
     title: 'Web Development Roadmap',
-    image: '/assets/Gemini_Generated_Image_7j17r77j17r77j17.jpeg',
+    image: '/assets/roadmap_web_dev.png',
     link: '/viewdetails/5',
   },
   {
     id: 6,
     title: 'App Development Roadmap',
-    image: '/assets/Gemini_Generated_Image_3gm9f13gm9f13gm9.jpeg',
+    image: '/assets/roadmap_app_dev.png',
     link: '/viewdetails/6',
   },
   {
     id: 7,
     title: 'Data Science Roadmap',
-    image: '/assets/Gemini_Generated_Image_9z60pk9z60pk9z60.jpeg',
+    image: '/assets/roadmap_data_science.png',
     link: '/viewdetails/7',
   },
   {
     id: 8,
     title: 'Machine Learning Roadmap',
-    image: '/assets/Gemini_Generated_Image_cxsn3rcxsn3rcxsn.jpeg',
+    image: '/assets/roadmap_ml.png',
     link: '/viewdetails/8',
   },
 ];
@@ -166,7 +186,12 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <section className="max-w-[85vw] mx-auto py-16 flex flex-col lg:flex-row items-center justify-between gap-12">
+      <motion.section 
+        initial="hidden" 
+        animate="visible" 
+        variants={fadeInUp} 
+        className="max-w-[85vw] mx-auto py-16 flex flex-col lg:flex-row items-center justify-between gap-12"
+      >
         <div className="flex-1 space-y-4">
           <div className="text-[#FF6643] font-semibold text-[30px]">
             INTRODUCING INTERACTIVE
@@ -187,10 +212,16 @@ export default function Home() {
             className="w-full max-w-lg mx-auto"
           />
         </div>
-      </section>
+      </motion.section>
 
       {/* Features Section */}
-      <section className="max-w-[85vw] mx-auto my-20 bg-[#f4f4f4] rounded-[20px] overflow-hidden">
+      <motion.section 
+        initial="hidden" 
+        whileInView="visible" 
+        viewport={{ once: true, amount: 0.2 }} 
+        variants={fadeInUp} 
+        className="max-w-[85vw] mx-auto my-20 bg-[#f4f4f4] rounded-[20px] overflow-hidden"
+      >
         <header className="bg-[#FF6643] text-white p-6 text-center">
           <h2 className="text-3xl font-bold">Our Program Features</h2>
         </header>
@@ -241,10 +272,17 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Courses Section */}
-      <section id="courses" className="max-w-[85vw] mx-auto py-12">
+      <motion.section 
+        initial="hidden" 
+        whileInView="visible" 
+        viewport={{once: true, amount: 0.1 }} 
+        variants={fadeInUp} 
+        id="courses" 
+        className="max-w-[85vw] mx-auto py-12"
+      >
         <h2 className="text-5xl font-extrabold mb-4">
           Start learning with AI courses
         </h2>
@@ -252,9 +290,9 @@ export default function Home() {
           even if you are not ready with paid courses, there are variety of
           free Roadmaps are available for you
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {courseData.map((course) => (
-            <div key={course.id} className="group">
+            <motion.div variants={fadeInUp} key={course.id} className="group">
               <div className="overflow-hidden rounded-[20px]">
                 <Image
                   src={course.image}
@@ -265,17 +303,25 @@ export default function Home() {
                 />
               </div>
               <Link href={course.link}>
-                <button className={getButtonStyle(course.id)}>
+                <motion.button 
+                  whileHover={{ scale: 1.03 }} 
+                  whileTap={{ scale: 0.97 }} 
+                  className={getButtonStyle(course.id)}
+                >
                   {getButtonLabel(course.id)}
-                </button>
+                </motion.button>
               </Link>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Roadmaps Section */}
-      <section
+      <motion.section
+        initial="hidden" 
+        whileInView="visible" 
+        viewport={{ once: true, amount: 0.1 }} 
+        variants={fadeInUp} 
         id="roadmaps"
         className="max-w-[90vw] mx-auto py-20 px-8 my-20 bg-white/40 backdrop-blur-md rounded-[40px] border border-white shadow-xl shadow-gray-200/50"
       >
@@ -285,9 +331,9 @@ export default function Home() {
             Here are the free roadmaps for you
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {roadmapData.map((roadmap) => (
-            <div key={roadmap.id} className="group">
+            <motion.div variants={fadeInUp} key={roadmap.id} className="group">
               <div className="overflow-hidden rounded-[20px]">
                 <Image
                   src={roadmap.image}
@@ -298,22 +344,30 @@ export default function Home() {
                 />
               </div>
               <Link href={roadmap.link}>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.03 }} 
+                  whileTap={{ scale: 0.97 }} 
                   className={`w-full mt-4 font-bold py-3 rounded-[20px] transition-colors ${isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id])
                       ? 'bg-white text-[#FF6643] hover:bg-gray-100 shadow-sm border border-gray-200'
                       : 'bg-[#FF6643] text-white hover:bg-[#e65c00]'
                     }`}
                 >
                   {isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id]) ? 'Continue' : 'Get Free'}
-                </button>
+                </motion.button>
               </Link>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* Community Section */}
-      <section className="py-20 text-center space-y-6">
+      <motion.section 
+        initial="hidden" 
+        whileInView="visible" 
+        viewport={{ once: true, amount: 0.2 }} 
+        variants={fadeInUp} 
+        className="py-20 text-center space-y-6"
+      >
         <h3 className="text-[#FF6643] font-bold text-xl">
           BUILD UP THE COMMUNITY
         </h3>
@@ -324,17 +378,25 @@ export default function Home() {
           Learn, share knowledge with community members and shine from wherever
           you are.
         </div>
-        <Image
-          src="/assets/world4.png"
-          alt="Community"
-          width={900}
-          height={500}
-          className="max-w-[900px] w-full mx-auto mt-8"
-        />
-      </section>
+        <motion.div variants={scaleIn}>
+          <Image
+            src="/assets/world4.png"
+            alt="Community"
+            width={900}
+            height={500}
+            className="max-w-[900px] w-full mx-auto mt-8"
+          />
+        </motion.div>
+      </motion.section>
 
       {/* CTA Section */}
-      <div className="max-w-[80vw] mx-auto py-8 md:py-0 min-h-[200px] h-auto md:h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-6 md:px-12 shadow-[13px_13px_0_0_#000] mb-20 gap-6 md:gap-0">
+      <motion.div 
+        initial="hidden" 
+        whileInView="visible" 
+        viewport={{ once: true, amount: 0.2 }} 
+        variants={scaleIn}
+        className="max-w-[80vw] mx-auto py-8 md:py-0 min-h-[200px] h-auto md:h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-6 md:px-12 shadow-[13px_13px_0_0_#000] mb-20 gap-6 md:gap-0"
+      >
         <div className="text-white font-bold text-3xl text-center md:text-left">
           Join now &amp; get the certificate
         </div>
@@ -344,11 +406,11 @@ export default function Home() {
             placeholder="Search courses..."
             className="px-6 py-3 bg-white rounded-full w-full sm:w-64 md:w-96 outline-none text-black"
           />
-          <button className="bg-[#FF6643] text-white px-8 py-3 rounded-full font-bold w-full sm:w-auto hover:bg-[#e65c00] transition-colors whitespace-nowrap">
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-[#FF6643] text-white px-8 py-3 rounded-full font-bold w-full sm:w-auto hover:bg-[#e65c00] transition-colors whitespace-nowrap">
             Search
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       <Footer />
     </div>

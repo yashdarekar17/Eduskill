@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
+import { motion } from 'framer-motion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -46,7 +52,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         <div className="bg-orange-600 py-4 px-6">
           <h1 className="text-2xl font-bold text-white text-center">
             Create Your Account
@@ -220,7 +226,7 @@ export default function SignupPage() {
             </Link>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
