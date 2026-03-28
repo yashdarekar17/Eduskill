@@ -219,10 +219,7 @@ export const api = {
     data: {
       course_key: string;
       company_type: string;
-      stuck_on_topic: string;
-      stuck_on_subtopic: string;
-      stuck_reason: string;
-      base_topics: { name: string; subtopics: { name: string }[] }[];
+      answers: { dream_job?: string; skill_gap?: string; hours_per_week?: string; current_project?: string; improvement_area?: string };
     },
     token: string
   ) {
@@ -238,6 +235,24 @@ export const api = {
     }
     return response.json();
   },
+
+  async toggleAiTask(
+    data: { course_key: string; task_id: string; },
+    token: string
+  ) {
+    const response = await fetch(`${API_BASE_URL}/api/roadmap/personalized/toggle-task`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || "Failed to toggle task");
+    }
+    return response.json();
+  },
+
 
   async getAiRoadmap(courseKey: string, token: string) {
     const response = await fetch(`${API_BASE_URL}/api/roadmap/personalized/${courseKey}`, {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { toggleSubtopic, getRoadmapProgress, getStartedRoadmaps, generatePersonalizedRoadmap, getPersonalizedRoadmap } from '../controllers/roadmapController';
+import { toggleSubtopic, getRoadmapProgress, getStartedRoadmaps, generatePersonalizedRoadmap, getPersonalizedRoadmap, togglePersonalizedTask } from '../controllers/roadmapController';
 import { jwtWebMiddleware } from '../middleware/jwt';
 
 const router = Router();
@@ -23,6 +23,9 @@ router.post('/personalized/generate', jwtWebMiddleware, generatePersonalizedRoad
 
 // GET /api/roadmap/personalized/:courseKey — Fetch saved AI roadmap
 router.get('/personalized/:courseKey', jwtWebMiddleware, getPersonalizedRoadmap);
+
+// POST /api/roadmap/personalized/toggle-task — Toggle specific daily task in the AI roadmap
+router.post('/personalized/toggle-task', jwtWebMiddleware, togglePersonalizedTask);
 
 /**
  * @route   GET /api/roadmap/:courseKey/:companyType

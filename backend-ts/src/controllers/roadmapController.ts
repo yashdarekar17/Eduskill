@@ -107,36 +107,28 @@ export const generatePersonalizedRoadmap = async (req: Request, res: Response): 
       return;
     }
 
-    const { course_key, company_type, stuck_on_topic, stuck_on_subtopic, stuck_reason, base_topics } = req.body;
+    const { course_key, company_type, answers } = req.body;
 
-    if (!course_key || !company_type || !stuck_on_topic || !stuck_on_subtopic || !stuck_reason || !base_topics) {
+    if (!course_key || !company_type || !answers) {
       res.status(400).json({ success: false, message: 'All fields are required' });
       return;
     }
 
-    // Get user's completed subtopics for this roadmap
-    const progressResult = await pool.query(
-      `SELECT topic_name, subtopic_name FROM roadmap_progress
-       WHERE user_id = $1 AND course_key = $2 AND company_type = $3`,
-      [userId, course_key, company_type]
-    );
-    const completedKeys = progressResult.rows.map((r: any) => `${r.topic_name}::${r.subtopic_name}`);
-
     // Call NVIDIA API
     const result = await generatePersonalizedRoadmapFromNvidia(
-      course_key, company_type, stuck_on_topic, stuck_on_subtopic, stuck_reason, completedKeys, base_topics
+      course_key, company_type, answers
     );
 
-    // Upsert into personalized_roadmaps (table already created by user)
+    // Upsert into personalized_roadmaps
     await pool.query(
       `INSERT INTO personalized_roadmaps (user_id, course_key, roadmap_data, ai_message)
        VALUES ($1, $2, $3, $4)
        ON CONFLICT (user_id, course_key)
        DO UPDATE SET roadmap_data = EXCLUDED.roadmap_data, ai_message = EXCLUDED.ai_message, created_at = NOW()`,
-      [userId, course_key, JSON.stringify(result.topics), result.aiMessage]
+      [userId, course_key, JSON.stringify(result), 'Roadmap generated successfully!']
     );
 
-    res.status(200).json({ success: true, topics: result.topics, aiMessage: result.aiMessage });
+    res.status(200).json({ success: true, roadmap: result, aiMessage: 'Roadmap generated successfully!' });
   } catch (error: any) {
     console.error('Generate personalized roadmap error:', error);
     res.status(500).json({ success: false, message: error.message || 'Failed to generate roadmap' });
@@ -168,12 +160,60 @@ export const getPersonalizedRoadmap = async (req: Request, res: Response): Promi
     res.status(200).json({
       success: true,
       exists: true,
-      topics: result.rows[0].roadmap_data,
+      roadmap: result.rows[0].roadmap_data,
       aiMessage: result.rows[0].ai_message,
       createdAt: result.rows[0].created_at,
     });
   } catch (error) {
     console.error('Get personalized roadmap error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch personalized roadmap' });
+  }
+};
+
+// POST /api/roadmap/personalized/toggle-task
+export const togglePersonalizedTask = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      res.status(401).json({ success: false, message: 'Unauthorized' }); return;
+    }
+    const { course_key, task_id } = req.body;
+    if (!course_key || !task_id) {
+      res.status(400).json({ success: false, message: 'course_key and task_id required' }); return;
+    }
+
+    const mapRes = await pool.query(
+      `SELECT roadmap_data FROM personalized_roadmaps WHERE user_id=$1 AND course_key=$2`,
+      [userId, course_key]
+    );
+    if(mapRes.rows.length === 0){
+      res.status(404).json({ success: false, message: 'Roadmap not found' }); return;
+    }
+    const mapData = mapRes.rows[0].roadmap_data;
+    let toggled = false;
+    let newTaskState = false;
+    
+    if(mapData && mapData.daily_tasks) {
+      mapData.daily_tasks = mapData.daily_tasks.map((t: any) => {
+        if(t.id === task_id) {
+          toggled = true;
+          newTaskState = !t.completed;
+          return { ...t, completed: newTaskState };
+        }
+        return t;
+      });
+    }
+
+    if(toggled) {
+      await pool.query(
+        `UPDATE personalized_roadmaps SET roadmap_data = $1 WHERE user_id=$2 AND course_key=$3`,
+        [JSON.stringify(mapData), userId, course_key]
+      );
+      res.status(200).json({ success: true, completed: newTaskState });
+    } else {
+      res.status(404).json({ success: false, message: 'Task not found in roadmap' });
+    }
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };

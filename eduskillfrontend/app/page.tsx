@@ -186,10 +186,10 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <motion.section 
-        initial="hidden" 
-        animate="visible" 
-        variants={fadeInUp} 
+      <motion.section
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
         className="max-w-[85vw] mx-auto py-16 flex flex-col lg:flex-row items-center justify-between gap-12"
       >
         <div className="flex-1 space-y-4">
@@ -215,11 +215,11 @@ export default function Home() {
       </motion.section>
 
       {/* Features Section */}
-      <motion.section 
-        initial="hidden" 
-        whileInView="visible" 
-        viewport={{ once: true, amount: 0.2 }} 
-        variants={fadeInUp} 
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={fadeInUp}
         className="max-w-[85vw] mx-auto my-20 bg-[#f4f4f4] rounded-[20px] overflow-hidden"
       >
         <header className="bg-[#FF6643] text-white p-6 text-center">
@@ -275,12 +275,12 @@ export default function Home() {
       </motion.section>
 
       {/* Courses Section */}
-      <motion.section 
-        initial="hidden" 
-        whileInView="visible" 
-        viewport={{once: true, amount: 0.1 }} 
-        variants={fadeInUp} 
-        id="courses" 
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={fadeInUp}
+        id="courses"
         className="max-w-[85vw] mx-auto py-12"
       >
         <h2 className="text-5xl font-extrabold mb-4">
@@ -303,9 +303,9 @@ export default function Home() {
                 />
               </div>
               <Link href={course.link}>
-                <motion.button 
-                  whileHover={{ scale: 1.03 }} 
-                  whileTap={{ scale: 0.97 }} 
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   className={getButtonStyle(course.id)}
                 >
                   {getButtonLabel(course.id)}
@@ -318,10 +318,10 @@ export default function Home() {
 
       {/* Roadmaps Section */}
       <motion.section
-        initial="hidden" 
-        whileInView="visible" 
-        viewport={{ once: true, amount: 0.1 }} 
-        variants={fadeInUp} 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={fadeInUp}
         id="roadmaps"
         className="max-w-[90vw] mx-auto py-20 px-8 my-20 bg-white/40 backdrop-blur-md rounded-[40px] border border-white shadow-xl shadow-gray-200/50"
       >
@@ -331,7 +331,7 @@ export default function Home() {
             Here are the free roadmaps for you
           </p>
         </div>
-        <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {roadmapData.map((roadmap) => (
             <motion.div variants={fadeInUp} key={roadmap.id} className="group">
               <div className="overflow-hidden rounded-[20px]">
@@ -345,11 +345,11 @@ export default function Home() {
               </div>
               <Link href={roadmap.link}>
                 <motion.button
-                  whileHover={{ scale: 1.03 }} 
-                  whileTap={{ scale: 0.97 }} 
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   className={`w-full mt-4 font-bold py-3 rounded-[20px] transition-colors ${isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id])
-                      ? 'bg-white text-[#FF6643] hover:bg-gray-100 shadow-sm border border-gray-200'
-                      : 'bg-[#FF6643] text-white hover:bg-[#e65c00]'
+                    ? 'bg-white text-[#FF6643] hover:bg-gray-100 shadow-sm border border-gray-200'
+                    : 'bg-[#FF6643] text-white hover:bg-[#e65c00]'
                     }`}
                 >
                   {isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id]) ? 'Continue' : 'Get Free'}
@@ -358,14 +358,27 @@ export default function Home() {
             </motion.div>
           ))}
         </motion.div>
+
+        <motion.div variants={fadeInUp} className="text-center pt-8 border-t border-gray-200/50">
+          <h3 className="text-xl font-semibold mb-4 text-gray-800">Want something built just for you?</h3>
+          <Link href="/ai-roadmap">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-[#FF6643] text-white font-bold text-base rounded-full shadow-lg hover:bg-[#e65c00] transition-all flex items-center justify-center mx-auto gap-2"
+            >
+              ✨ Generate AI Personalized Roadmap
+            </motion.button>
+          </Link>
+        </motion.div>
       </motion.section>
 
       {/* Community Section */}
-      <motion.section 
-        initial="hidden" 
-        whileInView="visible" 
-        viewport={{ once: true, amount: 0.2 }} 
-        variants={fadeInUp} 
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={fadeInUp}
         className="py-20 text-center space-y-6"
       >
         <h3 className="text-[#FF6643] font-bold text-xl">
@@ -390,10 +403,10 @@ export default function Home() {
       </motion.section>
 
       {/* CTA Section */}
-      <motion.div 
-        initial="hidden" 
-        whileInView="visible" 
-        viewport={{ once: true, amount: 0.2 }} 
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
         variants={scaleIn}
         className="max-w-[80vw] mx-auto py-8 md:py-0 min-h-[200px] h-auto md:h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-6 md:px-12 shadow-[13px_13px_0_0_#000] mb-20 gap-6 md:gap-0"
       >

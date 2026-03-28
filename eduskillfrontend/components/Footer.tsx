@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="max-w-screen-xl mx-auto py-20 px-6 border-t border-gray-200 mt-20">
+    <footer className="w-full max-w-screen-xl mx-auto py-20 px-6 border-t border-gray-200 mt-20">
       <div className="mb-10 text-gray-700 font-medium">
         Questions? Call{" "}
         <a href="tel:0008009191694" className="underline hover:text-[#FF6643] transition-colors">

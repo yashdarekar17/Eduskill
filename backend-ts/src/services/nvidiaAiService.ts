@@ -1,79 +1,101 @@
 import https from 'https';
 
-export interface RoadmapSubtopic {
-  name: string;
+export interface DailyTask {
+  id: string;
+  title: string;
+  description: string;
+  milestone_id: string;
+  completed: boolean;
 }
 
-export interface RoadmapTopic {
-  name: string;
-  subtopics: RoadmapSubtopic[];
-  note?: string;
+export interface MonthlyGoal {
+  month: string;
+  focus: string;
+  deliverables?: string[];
+}
+
+export interface SubGoal {
+  title: string;
+  description: string;
+}
+
+export interface LongTermMilestone {
+  id: string;
+  title: string;
+  timeline: string;
+  description: string;
+  sub_goals?: SubGoal[];
+  skills_to_gain?: string[];
 }
 
 export interface PersonalizedRoadmapResult {
-  topics: RoadmapTopic[];
-  aiMessage: string;
+  long_term_milestones: LongTermMilestone[];
+  monthly_goals: MonthlyGoal[];
+  weekly_focus: string;
+  daily_tasks: DailyTask[];
 }
 
 export async function generatePersonalizedRoadmapFromNvidia(
   courseKey: string,
   companyType: string,
-  stuckOnTopic: string,
-  stuckOnSubtopic: string,
-  stuckReason: string,
-  completedKeys: string[],
-  baseTopics: { name: string; subtopics: { name: string }[] }[]
+  answers: { dream_job?: string; skill_gap?: string; hours_per_week?: string; current_project?: string; improvement_area?: string }
 ): Promise<PersonalizedRoadmapResult> {
   const apiKey = process.env.NVIDIA_API_KEY;
   if (!apiKey) throw new Error('NVIDIA_API_KEY is not set.');
 
-  const completedList =
-    completedKeys.length > 0
-      ? completedKeys.map((k) => `  - ${k.replace('::', ' → ')}`).join('\n')
-      : '  - (none yet)';
-
-  const baseRoadmapJson = JSON.stringify(
-    baseTopics.map((t) => ({ name: t.name, subtopics: t.subtopics.map((s) => s.name) })),
-    null,
-    2
-  );
-
-  const systemPrompt = `You are an expert learning roadmap designer.
+  const systemPrompt = `You are an expert tech career coach and learning roadmap designer.
 You will output ONLY valid JSON — no markdown, no explanation outside the JSON.
 
 Required JSON format:
 {
-  "aiMessage": "One sentence explaining what you changed and why.",
-  "topics": [
+  "long_term_milestones": [
     {
-      "name": "Topic Name",
-      "note": "(optional) Short note if this topic needs special attention",
-      "subtopics": [{ "name": "Subtopic Name" }]
+      "id": "m1",
+      "title": "Milestone Title",
+      "timeline": "Phase 1 / Months 1-3",
+      "description": "...",
+      "skills_to_gain": ["Skill 1"],
+      "sub_goals": [
+        { "title": "Sub Goal", "description": "..." }
+      ]
+    }
+  ],
+  "monthly_goals": [
+    {
+      "month": "Month 1",
+      "focus": "Focus Area",
+      "deliverables": ["Deliverable 1"]
+    }
+  ],
+  "weekly_focus": "The primary learning objective for this week",
+  "daily_tasks": [
+    {
+      "id": "task1",
+      "title": "Task Title",
+      "description": "Specific actionable item",
+      "milestone_id": "m1",
+      "completed": false
     }
   ]
 }
 
 Rules:
-1. Place the stuck topic FIRST with a detailed breakdown of its fundamentals.
-2. Review prerequisites of the stuck topic if needed.
-3. Remove subtopics the user has already completed (unless they are direct prerequisites).
-4. Keep the total roadmap focused — max 8 topics.
+1. Generate exactly 4 levels of detail (milestones, monthly, weekly, daily tasks).
+2. 'daily_tasks' must have 'milestone_id' matching one of the 'long_term_milestones' ids.
+3. Incorporate the user's specific answers into the learning path.
+4. Ensure 'completed' is false for all tasks.
 5. Do NOT include any text outside the JSON object.`;
 
-  const userPrompt = `The user is learning "${courseKey}" targeting "${companyType}" companies.
+  const userPrompt = `The user is building a roadmap for "${courseKey}" targeting "${companyType}" companies.
 
-STUCK AT:
-  Topic: "${stuckOnTopic}"
-  Subtopic: "${stuckOnSubtopic}"
-  Reason: "${stuckReason}"
+USER QUESTIONNAIRE ANSWERS:
+- Dream Job (next 2 years): ${answers.dream_job || 'Not provided'}
+- Primary Skill Gap: ${answers.skill_gap || 'Not provided'}
+- Hours/Week available: ${answers.hours_per_week || 'Not provided'}
+- Current Project: ${answers.current_project || 'Not provided'}
+- Improvement Area: ${answers.improvement_area || 'Not provided'}
 
-ALREADY COMPLETED:
-${completedList}
-
-BASE ROADMAP (for context):
-${baseRoadmapJson}
-
-Generate a personalized roadmap to help this user get unstuck and continue learning.`;
+Generate a highly personalized, actionable roadmap tailored exactly to these inputs.`;
 
   const payload = JSON.stringify({
     model: 'meta/llama-3.1-70b-instruct',
