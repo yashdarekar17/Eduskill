@@ -31,151 +31,90 @@ const COMPANY_TABS = [
   { id: 'faang', label: 'FAANG Companies', icon: Star },
 ];
 
-interface SubTopic { name: string; }
-interface Topic { name: string; subtopics: SubTopic[]; note?: string; }
+interface Topic { name: string; subtopics: { name: string }[]; note?: string; }
 
 // ===== ROADMAP DATA =====
 const roadmapData: Record<string, Record<string, Topic[]>> = {
-  // ========== WEB DEVELOPMENT ==========
   webdev: {
     startup: [
-      { name: 'HTML', subtopics: [{ name: 'Semantic Elements' }, { name: 'Forms & Inputs' }, { name: 'Tables & Lists' }, { name: 'Media Tags' }, { name: 'Accessibility Basics' }, { name: 'SEO Meta Tags' }] },
-      { name: 'CSS', subtopics: [{ name: 'Selectors & Specificity' }, { name: 'Box Model' }, { name: 'Flexbox' }, { name: 'Grid Layout' }, { name: 'Responsive Design' }] },
-      { name: 'JavaScript', subtopics: [{ name: 'Variables & Data Types' }, { name: 'Functions & Scope' }, { name: 'DOM Manipulation' }, { name: 'Event Handling' }, { name: 'ES6+ Features' }, { name: 'Async/Await & Promises' }, { name: 'Error Handling' }] },
-      { name: 'React', subtopics: [{ name: 'Components & JSX' }, { name: 'State & Props' }, { name: 'Hooks (useState, useEffect)' }, { name: 'Routing Basics' }] },
-      { name: 'Git/GitHub', subtopics: [{ name: 'Init, Add, Commit' }, { name: 'Branching & Merging' }, { name: 'Pull Requests' }, { name: 'Resolving Conflicts' }, { name: 'GitHub Actions Intro' }, { name: 'Collaborative Workflows' }] },
-      { name: 'Basic SEO Principles', subtopics: [{ name: 'Title & Meta Tags' }, { name: 'Heading Hierarchy' }, { name: 'Image Optimization' }, { name: 'Sitemap & Robots.txt' }, { name: 'Core Web Vitals' }] },
-      { name: 'Backend Essentials', subtopics: [{ name: 'Node.js Basics' }, { name: 'Express.js Setup' }, { name: 'REST API Design' }, { name: 'MongoDB/PostgreSQL Basics' }, { name: 'Authentication Basics' }] },
+      { name: 'Modern HTML/CSS', subtopics: [{ name: 'Tailwind CSS' }, { name: 'Semantic Markup' }, { name: 'Responsive Layouts' }] },
+      { name: 'JavaScript Mastery', subtopics: [{ name: 'ES6+ Features' }, { name: 'Promises/Async' }, { name: 'DOM Manipulation' }] },
+      { name: 'React Framework', subtopics: [{ name: 'Hooks' }, { name: 'Context API' }, { name: 'Component Patterns' }] },
+      { name: 'Deployment', subtopics: [{ name: 'Vercel/Netlify' }, { name: 'Git Workflow' }, { name: 'CI/CD Basics' }] },
     ],
     service: [
-      { name: 'HTML', subtopics: [{ name: 'Semantic Elements' }, { name: 'Forms & Inputs' }, { name: 'Tables & Lists' }, { name: 'Media Tags' }, { name: 'Accessibility Basics' }, { name: 'SEO Meta Tags' }] },
-      { name: 'CSS', subtopics: [{ name: 'Selectors & Specificity' }, { name: 'Box Model' }, { name: 'Flexbox' }, { name: 'Grid Layout' }, { name: 'Responsive Design' }, { name: 'CSS Preprocessors (SASS)' }] },
-      { name: 'JavaScript', subtopics: [{ name: 'Variables & Data Types' }, { name: 'Functions & Scope' }, { name: 'DOM Manipulation' }, { name: 'Event Handling' }, { name: 'ES6+ Features' }, { name: 'Async/Await & Promises' }, { name: 'Error Handling' }] },
-      { name: 'TypeScript', subtopics: [{ name: 'Types & Interfaces' }, { name: 'Generics' }, { name: 'Type Guards' }, { name: 'Module System' }, { name: 'tsconfig Setup' }] },
-      { name: 'React', subtopics: [{ name: 'Components & JSX' }, { name: 'State & Props' }, { name: 'Hooks (useState, useEffect)' }, { name: 'Context API' }, { name: 'React Router' }] },
-      { name: 'REST APIs', subtopics: [{ name: 'HTTP Methods' }, { name: 'Status Codes' }, { name: 'Request/Response Cycle' }, { name: 'Authentication Headers' }] },
-      { name: 'SQL & Databases', subtopics: [{ name: 'SELECT/INSERT/UPDATE/DELETE' }, { name: 'JOINs' }, { name: 'Indexes' }, { name: 'Normalization' }, { name: 'ORM Basics (Sequelize/Prisma)' }] },
-      { name: 'Testing', subtopics: [{ name: 'Unit Testing (Jest)' }, { name: 'Integration Tests' }, { name: 'E2E Testing Basics' }, { name: 'Test Coverage' }] },
-      { name: 'Agile & Scrum', subtopics: [{ name: 'Sprint Planning' }, { name: 'Daily Standups' }, { name: 'Retrospectives' }] },
+      { name: 'Enterprise Foundations', subtopics: [{ name: 'Angular or Vue.js' }, { name: 'TypeScript Mastery' }, { name: 'SASS/SCSS' }] },
+      { name: 'Backend Integration', subtopics: [{ name: 'Java/Node REST APIs' }, { name: 'Microservices Basics' }, { name: 'SQL/NoSQL' }] },
+      { name: 'Testing Standards', subtopics: [{ name: 'Unit Testing (Jest)' }, { name: 'Manual QA' }, { name: 'Documentation' }] },
+      { name: 'Project Management', subtopics: [{ name: 'Agile/Scrum' }, { name: 'Jira Basics' }, { name: 'Client Communication' }] },
     ],
     product: [
-      { name: 'HTML & CSS Mastery', subtopics: [{ name: 'Advanced Layouts' }, { name: 'CSS Animations & Transitions' }, { name: 'BEM Methodology' }, { name: 'Responsive + Adaptive Design' }, { name: 'Accessibility (WCAG)' }] },
-      { name: 'JavaScript Advanced', subtopics: [{ name: 'Closures & Prototypes' }, { name: 'Event Loop & Concurrency' }, { name: 'Design Patterns' }, { name: 'Memory Management' }, { name: 'Web Workers' }, { name: 'Service Workers' }] },
-      { name: 'TypeScript', subtopics: [{ name: 'Types & Interfaces' }, { name: 'Generics' }, { name: 'Utility Types' }, { name: 'Decorators' }, { name: 'Advanced Patterns' }] },
-      { name: 'React Advanced', subtopics: [{ name: 'Performance Optimization' }, { name: 'Custom Hooks' }, { name: 'State Management (Redux/Zustand)' }, { name: 'Server Components' }, { name: 'Suspense & Error Boundaries' }, { name: 'Testing React Components' }] },
-      { name: 'System Design Basics', subtopics: [{ name: 'Client-Server Architecture' }, { name: 'Load Balancing' }, { name: 'Caching Strategies' }, { name: 'CDN & Edge' }, { name: 'Database Scaling' }, { name: 'Microservices Intro' }] },
-      { name: 'Performance Optimization', subtopics: [{ name: 'Lighthouse Audits' }, { name: 'Code Splitting' }, { name: 'Lazy Loading' }, { name: 'Image Optimization' }, { name: 'Bundle Analysis' }] },
-      { name: 'CI/CD & DevOps', subtopics: [{ name: 'GitHub Actions' }, { name: 'Docker Basics' }, { name: 'Deployment Pipelines' }, { name: 'Monitoring & Logging' }] },
-      { name: 'Security', subtopics: [{ name: 'XSS Prevention' }, { name: 'CSRF Protection' }, { name: 'CORS' }, { name: 'Content Security Policy' }] },
-      { name: 'DSA Fundamentals', subtopics: [{ name: 'Arrays & Strings' }, { name: 'Linked Lists' }, { name: 'Stacks & Queues' }, { name: 'Trees & Graphs' }, { name: 'Hash Maps' }, { name: 'Sorting Algorithms' }, { name: 'Searching Algorithms' }, { name: 'Time/Space Complexity' }] },
+      { name: 'State Architecture', subtopics: [{ name: 'Redux Toolkit' }, { name: 'Zustand' }, { name: 'Immersive UI' }] },
+      { name: 'Performance Optimization', subtopics: [{ name: 'Next.js SSR/Static' }, { name: 'Code Splitting' }, { name: 'Asset Prefetching' }] },
+      { name: 'UX Engineering', subtopics: [{ name: 'Framer Motion' }, { name: 'Design Systems' }, { name: 'Accessibility (A11y)' }] },
+      { name: 'DevOps & Monitoring', subtopics: [{ name: 'Docker/K8s' }, { name: 'Sentry/Logging' }, { name: 'Analytics Integration' }] },
     ],
     faang: [
-      { name: 'Advanced DSA', subtopics: [{ name: 'Dynamic Programming' }, { name: 'Greedy Algorithms' }, { name: 'Graph Algorithms (BFS/DFS)' }, { name: 'Backtracking' }, { name: 'Sliding Window' }, { name: 'Two Pointers' }, { name: 'Trie & Segment Trees' }, { name: 'Topological Sort' }, { name: 'Bit Manipulation' }, { name: 'Competitive Problem Solving' }] },
-      { name: 'System Design', subtopics: [{ name: 'URL Shortener Design' }, { name: 'Chat System Design' }, { name: 'News Feed Design' }, { name: 'Rate Limiter' }, { name: 'Distributed Cache' }, { name: 'Database Sharding' }] },
-      { name: 'Low-Level Design', subtopics: [{ name: 'SOLID Principles' }, { name: 'Design Patterns (Factory, Observer, etc.)' }, { name: 'Class Diagrams' }, { name: 'Code Modularity' }, { name: 'API Design Best Practices' }] },
-      { name: 'High-Level Design', subtopics: [{ name: 'Scalable Architecture' }, { name: 'Event-Driven Systems' }, { name: 'Message Queues (Kafka, RabbitMQ)' }, { name: 'Microservices Patterns' }, { name: 'CAP Theorem & Trade-offs' }] },
-      { name: 'Frontend Architecture', subtopics: [{ name: 'Micro-Frontend Architecture' }, { name: 'Module Federation' }, { name: 'Build System Optimization' }, { name: 'State Machine (XState)' }, { name: 'Rendering Strategies (SSR, ISR, SSG)' }] },
-      { name: 'Behavioral & Communication', subtopics: [{ name: 'STAR Method' }, { name: 'Leadership Principles' }, { name: 'Conflict Resolution' }, { name: 'Project Impact Storytelling' }] },
-    ],
+      { name: 'Computer Science Core', subtopics: [{ name: 'Advanced DS/Algo' }, { name: 'Algorithm Efficiency' }, { name: 'System Design Patterns' }] },
+      { name: 'Browser Internals', subtopics: [{ name: 'Rendering Engines' }, { name: 'V8 Engine Optimization' }, { name: 'Network Protocols' }] },
+      { name: 'Scalable Architecture', subtopics: [{ name: 'Micro-Frontends' }, { name: 'Graph QL' }, { name: 'Edge Computing' }] },
+      { name: 'Reliability Engineering', subtopics: [{ name: 'Automated E2E Testing' }, { name: 'Security Audits' }, { name: 'Large Scale Deployments' }] },
+    ]
   },
-  // ========== APP DEVELOPMENT ==========
   appdev: {
     startup: [
-      { name: 'React Native Basics', subtopics: [{ name: 'Components (View, Text, Image)' }, { name: 'StyleSheet & Flexbox' }, { name: 'Expo Setup' }, { name: 'Hot Reloading' }, { name: 'Platform-Specific Code' }] },
-      { name: 'Navigation', subtopics: [{ name: 'Stack Navigator' }, { name: 'Tab Navigator' }, { name: 'Drawer Navigator' }, { name: 'Passing Params' }] },
-      { name: 'State & Data', subtopics: [{ name: 'useState & useEffect' }, { name: 'AsyncStorage' }, { name: 'Fetching APIs' }, { name: 'Form Handling' }] },
-      { name: 'UI/UX Basics', subtopics: [{ name: 'Custom Components' }, { name: 'Icons & Fonts' }, { name: 'Animations (Animated API)' }, { name: 'Responsive Layouts' }, { name: 'Dark Mode' }] },
-      { name: 'Publishing', subtopics: [{ name: 'EAS Build' }, { name: 'App Icons & Splash Screen' }, { name: 'Play Store Upload' }, { name: 'App Store Upload' }] },
+      { name: 'Mobile Fundamentals', subtopics: [{ name: 'React Native Basics' }, { name: 'Flutter Introduction' }, { name: 'App Lifecycle' }] },
+      { name: 'Fast Development', subtopics: [{ name: 'Firebase Integration' }, { name: 'Expo Workflow' }, { name: 'Rapid Prototyping' }] },
     ],
     service: [
-      { name: 'React Native Core', subtopics: [{ name: 'Components & Lifecycle' }, { name: 'StyleSheet & Flexbox' }, { name: 'Platform APIs' }, { name: 'Native Modules Basics' }, { name: 'Debugging Tools' }] },
-      { name: 'Navigation Advanced', subtopics: [{ name: 'Deep Linking' }, { name: 'Auth Flow Patterns' }, { name: 'Nested Navigators' }, { name: 'Custom Transitions' }] },
-      { name: 'State Management', subtopics: [{ name: 'Context API' }, { name: 'Redux Toolkit' }, { name: 'React Query' }, { name: 'Zustand' }] },
-      { name: 'API Integration', subtopics: [{ name: 'REST APIs with Axios' }, { name: 'Error Handling' }, { name: 'Token Management' }, { name: 'Offline Support' }] },
-      { name: 'Native Features', subtopics: [{ name: 'Camera & Image Picker' }, { name: 'Location Services' }, { name: 'Push Notifications' }, { name: 'Biometric Auth' }] },
-      { name: 'Testing', subtopics: [{ name: 'Jest for RN' }, { name: 'Component Testing' }, { name: 'E2E with Detox' }] },
+      { name: 'Native Integration', subtopics: [{ name: 'Swift Basics' }, { name: 'Kotlin Basics' }, { name: 'Native Modules' }] },
+      { name: 'Enterprise App Patterns', subtopics: [{ name: 'Offline Data Storage' }, { name: 'Enterprise Security' }, { name: 'Multi-lingual Apps' }] },
     ],
     product: [
-      { name: 'Architecture Patterns', subtopics: [{ name: 'MVVM Pattern' }, { name: 'Clean Architecture' }, { name: 'Modular App Structure' }, { name: 'Feature-Based Organization' }, { name: 'Dependency Injection' }] },
-      { name: 'Performance', subtopics: [{ name: 'FlatList Optimization' }, { name: 'Memoization (memo, useMemo)' }, { name: 'Image Caching' }, { name: 'Bundle Size Reduction' }, { name: 'Hermes Engine' }] },
-      { name: 'Advanced UI', subtopics: [{ name: 'Reanimated Library' }, { name: 'Gesture Handler' }, { name: 'Custom Animations' }, { name: 'Shared Element Transitions' }, { name: 'Skia Graphics' }] },
-      { name: 'CI/CD for Mobile', subtopics: [{ name: 'Fastlane Setup' }, { name: 'EAS Build Pipelines' }, { name: 'OTA Updates' }, { name: 'Beta Distribution' }] },
-      { name: 'Security', subtopics: [{ name: 'Secure Storage' }, { name: 'Certificate Pinning' }, { name: 'Code Obfuscation' }, { name: 'API Key Protection' }] },
-      { name: 'DSA for Interviews', subtopics: [{ name: 'Arrays & Strings' }, { name: 'Linked Lists' }, { name: 'Trees & Graphs' }, { name: 'Dynamic Programming Basics' }, { name: 'Time Complexity' }] },
+      { name: 'Experience Focused', subtopics: [{ name: 'Smooth Animations' }, { name: 'Push Notifications' }, { name: 'In-App Purchases' }] },
+      { name: 'Production Quality', subtopics: [{ name: 'Performance Tuning' }, { name: 'Memory Management' }, { name: 'Detailed Analytics' }] },
     ],
     faang: [
-      { name: 'Advanced DSA', subtopics: [{ name: 'Dynamic Programming' }, { name: 'Graph Algorithms' }, { name: 'Backtracking' }, { name: 'Sliding Window' }, { name: 'Trie & Advanced Trees' }, { name: 'Topological Sort' }, { name: 'Competitive Solving' }, { name: 'System Design Questions' }] },
-      { name: 'System Design (Mobile)', subtopics: [{ name: 'Offline-First Architecture' }, { name: 'Real-Time Sync' }, { name: 'Push Architecture' }, { name: 'Media Streaming' }, { name: 'Chat System Mobile' }] },
-      { name: 'Native Deep Dive', subtopics: [{ name: 'Bridge Architecture' }, { name: 'JSI & TurboModules' }, { name: 'Fabric Renderer' }, { name: 'Native Module Development' }] },
-      { name: 'Cross-Platform Strategy', subtopics: [{ name: 'RN vs Flutter Decision' }, { name: 'KMP (Kotlin Multiplatform)' }, { name: 'Web + Mobile Code Sharing' }, { name: 'Design System Unification' }] },
-      { name: 'Behavioral', subtopics: [{ name: 'STAR Method' }, { name: 'Leadership Principles' }, { name: 'Impact Storytelling' }, { name: 'Conflict Resolution' }] },
-    ],
+      { name: 'High-Level Architecture', subtopics: [{ name: 'Cross-platform Optimization' }, { name: 'Scalable Mobile Backends' }, { name: 'Advanced Concurrency' }] },
+      { name: 'Standard Compliance', subtopics: [{ name: 'Accessibility standards' }, { name: 'Security Encryption' }, { name: 'Deep System Integration' }] },
+    ]
   },
-  // ========== DATA SCIENCE ==========
   datascience: {
     startup: [
-      { name: 'Python Programming', subtopics: [{ name: 'Variables & Data Types' }, { name: 'Control Flow' }, { name: 'Functions' }, { name: 'File I/O' }, { name: 'List Comprehensions' }] },
-      { name: 'NumPy', subtopics: [{ name: 'Arrays & Operations' }, { name: 'Broadcasting' }, { name: 'Linear Algebra' }, { name: 'Random Module' }] },
-      { name: 'Pandas', subtopics: [{ name: 'DataFrames & Series' }, { name: 'Reading CSV/Excel' }, { name: 'Filtering & Grouping' }, { name: 'Merge & Join' }, { name: 'Missing Data' }] },
-      { name: 'Data Visualization', subtopics: [{ name: 'Matplotlib Basics' }, { name: 'Seaborn Plots' }, { name: 'Bar/Line/Scatter Charts' }, { name: 'Heatmaps' }] },
-      { name: 'SQL Basics', subtopics: [{ name: 'SELECT & WHERE' }, { name: 'JOINs' }, { name: 'GROUP BY' }, { name: 'Subqueries' }, { name: 'Window Functions' }] },
-      { name: 'Excel & Google Sheets', subtopics: [{ name: 'VLOOKUP/XLOOKUP' }, { name: 'Pivot Tables' }, { name: 'Charts & Dashboards' }] },
+      { name: 'Data Essentials', subtopics: [{ name: 'Python for Data' }, { name: 'Pandas/Numpy' }, { name: 'Basic ETL' }] },
+      { name: 'Insights Generation', subtopics: [{ name: 'Visual Dashboards' }, { name: 'Exploratory Analysis' }, { name: 'Reporting' }] },
     ],
     service: [
-      { name: 'Python Advanced', subtopics: [{ name: 'OOP in Python' }, { name: 'Decorators & Generators' }, { name: 'Error Handling' }, { name: 'Virtual Environments' }, { name: 'Package Management' }] },
-      { name: 'Statistics', subtopics: [{ name: 'Descriptive Stats' }, { name: 'Probability Distributions' }, { name: 'Hypothesis Testing' }, { name: 'Confidence Intervals' }, { name: 'A/B Testing' }] },
-      { name: 'Data Cleaning', subtopics: [{ name: 'Handling Missing Values' }, { name: 'Outlier Detection' }, { name: 'Data Type Conversion' }, { name: 'String Cleaning (Regex)' }] },
-      { name: 'EDA Techniques', subtopics: [{ name: 'Univariate Analysis' }, { name: 'Bivariate Analysis' }, { name: 'Correlation Analysis' }, { name: 'Feature Distributions' }, { name: 'Automated EDA Tools' }] },
-      { name: 'ML Basics', subtopics: [{ name: 'Linear Regression' }, { name: 'Logistic Regression' }, { name: 'Decision Trees' }, { name: 'Model Evaluation Metrics' }] },
-      { name: 'BI Tools', subtopics: [{ name: 'Power BI Basics' }, { name: 'Tableau Basics' }, { name: 'Dashboard Design' }] },
+      { name: 'Structured Pipelines', subtopics: [{ name: 'SQL Databases' }, { name: 'Data Cleaning' }, { name: 'Statistical Testing' }] },
+      { name: 'Deployment Focus', subtopics: [{ name: 'Power BI / Tableau' }, { name: 'BigQuery / Snowflake' }, { name: 'Cloud Basics' }] },
     ],
     product: [
-      { name: 'Advanced ML', subtopics: [{ name: 'Random Forest & Boosting' }, { name: 'SVM' }, { name: 'Clustering (K-Means, DBSCAN)' }, { name: 'Dimensionality Reduction (PCA)' }, { name: 'Feature Engineering' }, { name: 'Cross-Validation' }] },
-      { name: 'Deep Learning Basics', subtopics: [{ name: 'Neural Network Architecture' }, { name: 'Activation Functions' }, { name: 'Backpropagation' }, { name: 'TensorFlow/Keras Intro' }, { name: 'CNNs for Images' }] },
-      { name: 'NLP Foundations', subtopics: [{ name: 'Text Preprocessing' }, { name: 'TF-IDF' }, { name: 'Word Embeddings' }, { name: 'Sentiment Analysis' }] },
-      { name: 'Big Data Tools', subtopics: [{ name: 'PySpark' }, { name: 'Hadoop Concepts' }, { name: 'Data Warehousing' }, { name: 'ETL Pipelines' }] },
-      { name: 'DSA for Interviews', subtopics: [{ name: 'Arrays & Strings' }, { name: 'Hash Maps' }, { name: 'Sorting & Searching' }, { name: 'Trees' }, { name: 'Dynamic Programming Basics' }] },
+      { name: 'Feature Engineering', subtopics: [{ name: 'Advanced Selection' }, { name: 'Dimensionality Reduction' }, { name: 'A/B Testing' }] },
+      { name: 'Production Data', subtopics: [{ name: 'Real-time Streaming' }, { name: 'Airflow Orchestration' }, { name: 'Scalable ETL' }] },
     ],
     faang: [
-      { name: 'Advanced DSA', subtopics: [{ name: 'Dynamic Programming' }, { name: 'Graph Algorithms' }, { name: 'Greedy Algorithms' }, { name: 'Backtracking' }, { name: 'Advanced Trees' }, { name: 'Competitive Problem Solving' }] },
-      { name: 'ML System Design', subtopics: [{ name: 'Recommendation Systems' }, { name: 'Search Ranking' }, { name: 'Fraud Detection Pipeline' }, { name: 'A/B Testing at Scale' }, { name: 'Feature Store Design' }] },
-      { name: 'Advanced Deep Learning', subtopics: [{ name: 'Transformers & Attention' }, { name: 'GANs' }, { name: 'Reinforcement Learning' }, { name: 'Transfer Learning' }, { name: 'Model Optimization' }] },
-      { name: 'MLOps', subtopics: [{ name: 'Model Versioning (MLflow)' }, { name: 'Model Monitoring' }, { name: 'CI/CD for ML' }, { name: 'Containerized Deployment' }, { name: 'Cloud ML Services (AWS/GCP)' }] },
-      { name: 'Behavioral', subtopics: [{ name: 'STAR Method' }, { name: 'Impact Quantification' }, { name: 'Cross-Team Collaboration' }, { name: 'Technical Communication' }] },
-    ],
+      { name: 'Research & Scale', subtopics: [{ name: 'Advanced Analytics' }, { name: 'Research Methodologies' }, { name: 'Petabyte-scale Processing' }] },
+      { name: 'System Design', subtopics: [{ name: 'Distributed Systems' }, { name: 'Algorithmic Fairness' }, { name: 'Strategic Decisioning' }] },
+    ]
   },
-  // ========== MACHINE LEARNING ==========
   ml: {
     startup: [
-      { name: 'Python for ML', subtopics: [{ name: 'NumPy & Pandas' }, { name: 'Matplotlib & Seaborn' }, { name: 'Scikit-learn Basics' }, { name: 'Jupyter Environment' }] },
-      { name: 'Math Foundations', subtopics: [{ name: 'Linear Algebra' }, { name: 'Calculus (Gradients)' }, { name: 'Probability & Statistics' }, { name: 'Optimization Basics' }] },
-      { name: 'Supervised Learning', subtopics: [{ name: 'Linear Regression' }, { name: 'Logistic Regression' }, { name: 'Decision Trees' }, { name: 'KNN' }, { name: 'Model Evaluation' }] },
-      { name: 'Unsupervised Learning', subtopics: [{ name: 'K-Means Clustering' }, { name: 'Hierarchical Clustering' }, { name: 'PCA' }, { name: 'Anomaly Detection' }] },
-      { name: 'Projects', subtopics: [{ name: 'House Price Prediction' }, { name: 'Customer Segmentation' }, { name: 'Spam Classifier' }] },
+      { name: 'ML Basics', subtopics: [{ name: 'Scikit-Learn' }, { name: 'Regression/Classification' }, { name: 'Model Evaluation' }] },
+      { name: 'Applied AI', subtopics: [{ name: 'OpenAI API' }, { name: 'Simple HuggingFace' }, { name: 'API Wrappers' }] },
     ],
     service: [
-      { name: 'Advanced Supervised', subtopics: [{ name: 'Random Forest' }, { name: 'Gradient Boosting (XGBoost)' }, { name: 'SVM' }, { name: 'Naive Bayes' }, { name: 'Ensemble Methods' }] },
-      { name: 'Feature Engineering', subtopics: [{ name: 'Feature Scaling' }, { name: 'Encoding Categorical Data' }, { name: 'Feature Selection' }, { name: 'Handling Imbalanced Data' }] },
-      { name: 'Model Optimization', subtopics: [{ name: 'Hyperparameter Tuning' }, { name: 'Grid/Random Search' }, { name: 'Cross-Validation' }, { name: 'Pipeline Construction' }] },
-      { name: 'Deep Learning Intro', subtopics: [{ name: 'Neural Network Architecture' }, { name: 'Activation Functions' }, { name: 'Loss Functions' }, { name: 'Optimizers (SGD, Adam)' }, { name: 'TensorFlow/Keras' }] },
-      { name: 'NLP Basics', subtopics: [{ name: 'Text Preprocessing' }, { name: 'Bag of Words / TF-IDF' }, { name: 'Word Embeddings (Word2Vec)' }, { name: 'Sentiment Analysis' }] },
-      { name: 'Deployment', subtopics: [{ name: 'Flask/FastAPI for ML' }, { name: 'Model Serialization (Pickle)' }, { name: 'Docker Basics' }] },
+      { name: 'Classical Models', subtopics: [{ name: 'Model Refinement' }, { name: 'Pipeline Integration' }, { name: 'Custom Visualizations' }] },
+      { name: 'Client Implementations', subtopics: [{ name: 'Edge AI Basics' }, { name: 'Cost Optimization' }, { name: 'Client Dashboards' }] },
     ],
     product: [
-      { name: 'Advanced Deep Learning', subtopics: [{ name: 'CNNs for Computer Vision' }, { name: 'RNNs & LSTMs' }, { name: 'Transfer Learning' }, { name: 'Image Classification' }, { name: 'Object Detection (YOLO)' }] },
-      { name: 'NLP Advanced', subtopics: [{ name: 'Seq2Seq Models' }, { name: 'Attention Mechanism' }, { name: 'BERT & Transformers' }, { name: 'Text Generation' }, { name: 'Named Entity Recognition' }] },
-      { name: 'Recommendation Systems', subtopics: [{ name: 'Collaborative Filtering' }, { name: 'Content-Based Filtering' }, { name: 'Matrix Factorization' }, { name: 'Hybrid Approaches' }] },
-      { name: 'MLOps Basics', subtopics: [{ name: 'Experiment Tracking (MLflow)' }, { name: 'Model Registry' }, { name: 'Automated Pipelines' }, { name: 'A/B Testing Models' }] },
-      { name: 'DSA for Interviews', subtopics: [{ name: 'Arrays & Hash Maps' }, { name: 'Trees & Graphs' }, { name: 'Dynamic Programming' }, { name: 'Sorting Algorithms' }, { name: 'Time Complexity' }] },
+      { name: 'Deep Learning', subtopics: [{ name: 'Neural Networks' }, { name: 'TensorFlow/PyTorch' }, { name: 'Fine-tuning Models' }] },
+      { name: 'MLOps', subtopics: [{ name: 'Model Versioning' }, { name: 'Continuous Training' }, { name: 'Monitoring drift' }] },
     ],
     faang: [
-      { name: 'Advanced DSA', subtopics: [{ name: 'Dynamic Programming Mastery' }, { name: 'Graph Algorithms (Dijkstra, A*)' }, { name: 'Advanced Trees (Red-Black, AVL)' }, { name: 'Trie & Suffix Trees' }, { name: 'Bit Manipulation' }, { name: 'Competitive Problem Solving' }] },
-      { name: 'ML System Design', subtopics: [{ name: 'Recommendation Engine at Scale' }, { name: 'Search Ranking System' }, { name: 'Ads Click Prediction' }, { name: 'Real-Time Fraud Detection' }, { name: 'Self-Driving Perception Pipeline' }] },
-      { name: 'Research-Level ML', subtopics: [{ name: 'GANs & VAEs' }, { name: 'Reinforcement Learning' }, { name: 'Graph Neural Networks' }, { name: 'Self-Supervised Learning' }, { name: 'Diffusion Models' }] },
-      { name: 'Production ML', subtopics: [{ name: 'Model Serving (TFServing, TorchServe)' }, { name: 'Feature Store Design' }, { name: 'Model Monitoring & Drift' }, { name: 'Distributed Training (Horovod)' }, { name: 'Cloud ML (SageMaker, Vertex AI)' }] },
-      { name: 'Behavioral', subtopics: [{ name: 'STAR Method' }, { name: 'Research Impact Communication' }, { name: 'Cross-Functional Leadership' }, { name: 'Technical Mentorship' }] },
-    ],
-  },
+      { name: 'Core Innovation', subtopics: [{ name: 'Transformers & LLMs' }, { name: 'Computer Vision Core' }, { name: 'Reinforcement Learning' }] },
+      { name: 'Large Scale Inference', subtopics: [{ name: 'High-Throughput APIs' }, { name: 'Custom Hardware (TPU)' }, { name: 'Security in AI' }] },
+    ]
+  }
 };
 
 const COURSE_ID_MAP: Record<number, string> = {
@@ -189,7 +128,6 @@ interface CompanyRoadmapProps {
   courseId?: number;
 }
 
-// ===== MAIN COMPONENT =====
 export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
   const router = useRouter();
   const fixedCourse = courseId ? COURSE_ID_MAP[courseId] : undefined;
@@ -199,14 +137,13 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
   const [togglingKeys, setTogglingKeys] = useState<Set<string>>(new Set());
 
-  // Fetch regular progress
   const fetchProgress = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
       const res = await api.getRoadmapProgress(activeCourse, activeTab, token);
       if (res.success) setCompletedSet(new Set(res.completedKeys));
-    } catch { /* not logged in */ }
+    } catch { /* ignored */ }
   }, [activeCourse, activeTab]);
 
   useEffect(() => { fetchProgress(); }, [fetchProgress]);
@@ -242,7 +179,7 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
       }, token);
     } catch (error: any) {
       alert(`Failed to save progress: ${error.message || 'Server error'}`);
-      setCompletedSet(prev => {
+       setCompletedSet(prev => {
         const next = new Set(prev);
         if (next.has(key)) { next.delete(key); } else { next.add(key); }
         return next;
@@ -260,31 +197,21 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
     return done;
   };
 
-  const topics = roadmapData[activeCourse]?.[activeTab] || [];
+  const topics = (roadmapData[activeCourse] && roadmapData[activeCourse][activeTab]) || [];
 
   return (
     <div className="w-full">
-      {/* Header — only show if no courseId (standalone mode) */}
+      {/* Course Pills */}
       {!fixedCourse && (
-        <div className="text-center space-y-4 mb-10">
-          <h2 className="text-5xl md:text-6xl font-extrabold">Roadmaps</h2>
-          <p className="font-semibold text-gray-600 text-lg">
-            Structured learning paths tailored for different company types
-          </p>
-        </div>
-      )}
-
-      {/* Course Selector Pills — only show if no courseId */}
-      {!fixedCourse && (
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
           {COURSES.map(course => (
             <button
               key={course.id}
               onClick={() => { setActiveCourse(course.id); setExpandedTopics(new Set()); }}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm md:text-base transition-all duration-300 ${
+              className={`h-[50px] px-8 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 ${
                 activeCourse === course.id
-                  ? 'bg-[#FF6643] text-white shadow-lg shadow-[#FF6643]/30 scale-105'
-                  : 'bg-white text-gray-700 border border-gray-200 hover:border-[#FF6643]/50 hover:text-[#FF6643]'
+                  ? 'bg-black text-white shadow-lg'
+                  : 'bg-white text-black/40 border-2 border-transparent hover:border-black/5'
               }`}
             >
               {course.label}
@@ -293,24 +220,25 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
         </div>
       )}
 
-      {/* Main Card */}
-      <div className="">
-        {/* Company Type Tabs */}
-        <div className="border-b border-gray-100 overflow-x-auto">
+      {/* Interface Container */}
+      <div className="overflow-hidden">
+        {/* Tier Tabs */}
+        <div className="border-b border-gray-100 flex overflow-x-auto">
           <div className="flex min-w-max">
             {COMPANY_TABS.map(tab => {
               const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => { setActiveTab(tab.id); setExpandedTopics(new Set()); }}
-                  className={`flex items-center gap-2 px-5 md:px-8 py-4 font-semibold text-sm md:text-base transition-all border-b-3 whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? 'text-[#FF6643] border-b-[3px] border-[#FF6643] bg-orange-50/50'
-                      : 'text-gray-500 border-b-[3px] border-transparent hover:text-gray-700 hover:bg-gray-50/50'
+                  className={`flex items-center gap-3 px-6 md:px-8 py-6 font-bold text-xs uppercase tracking-widest transition-all border-b-2 ${
+                    isActive
+                      ? 'text-black border-black'
+                      : 'text-black/30 border-transparent hover:text-black/60'
                   }`}
                 >
-                  <Icon size={18} />
+                  <Icon size={16} className={isActive ? 'text-black' : 'text-black/20'} />
                   {tab.label}
                 </button>
               );
@@ -318,76 +246,90 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
           </div>
         </div>
 
-        {/* Regular Topics List (Startup / Service / Product / FAANG) */}
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="p-4 md:p-6 space-y-3">
-          {topics.map((topic, idx) => {
-            const isExpanded = expandedTopics.has(topic.name);
-            const count = topic.subtopics.length;
-            const done = getTopicProgress(topic);
-            const pct = count > 0 ? Math.round((done / count) * 100) : 0;
+        {/* Roadmap Nodes */}
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="py-8 space-y-3">
+          {topics.length > 0 ? (
+            topics.map((topic, idx) => {
+              const isExpanded = expandedTopics.has(topic.name);
+              const count = topic.subtopics.length;
+              const done = getTopicProgress(topic);
+              const isTopicComplete = done === count && count > 0;
+              const pct = count > 0 ? Math.round((done / count) * 100) : 0;
 
-            return (
-              <motion.div
-                variants={itemVariants}
-                key={`${activeTab}-${topic.name}`}
-                className="rounded-2xl border border-gray-100 overflow-hidden transition-all hover:border-orange-200"
-              >
-                <button
-                  onClick={() => toggleTopic(topic.name)}
-                  className="w-full flex items-center justify-between px-5 md:px-6 py-4 bg-gradient-to-r from-gray-50 to-white hover:from-orange-50/30 hover:to-white transition-all"
+              return (
+                <motion.div
+                  variants={itemVariants}
+                  key={`${activeTab}-${topic.name}`}
+                  className={`rounded-[24px] border transition-all ${
+                    isExpanded ? 'border-gray-200 bg-gray-50/30' : 'border-gray-50 bg-[#FBFBFB] hover:border-gray-200'
+                  }`}
                 >
-                  <span className="font-bold text-gray-800 text-base md:text-lg text-left">{topic.name}</span>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm font-semibold ${done === count && count > 0 ? 'text-green-500' : 'text-gray-400'}`}>{done}/{count}</span>
-                      <div className="w-24 md:w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full transition-all duration-500 ${done === count && count > 0 ? 'bg-green-500' : 'bg-[#FF6643]'}`} style={{ width: `${pct}%` }} />
+                  <button
+                    onClick={() => toggleTopic(topic.name)}
+                    className="w-full flex items-center justify-between px-6 py-5 text-left group"
+                  >
+                    <div className="flex items-center gap-5">
+                       <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[10px] transition-all ${
+                          isTopicComplete ? 'bg-black text-white' : 'bg-white text-black/20 border-2 border-gray-50 group-hover:border-black/10'
+                       }`}>
+                          {isTopicComplete ? '✓' : idx + 1}
+                       </div>
+                       <span className={`font-bold text-lg uppercase tracking-tight transition-colors ${isExpanded ? 'text-black' : 'text-black/40 group-hover:text-black'}`}>
+                          {topic.name}
+                       </span>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                      <div className="hidden md:flex flex-col items-end opacity-40">
+                         <div className="w-20 h-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-black transition-all duration-500" style={{ width: `${pct}%` }} />
+                         </div>
                       </div>
+                      <ChevronDown size={20} className={`transition-transform duration-500 ${isExpanded ? 'rotate-180 text-black' : 'text-black/10'}`} />
                     </div>
-                    <div className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
-                      <ChevronDown size={20} className="text-gray-400" />
-                    </div>
-                  </div>
-                </button>
+                  </button>
 
-                {isExpanded && (
-                  <div className="px-5 md:px-6 pb-4 bg-white border-t border-gray-50">
-                    <div className="grid gap-2 pt-3">
-                      {topic.subtopics.map((sub, sIdx) => {
-                        const subKey = `${topic.name}::${sub.name}`;
-                        const isCompleted = completedSet.has(subKey);
-                        const isToggling = togglingKeys.has(subKey);
+                  {isExpanded && (
+                    <div className="px-6 pb-6 mt-1 flex flex-col gap-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="grid md:grid-cols-2 gap-2">
+                        {topic.subtopics.map((sub, sIdx) => {
+                          const subKey = `${topic.name}::${sub.name}`;
+                          const isCompleted = completedSet.has(subKey);
+                          const isToggling = togglingKeys.has(subKey);
 
-                        return (
-                          <div
-                            key={sIdx}
-                            className="relative"
-                          >
+                          return (
                             <button
+                              key={sIdx}
                               onClick={() => handleSubtopicClick(topic.name, sub.name)}
                               disabled={isToggling}
-                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group text-left ${
-                                isCompleted ? 'bg-green-50 hover:bg-green-100/70' : 'bg-gray-50 hover:bg-orange-50/50'
-                              } ${isToggling ? 'opacity-60' : ''}`}
+                              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all border-2 text-left ${
+                                isCompleted 
+                                  ? 'bg-black border-black text-white' 
+                                  : 'bg-white border-transparent text-black/30 hover:border-black/5 hover:text-black'
+                              } ${isToggling ? 'opacity-50' : ''}`}
                             >
-                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                                isCompleted ? 'bg-green-500 border-green-500' : 'border-gray-300 group-hover:border-[#FF6643]'
+                              <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
+                                isCompleted ? 'bg-white border-white' : 'bg-black/5 border-transparent'
                               }`}>
-                                {isCompleted && <Check size={12} className="text-white" strokeWidth={3} />}
+                                {isCompleted && <Check size={10} className="text-black" strokeWidth={4} />}
                               </div>
-                              <span className={`text-sm md:text-base font-medium ${isCompleted ? 'text-green-700' : 'text-gray-700'}`}>
+                              <span className="font-bold text-xs uppercase tracking-tight">
                                 {sub.name}
                               </span>
                             </button>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </motion.div>
-            );
-          })}
+                  )}
+                </motion.div>
+              );
+            })
+          ) : (
+            <div className="py-20 text-center">
+               <p className="text-black/20 font-bold uppercase tracking-widest text-xs">Curriculum syncing in progress...</p>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

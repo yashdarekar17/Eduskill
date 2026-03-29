@@ -37,45 +37,45 @@ export default function Sidebar({ phases, completedModuleIds, activeModuleId }: 
     };
 
     return (
-        <nav className="bg-white/80 backdrop-blur-md rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-gray-100">
-                <h3 className="font-bold text-gray-800 text-lg">Course Phases</h3>
+        <nav className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-gray-50">
+                <h3 className="font-black text-black text-sm uppercase tracking-widest">Course Directory</h3>
             </div>
-            <div className="p-3 space-y-1">
+            <div className="p-4 space-y-2">
                 {phases.map((phase) => {
                     const phaseCompleted = phase.modules.length > 0 && phase.modules.every((m) => completedModuleIds.has(m.id));
                     const phasePartial = phase.modules.some((m) => completedModuleIds.has(m.id));
                     const isExpanded = expandedPhases.has(phase.id);
 
                     return (
-                        <div key={phase.id}>
+                        <div key={phase.id} className="mb-2">
                             <button
                                 onClick={() => togglePhase(phase.id)}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-orange-50 transition-colors text-left"
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-gray-50 transition-all text-left group"
                             >
                                 <span
-                                    className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${phaseCompleted
-                                            ? 'bg-green-500 text-white'
+                                    className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black tracking-tighter transition-colors ${phaseCompleted
+                                            ? 'bg-black text-white'
                                             : phasePartial
-                                                ? 'bg-orange-400 text-white'
-                                                : 'bg-gray-200 text-gray-500'
+                                                ? 'bg-gray-800 text-white'
+                                                : 'bg-gray-100 text-gray-400'
                                         }`}
                                 >
                                     {phaseCompleted ? '✓' : phase.phase_order}
                                 </span>
-                                <span className="flex-1 font-semibold text-sm text-gray-700">{phase.title}</span>
+                                <span className="flex-1 font-bold text-sm text-black/70 group-hover:text-black transition-colors">{phase.title}</span>
                                 <svg
-                                    className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                    className={`w-4 h-4 text-gray-300 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
 
                             {isExpanded && (
-                                <div className="ml-6 pl-4 border-l-2 border-gray-100 space-y-0.5 pb-2">
+                                <div className="mt-1 space-y-1">
                                     {phase.modules.map((mod) => {
                                         const isCompleted = completedModuleIds.has(mod.id);
                                         const isActive = activeModuleId === mod.id;
@@ -83,19 +83,19 @@ export default function Sidebar({ phases, completedModuleIds, activeModuleId }: 
                                             <Link
                                                 key={mod.id}
                                                 href={`/modules/${mod.id}`}
-                                                className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all ${isActive
-                                                        ? 'bg-[#FF6643] text-white font-semibold'
+                                                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all ${isActive
+                                                        ? 'bg-black text-white font-black'
                                                         : isCompleted
-                                                            ? 'text-green-700 hover:bg-green-50'
-                                                            : 'text-gray-600 hover:bg-gray-50'
+                                                            ? 'text-black/40 hover:text-black hover:bg-gray-50'
+                                                            : 'text-gray-400 hover:text-black hover:bg-gray-50'
                                                     }`}
                                             >
-                                                {isCompleted && !isActive ? (
-                                                    <span className="text-green-500 text-base">✓</span>
+                                                {isCompleted ? (
+                                                    <span className="text-black font-black">✓</span>
                                                 ) : (
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-current opacity-40" />
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-gray-300'}`} />
                                                 )}
-                                                <span>{mod.title}</span>
+                                                <span className="font-bold uppercase tracking-tight">{mod.title}</span>
                                             </Link>
                                         );
                                     })}

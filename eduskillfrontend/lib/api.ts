@@ -32,6 +32,42 @@ export const api = {
     return response.json();
   },
 
+  async googleAuth(token: string, intent?: string) {
+    const response = await fetch(`${API_BASE_URL}/Profile/google-auth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token, intent }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Google authentication failed");
+    }
+
+    return response.json();
+  },
+
+  async googleSignupComplete(data: any) {
+    const response = await fetch(`${API_BASE_URL}/Profile/google-signup-complete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Signup completion failed");
+    }
+
+    return response.json();
+  },
+
   async signup(data: SignupFormData) {
     const response = await fetch(`${API_BASE_URL}/Profile/signup`, {
       method: "POST",
@@ -211,6 +247,15 @@ export const api = {
       credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch started roadmaps");
+    return response.json();
+  },
+
+  async getProfile(token: string) {
+    const response = await fetch(`${API_BASE_URL}/Profile/profile`, {
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Failed to fetch profile");
     return response.json();
   },
 

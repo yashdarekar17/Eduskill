@@ -182,248 +182,283 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="bg-[#F9F9F9] min-h-screen font-sans selection:bg-black selection:text-white">
       <Header />
 
       {/* Hero Section */}
-      <motion.section
-        initial="hidden"
-        animate="visible"
-        variants={fadeInUp}
-        className="max-w-[85vw] mx-auto py-16 flex flex-col lg:flex-row items-center justify-between gap-12"
-      >
-        <div className="flex-1 space-y-4">
-          <div className="text-[#FF6643] font-semibold text-[30px]">
-            INTRODUCING INTERACTIVE
-          </div>
-          <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-            Learning courses by AI chatbots.
-          </h1>
-          <div className="text-3xl font-semibold">
-            Learn <span className="text-[#FF6643]">{text}</span>
-          </div>
-        </div>
-        <div className="flex-1">
-          <Image
-            src="/assets/code.png"
-            alt="Hero"
-            width={500}
-            height={500}
-            className="w-full max-w-lg mx-auto"
-          />
-        </div>
-      </motion.section>
+      <section className="relative pt-30 pb-20 overflow-hidden flex flex-col items-center justify-center text-center px-4">
+        {/* Faint Grid Texture */}
+        <div className="absolute inset-0 tutorly-grid opacity-30 z-0"></div>
 
-      {/* Features Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={fadeInUp}
-        className="max-w-[85vw] mx-auto my-20 bg-[#f4f4f4] rounded-[20px] overflow-hidden"
-      >
-        <header className="bg-[#FF6643] text-white p-6 text-center">
-          <h2 className="text-3xl font-bold">Our Program Features</h2>
-        </header>
-        <div className="p-8 space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm flex items-center gap-6">
-            <Image
-              src="/assets/bulb2.png"
-              alt="Icon"
-              width={48}
-              height={48}
-              className="w-12 h-12"
-            />
-            <div>
-              <h3 className="font-bold text-xl">Creative Thinking</h3>
-              <p className="text-gray-600">
-                Unlock your creative potential with our tailored workshops.
-              </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 max-w-5xl"
+        >
+          <div className="flex justify-center gap-3 mb-8">
+            <span className="px-5 py-2 bg-white border border-gray-200 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
+              NEW ERA OF EDTECH
+            </span>
+          </div>
+
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-black leading-[0.9] tracking-tighter mb-10">
+            BUILD SKILLS.<br />
+            <span className="text-black/20">NEW OPPORTUNITIES.</span>
+          </h1>
+
+          <div className="text-xl md:text-2xl font-bold text-black/60 mb-12 flex justify-center items-center gap-2">
+            Master <span className="text-black border-b-2 border-black inline-block min-w-[150px]">{text}</span>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link href="/#courses">
+              <button className="px-10 py-5 bg-black text-white rounded-full font-black uppercase tracking-widest hover:scale-105 transition-all shadow-2xl hover:bg-gray-800">
+                Explore Courses —
+              </button>
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* Floating Stat Pills (Hero Decorations) */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="hidden lg:block absolute left-[10%] top-[40%] bg-white p-4 rounded-3xl shadow-xl border border-gray-100 z-20"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex -space-x-2">
+              {[
+                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop"
+              ].map((url, i) => (
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 overflow-hidden">
+                  <img src={url} alt="User" className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+            <div className="text-left">
+              <div className="text-xs font-black uppercase leading-none">125k+</div>
+              <div className="text-[10px] font-bold text-black/40 uppercase">AI ROADMAP MAKER</div>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm flex items-center gap-6">
-            <Image
-              src="/assets/c1.png"
-              alt="Icon"
-              width={48}
-              height={48}
-              className="w-12 h-12"
-            />
-            <div>
-              <h3 className="font-bold text-xl">Career Planning</h3>
-              <p className="text-gray-600">
-                Plan your career path with expert guidance.
-              </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.7, duration: 1 }}
+          className="hidden lg:block absolute right-[12%] top-[35%] bg-white py-4 px-6 rounded-3xl shadow-xl border border-gray-100 z-20"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
+              <div className="w-4 h-4 bg-white rounded-full animate-pulse" />
+            </div>
+            <div className="text-left">
+              <div className="text-xs font-black uppercase mb-1">100+</div>
+              <div className="text-[10px] font-bold text-black/40 uppercase">AI EXPERTS</div>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm flex items-center gap-6">
+        </motion.div>
+      </section>
+
+      {/* Core Modules Bento Section */}
+      <section className="hidden md:block max-w-[95vw] mx-auto py-20 px-6">
+        <div className="mb-16">
+          <h2 className="text-6xl font-black text-black tracking-tighter mb-4">Core Modules.</h2>
+          <p className="text-xl text-black/40 font-bold max-w-2xl leading-relaxed">
+            Curated learning paths designed to accelerate your career through AI-enhanced mentorship and structured curriculum.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[600px]">
+          {/* Main Card */}
+          <div className="lg:col-span-7 group relative rounded-[40px] overflow-hidden bg-gray-100 shadow-xl transition-all hover:shadow-2xl">
             <Image
-              src="/assets/problem.jpeg"
-              alt="Icon"
-              width={48}
-              height={48}
-              className="w-12 h-12"
+              src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=1400&auto=format&fit=crop"
+              alt="Creative Thinking"
+              fill
+              className="object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-90 transition-all duration-700"
             />
-            <div>
-              <h3 className="font-bold text-xl">Problem Solving</h3>
-              <p className="text-gray-600">
-                Enhance skills through practical real-world challenges.
+            <div className="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-black/80 to-transparent">
+              <div className="flex gap-2 mb-6">
+                <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-black text-white uppercase tracking-widest">
+                  NEW MODULE
+                </span>
+                <span className="px-4 py-1.5 text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                  24 Lessons
+                </span>
+              </div>
+              <h3 className="text-4xl font-black text-white mb-4 uppercase tracking-tighter">Creative Thinking</h3>
+              <p className="max-w-md text-white/60 font-bold text-sm mb-8 uppercase leading-relaxed">
+                Master the art of divergent thinking and complex problem solving through design methodology.
               </p>
+              <button className="px-8 py-3 bg-white text-black rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">
+                Learn More
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column Cards */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className="flex-1 group relative rounded-[40px] overflow-hidden bg-gray-200">
+              <Image
+                src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop"
+                alt="Career Planning"
+                fill
+                className="object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+              />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
+              <div className="absolute inset-x-0 bottom-0 p-10 flex justify-between items-end text-white">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter mb-1">Career Planning</h3>
+                  <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.2em]">8-Week Roadmap</p>
+                </div>
+                <div className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center translate-x-4 group-hover:translate-x-0 transition-transform">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 group relative rounded-[40px] overflow-hidden bg-gray-900">
+              <Image
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop"
+                alt="Problem Solving"
+                fill
+                className="object-cover opacity-40 grayscale group-hover:opacity-60 group-hover:grayscale-0 transition-all duration-700"
+              />
+              <div className="absolute inset-x-0 bottom-0 p-10 flex justify-between items-end text-white">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter mb-1">Problem Solving</h3>
+                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Advanced Tactics</p>
+                </div>
+                <div className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center translate-x-4 group-hover:translate-x-0 transition-transform">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Courses Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeInUp}
-        id="courses"
-        className="max-w-[85vw] mx-auto py-12"
-      >
-        <h2 className="text-5xl font-extrabold mb-4">
-          Start learning with AI courses
-        </h2>
-        <p className="text-gray-500 mb-12">
-          even if you are not ready with paid courses, there are variety of
-          free Roadmaps are available for you
-        </p>
-        <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {courseData.map((course) => (
-            <motion.div variants={fadeInUp} key={course.id} className="group">
-              <div className="overflow-hidden rounded-[20px]">
+      <section id="courses" className="max-w-[95vw] mx-auto py-32 px-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div className="max-w-2xl">
+            <h2 className="text-5xl md:text-7xl font-black text-black leading-tight tracking-tighter">
+              START LEARNING<br />WITH AI MODULES.
+            </h2>
+          </div>
+          <div className="text-black/40 font-bold uppercase tracking-widest text-xs py-2 border-b-2 border-black/10">
+            Selected Programs (4)
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {courseData.slice(0, 4).map((course) => (
+            <div key={course.id} className="group relative">
+              <div className="aspect-[4/3] rounded-[40px] overflow-hidden bg-gray-100 mb-6 transition-all group-hover:shadow-2xl group-hover:-translate-y-2">
                 <Image
                   src={course.image}
                   alt={course.title}
-                  width={300}
-                  height={200}
-                  className="w-full transition duration-500 group-hover:scale-110 object-cover"
+                  width={400}
+                  height={300}
+                  className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700"
                 />
+                <div className="absolute inset-x-0 bottom-0 p-8 flex justify-end">
+                  <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="7" y1="17" x2="17" y2="7"></line>
+                      <polyline points="7 7 17 7 17 17"></polyline>
+                    </svg>
+                  </div>
+                </div>
               </div>
+              <h3 className="text-xl font-black text-black mb-4 uppercase tracking-tighter">{course.title}</h3>
               <Link href={course.link}>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className={getButtonStyle(course.id)}
-                >
-                  {getButtonLabel(course.id)}
-                </motion.button>
+                <button className={`w-full py-4 rounded-full font-bold uppercase tracking-widest text-[10px] transition-all border ${isLoggedIn && purchasedIds.includes(course.id)
+                  ? 'bg-transparent border-black text-black hover:bg-black hover:text-white'
+                  : 'bg-black text-white hover:bg-gray-800 border-black'
+                  }`}>
+                  {getButtonLabel(course.id)} —
+                </button>
               </Link>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
-      </motion.section>
-
-      {/* Roadmaps Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeInUp}
-        id="roadmaps"
-        className="max-w-[90vw] mx-auto py-20 px-8 my-20 bg-white/40 backdrop-blur-md rounded-[40px] border border-white shadow-xl shadow-gray-200/50"
-      >
-        <div className="text-center space-y-4 mb-12">
-          <h2 className="text-6xl font-extrabold">Roadmaps</h2>
-          <p className="font-semibold text-gray-700">
-            Here are the free roadmaps for you
-          </p>
         </div>
-        <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {roadmapData.map((roadmap) => (
-            <motion.div variants={fadeInUp} key={roadmap.id} className="group">
-              <div className="overflow-hidden rounded-[20px]">
-                <Image
-                  src={roadmap.image}
-                  alt={roadmap.title}
-                  width={300}
-                  height={200}
-                  className="w-full transition duration-500 group-hover:scale-110 object-cover"
-                />
+      </section>
+
+      {/* Roadmap Section */}
+      <section id="roadmaps" className="bg-black text-white py-32">
+        <div className="max-w-[95vw] mx-auto px-6">
+          <div className="flex flex-col items-center text-center mb-24">
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-none">ROADMAPS</h2>
+            <p className="max-w-xl text-white/40 font-bold text-lg uppercase tracking-tight italic">
+              Uncover the logical path between your current status and job-ready technical competence.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
+            {roadmapData.slice(0, 4).map((roadmap) => (
+              <div key={roadmap.id} className="group">
+                <div className="aspect-[3/4] rounded-[40px] border border-white/10 overflow-hidden mb-6 relative hover:border-white/30 transition-all">
+                  <Image
+                    src={roadmap.image}
+                    alt={roadmap.title}
+                    width={300}
+                    height={400}
+                    className="w-full h-full object-cover opacity-50 grayscale group-hover:opacity-80 group-hover:grayscale-0 transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-8">
+                    <h3 className="text-xl font-black uppercase tracking-tighter mb-4">{roadmap.title}</h3>
+                    <Link href={roadmap.link}>
+                      <button className="w-full py-3 rounded-full bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-white/90 transition-all">
+                        {isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id]) ? 'Continue —' : 'Get Roadmap —'}
+                      </button>
+                    </Link>
+                  </div>
+                </div>
               </div>
-              <Link href={roadmap.link}>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className={`w-full mt-4 font-bold py-3 rounded-[20px] transition-colors ${isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id])
-                    ? 'bg-white text-[#FF6643] hover:bg-gray-100 shadow-sm border border-gray-200'
-                    : 'bg-[#FF6643] text-white hover:bg-[#e65c00]'
-                    }`}
-                >
-                  {isLoggedIn && startedRoadmaps.includes(COURSE_ID_MAP[roadmap.id]) ? 'Continue' : 'Get Free'}
-                </motion.button>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </div>
 
-        <motion.div variants={fadeInUp} className="text-center pt-8 border-t border-gray-200/50">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800">Want something built just for you?</h3>
-          <Link href="/ai-roadmap">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-[#FF6643] text-white font-bold text-base rounded-full shadow-lg hover:bg-[#e65c00] transition-all flex items-center justify-center mx-auto gap-2"
-            >
-              ✨ Generate AI Personalized Roadmap
-            </motion.button>
-          </Link>
-        </motion.div>
-      </motion.section>
-
-      {/* Community Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={fadeInUp}
-        className="py-20 text-center space-y-6"
-      >
-        <h3 className="text-[#FF6643] font-bold text-xl">
-          BUILD UP THE COMMUNITY
-        </h3>
-        <h2 className="text-5xl font-extrabold">
-          Join the biggest community of learning
-        </h2>
-        <div className="max-w-2xl mx-auto text-gray-600">
-          Learn, share knowledge with community members and shine from wherever
-          you are.
+          {/* AI Roadmap CTA */}
+          <div className="relative group max-w-4xl mx-auto bg-white/5 border border-white/10 p-12 rounded-[50px] text-center backdrop-blur-sm overflow-hidden hover:border-white/20 transition-all">
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+            <h3 className="text-3xl font-black mb-6 uppercase">WANT SOMETHING BUILT JUST FOR YOU?</h3>
+            <p className="text-white/40 font-bold mb-10 max-w-lg mx-auto uppercase tracking-wide text-xs">Answer a few quick questions so the AI can build the most robust and personalized career map for you.</p>
+            <Link href="/ai-roadmap">
+              <button className="px-12 py-5 bg-white text-black rounded-full font-black uppercase tracking-[0.2em] shadow-2xl hover:scale-105 active:scale-95 transition-all text-sm">
+                ✨ Generate AI Roadmap
+              </button>
+            </Link>
+          </div>
         </div>
-        <motion.div variants={scaleIn}>
+      </section>
+
+      {/* Final Community Section */}
+      <section className="py-40 text-center px-4 bg-white">
+        <h3 className="text-xs font-black text-black/30 uppercase tracking-[0.5em] mb-8">BUILD UP THE COMMUNITY</h3>
+        <h2 className="text-5xl md:text-8xl font-black text-black tracking-tighter mb-12">JOIN THE BIGGEST<br />COMMUNITY OF LEARNING.</h2>
+        <div className="max-w-3xl mx-auto">
           <Image
             src="/assets/world4.png"
-            alt="Community"
-            width={900}
-            height={500}
-            className="max-w-[900px] w-full mx-auto mt-8"
+            alt="Community Map"
+            width={1200}
+            height={600}
+            className="w-full h-auto grayscale opacity-90 brightness-75 transition-all hover:grayscale-0 hover:brightness-100 duration-1000"
           />
-        </motion.div>
-      </motion.section>
-
-      {/* CTA Section */}
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={scaleIn}
-        className="max-w-[80vw] mx-auto py-8 md:py-0 min-h-[200px] h-auto md:h-[200px] bg-gradient-to-r from-[#eaafc8] to-[#654ea3] rounded-[90px] flex flex-col md:flex-row items-center justify-around px-6 md:px-12 shadow-[13px_13px_0_0_#000] mb-20 gap-6 md:gap-0"
-      >
-        <div className="text-white font-bold text-3xl text-center md:text-left">
-          Join now &amp; get the certificate
         </div>
-        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3 items-center">
-          <input
-            type="search"
-            placeholder="Search courses..."
-            className="px-6 py-3 bg-white rounded-full w-full sm:w-64 md:w-96 outline-none text-black"
-          />
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-[#FF6643] text-white px-8 py-3 rounded-full font-bold w-full sm:w-auto hover:bg-[#e65c00] transition-colors whitespace-nowrap">
-            Search
-          </motion.button>
-        </div>
-      </motion.div>
+      </section>
 
       <Footer />
     </div>

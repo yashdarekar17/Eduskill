@@ -1,20 +1,24 @@
 import React from 'react';
+import { BookOpen, Zap, Info, AlertTriangle, ChevronRight, Code, Terminal, FileCode } from 'lucide-react';
 
 // --- UI Components for Blog Feel ---
 
 const CodeBlock = ({ code, language = 'javascript' }: { code: string, language?: string }) => (
-    <div className="my-8 rounded-xl overflow-hidden shadow-md border border-gray-200">
-        <div className="bg-gray-100 px-4 py-2 flex items-center justify-between border-b border-gray-200">
-            <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <div className="w-3 h-3 rounded-full bg-green-400"></div>
+    <div className="my-8 md:my-12 rounded-[24px] md:rounded-[32px] overflow-hidden border border-gray-100 shadow-2xl bg-white group transition-all hover:translate-y-[-2px]">
+        <div className="bg-gray-50/50 px-4 md:px-8 py-3 md:py-5 flex items-center justify-between border-b border-gray-100">
+            <div className="flex gap-2 md:gap-2.5">
+                <div className="w-2 md:w-3 h-2 md:h-3 rounded-full bg-black/5"></div>
+                <div className="w-2 md:w-3 h-2 md:h-3 rounded-full bg-black/10"></div>
+                <div className="w-2 md:w-3 h-2 md:h-3 rounded-full bg-black/20"></div>
             </div>
-            <span className="text-xs font-mono text-gray-500 uppercase">{language}</span>
+            <span className="text-[9px] md:text-[10px] font-black font-mono text-black/30 uppercase tracking-[0.2em] md:tracking-[0.3em]">{language}</span>
         </div>
-        <pre className="bg-gray-50 text-gray-800 p-6 overflow-x-auto text-sm font-mono leading-relaxed border-l-4 border-[#FF6643]">
-            <code>{code}</code>
-        </pre>
+        <div className="flex bg-white">
+            <div className="w-1.5 md:w-2.5 bg-black shrink-0" />
+            <pre className="p-6 md:p-10 overflow-x-auto text-xs md:text-[13px] font-mono leading-relaxed text-black/80 w-full">
+                <code>{code}</code>
+            </pre>
+        </div>
     </div>
 );
 
@@ -23,53 +27,62 @@ const MainHeading = ({ children }: { children: React.ReactNode }) => (
 );
 
 const SectionHeading = ({ children, id }: { children: React.ReactNode, id?: string }) => (
-    <h2 id={id} className="text-2xl font-bold text-gray-800 mt-12 mb-6 pb-2 border-b-2 border-orange-100 flex items-center gap-3">
-        <span className="text-[#FF6643] text-3xl leading-none">•</span>
+    <h2 id={id} className="text-2xl md:text-3xl font-black text-black mt-12 md:mt-20 mb-6 md:mb-8 pb-3 md:pb-4 border-b border-gray-100 uppercase tracking-tighter flex items-center gap-3 md:gap-4">
+        <span className="text-black text-3xl md:text-4xl leading-none">•</span>
         {children}
     </h2>
 );
 
 const SubHeading = ({ children }: { children: React.ReactNode }) => (
-    <h3 className="text-xl font-bold text-gray-800 mt-8 mb-4">{children}</h3>
+    <h3 className="text-lg md:text-xl font-black text-black mt-8 md:mt-10 mb-4 md:mb-6 uppercase tracking-tight">{children}</h3>
 );
 
 const Text = ({ children }: { children: React.ReactNode }) => (
-    <p className="mb-6 text-gray-700 leading-normal text-base text-justify">{children}</p>
+    <p className="mb-6 md:mb-8 text-black/60 font-medium leading-relaxed text-base md:text-lg">{children}</p>
 );
 
 const List = ({ items, ordered = false }: { items: React.ReactNode[], ordered?: boolean }) => {
     const Tag = ordered ? 'ol' : 'ul';
     const listClass = ordered ? 'list-decimal' : 'list-disc';
     return (
-        <Tag className={`${listClass} pl-8 mb-6 text-gray-700 leading-normal text-base space-y-2`}>
+        <Tag className={`${listClass} pl-6 md:pl-8 mb-6 md:mb-8 text-black/60 font-medium leading-relaxed text-base md:text-lg space-y-3 md:space-y-4`}>
             {items.map((item, i) => <li key={i}>{item}</li>)}
         </Tag>
     );
 };
 
-const ImportantNote = ({ children, title = "Note" }: { children: React.ReactNode, title?: string }) => (
-    <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl my-8 text-green-900 shadow-sm">
-        <strong className="font-bold flex items-center gap-2 mb-2 text-green-700 text-base">📝 {title}</strong>
-        <p className="text-sm leading-relaxed m-0">{children}</p>
+const ImportantNote = ({ children, title = "Protocol" }: { children: React.ReactNode, title?: string }) => (
+    <div className="flex bg-gray-50/50 border border-gray-100 rounded-[24px] md:rounded-[32px] my-8 md:my-12 overflow-hidden shadow-sm">
+        <div className="w-1.5 md:w-2.5 bg-black shrink-0" />
+        <div className="p-6 md:p-10">
+            <strong className="font-black flex items-center gap-2 md:gap-3 mb-2 md:mb-3 text-black text-[10px] md:text-xs uppercase tracking-[0.2em]">
+                <BookOpen size={14} className="md:w-4 md:h-4 shrink-0" /> {title}
+            </strong>
+            <p className="text-base md:text-lg font-bold leading-relaxed m-0 text-black/50">{children}</p>
+        </div>
     </div>
 );
 
 const WarningAlign = ({ children }: { children: React.ReactNode }) => (
-    <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl my-8 text-red-900 shadow-sm">
-        <strong className="font-bold flex items-center gap-2 mb-2 text-red-700 text-base">⚠️ Warning</strong>
-        <p className="text-sm leading-relaxed m-0">{children}</p>
+    <div className="bg-black text-white p-6 md:p-10 rounded-[28px] md:rounded-[40px] my-8 md:my-12 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-white/5 rounded-full blur-2xl md:blur-3xl -mr-16 -mt-16 md:-mr-20 md:-mt-20" />
+        <strong className="relative z-10 font-black flex items-center gap-2 md:gap-3 mb-3 md:mb-4 text-white/40 text-[10px] md:text-xs uppercase tracking-[0.2em]">
+            <Zap size={14} className="text-white md:w-4 md:h-4 shrink-0" /> Neural Alert
+        </strong>
+        <p className="relative z-10 text-base md:text-lg font-bold leading-relaxed m-0">{children}</p>
     </div>
 );
 
 
 const TableOfContents = ({ links }: { links: { title: string, id: string }[] }) => (
-    <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 my-8 float-none lg:float-right lg:ml-8 lg:mb-8 lg:w-80 clear-both">
-        <h4 className="font-bold text-lg mb-4 text-gray-800 uppercase tracking-wider">Table of Contents</h4>
-        <ul className="space-y-3">
+    <div className="bg-white p-6 md:p-10 rounded-[32px] md:rounded-[50px] border border-gray-100 my-8 md:my-12 w-full float-none lg:float-right lg:ml-12 lg:mb-12 lg:w-[400px] clear-both flex-shrink-0 shadow-xl md:shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 left-0 w-1 md:w-1.5 h-full bg-black/5" />
+        <h4 className="font-black text-[9px] md:text-[10px] mb-6 md:mb-8 text-black/20 uppercase tracking-[0.3em] md:tracking-[0.4em]">Sub-Sequence Directory</h4>
+        <ul className="space-y-4 md:space-y-5">
             {links.map(link => (
                 <li key={link.id}>
-                    <a href={`#${link.id}`} className="text-[#FF6643] hover:underline flex items-center gap-2">
-                        <span className="text-orange-300">▹</span> {link.title}
+                    <a href={`#${link.id}`} className="text-black font-bold text-xs md:text-sm hover:translate-x-2 flex items-start gap-3 md:gap-4 transition-all opacity-40 hover:opacity-100 group-hover:opacity-60">
+                        <span className="w-1.5 md:w-2 h-[2px] mt-2 bg-black block shrink-0" /> <span className="flex-1">{link.title}</span>
                     </a>
                 </li>
             ))}

@@ -10,8 +10,6 @@ export const jwtWebMiddleware = (req: AuthRequest, res: Response, next: NextFunc
   const authorization = req.headers.authorization;
   const token = authorization ? authorization.split(' ')[1] : req.cookies?.token;
 
-  console.log('🔍 Received Token:', token);
-
   if (!token) {
     res.status(401).json({ error: 'Token not found' });
     return;

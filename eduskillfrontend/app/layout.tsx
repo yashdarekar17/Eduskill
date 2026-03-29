@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} bg-[#f8f7f3] text-gray-800 antialiased`}>
-        {children}
+      <body className={`${inter.className} antialiased selection:bg-black selection:text-white`}>
+        <GoogleOAuthProvider clientId={clientId}>
+          {children}
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

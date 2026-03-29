@@ -15,7 +15,7 @@ import CompanyRoadmap from '@/components/CompanyRoadmap';
 import { motion } from 'framer-motion';
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
@@ -40,7 +40,7 @@ interface CourseDetail {
   botpressUrl?: string;
 }
 
-// Static data for roadmaps (IDs 5-8) — UNCHANGED
+// Static data for roadmaps (IDs 5-8)
 const courseDetails: Record<number, CourseDetail> = {
   5: {
     title: 'Web Development Roadmap',
@@ -123,7 +123,7 @@ const courseDetails: Record<number, CourseDetail> = {
 // Course descriptions for DB courses (IDs 1-4)
 const courseDescriptions: Record<number, { longDescription: string; price: number; duration: string; level: string; highlights: string[] }> = {
   1: {
-    longDescription: 'Become a full-stack web developer with this comprehensive course. You\'ll master HTML5, CSS3, JavaScript ES6+, React.js, Node.js, and modern deployment strategies. Build real-world projects including responsive websites, REST APIs, and full-stack applications from scratch.',
+    longDescription: 'Become a full-stack web developer with this comprehensive course. You master HTML5, CSS3, JavaScript ES6+, React.js, Node.js, and modern deployment strategies. Build real-world projects including responsive websites, REST APIs, and full-stack applications from scratch.',
     price: 499,
     duration: '12 Weeks',
     level: 'Beginner to Advanced',
@@ -171,9 +171,6 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
   const isDBCourse = DB_COURSE_IDS.includes(courseId);
   const staticCourse = courseDetails[courseId];
 
-  // ===== CHATBOT STATE (COMMENTED OUT) =====
-  // const [showChat, setShowChat] = useState(false);
-
   useEffect(() => {
     if (!isDBCourse) return;
 
@@ -184,7 +181,6 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
           setCourseData(courseRes.course);
         }
 
-        // Try to fetch progress and purchase status if user is logged in
         const token = localStorage.getItem('token');
         if (token) {
           try {
@@ -192,18 +188,14 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
             if (progressRes.success) {
               setProgressData(progressRes.progress);
             }
-          } catch {
-            // User not logged in or progress fetch failed — that's okay
-          }
+          } catch { /* skip */ }
 
           try {
             const purchaseRes = await api.getPurchasedCourses(token);
             if (purchaseRes.success && purchaseRes.purchasedCourseIds.includes(courseId)) {
               setIsPurchased(true);
             }
-          } catch {
-            // Not logged in — that's okay
-          }
+          } catch { /* skip */ }
         }
       } catch (error) {
         console.error('Failed to fetch course:', error);
@@ -232,7 +224,6 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
   const initiatePayment = async (courseTitle?: string) => {
     const token = localStorage.getItem('token');
     if (!token) {
-      // alert('Please login to purchase this course!');
       router.push('/login');
       return;
     }
@@ -265,8 +256,6 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
         description: data.description,
         order_id: data.order_id,
         handler: async function (response: any) {
-          console.log('Payment Successful', response);
-          // Save purchase to database
           try {
             await api.purchaseCourse(courseId, token);
             setIsPurchased(true);
@@ -280,7 +269,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
           email: 'user@eduskill.com',
           contact: '9999999999',
         },
-        theme: { color: '#FF6643' },
+        theme: { color: '#000000' },
         modal: {
           ondismiss: function () {
             setIsProcessing(false);
@@ -289,7 +278,6 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
         },
       };
 
-      // Ensure Razorpay script is loaded before using it
       if (!window.Razorpay) {
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement('script');
@@ -302,29 +290,24 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-      paymentObject.on('payment.failed', function (response: any) {
-        alert('Payment Failed: ' + response.error.description);
-        setIsProcessing(false);
-      });
     } catch (error) {
       console.error('Payment Error:', error);
-      alert('Failed to initiate payment. Please check your network connection.');
+      alert('Failed to initiate payment.');
       setIsProcessing(false);
     }
   };
 
-  // Loading state for DB courses
   if (isDBCourse && loading) {
     return (
-      <div>
+      <div className="min-h-screen bg-white">
         <Header2 />
-        <main className="max-w-[85vw] mx-auto py-12">
-          <div className="animate-pulse space-y-6">
-            <div className="h-12 bg-gray-200 rounded-xl w-1/2" />
-            <div className="h-4 bg-gray-200 rounded w-3/4" />
-            <div className="grid md:grid-cols-[280px_1fr] gap-8 mt-8">
-              <div className="h-64 bg-gray-200 rounded-[24px]" />
-              <div className="h-96 bg-gray-200 rounded-[30px]" />
+        <main className="max-w-[85vw] mx-auto py-32">
+          <div className="animate-pulse space-y-8">
+            <div className="h-16 bg-gray-100 rounded-[30px] w-3/4" />
+            <div className="h-4 bg-gray-100 rounded w-1/2" />
+            <div className="grid md:grid-cols-[300px_1fr] gap-12 mt-12">
+              <div className="h-80 bg-gray-100 rounded-[32px]" />
+              <div className="h-[500px] bg-gray-100 rounded-[40px]" />
             </div>
           </div>
         </main>
@@ -333,7 +316,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     );
   }
 
-  // ===== DB Course View (IDs 1-4) — Phases + Modules from API =====
+  // ===== DB Course View (IDs 1-4) =====
   if (isDBCourse && courseData) {
     const completedModuleIds = new Set<number>(
       (progressData?.modules || [])
@@ -348,74 +331,74 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     return (
       <div className="min-h-screen bg-white">
         <Header2 />
-        <Script
-          id="razorpay-checkout-js"
-          src="https://checkout.razorpay.com/v1/checkout.js"
-        />
+        <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
 
-        <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="max-w-[85vw] mx-auto py-12">
-          {/* ===== Modern Course Description Hero ===== */}
-          <div className="relative mb-12 rounded-[30px] overflow-hidden bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] p-8 md:p-12">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF6643]/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="px-4 py-1.5 bg-[#FF6643] text-white text-sm font-bold rounded-full">
-                  {desc?.level || 'All Levels'}
+        <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="max-w-[100vw] overflow-x-hidden">
+          {/* ===== Restored Massive Hero Section (White Background) ===== */}
+          <section className="relative bg-white pt-40 pb-20 px-6 md:px-12 border-b border-gray-100">
+            <div className="max-w-[85vw] mx-auto relative z-10">
+              <div className="flex flex-wrap items-center gap-3 mb-10">
+                <span className="px-4 py-1.5 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
+                  {desc?.level || 'Premium Content'}
                 </span>
-                <span className="px-4 py-1.5 bg-white/10 text-white/80 text-sm font-medium rounded-full backdrop-blur-sm flex items-center gap-1.5">
-                  <Clock size={14} /> {desc?.duration || '12 Weeks'}
+                <span className="px-4 py-1.5 bg-gray-50 text-black/50 text-[10px] font-bold uppercase tracking-widest rounded-full border border-gray-100 flex items-center gap-2">
+                  <Clock size={12} /> {desc?.duration || 'Course Program'}
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+              
+              <h1 className="text-6xl md:text-9xl font-black text-black mb-12 tracking-tighter leading-[0.85] uppercase">
                 {courseData.title}
               </h1>
-              <p className="text-lg text-gray-300 leading-relaxed max-w-3xl mb-6">
+              
+              <p className="text-xl md:text-2xl text-black/60 font-medium leading-tight max-w-4xl mb-16">
                 {desc?.longDescription || courseData.description}
               </p>
 
               {/* Highlights */}
               {desc?.highlights && (
-                <div className="flex flex-wrap gap-3 mb-8">
+                <div className="flex flex-wrap gap-4 mb-20">
                   {desc.highlights.map((h, i) => (
-                    <span key={i} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white/90 text-sm backdrop-blur-sm">
-                      <Sparkles size={14} className="text-[#FF6643]" /> {h}
+                    <span key={i} className="flex items-center gap-3 px-6 py-5 bg-gray-50 border border-gray-100 rounded-[24px] text-black font-bold text-sm transition-all hover:bg-gray-100">
+                      <Sparkles size={16} className="text-black/20" /> {h}
                     </span>
                   ))}
                 </div>
               )}
 
               {/* Price + CTA */}
-              <div className="flex items-center gap-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-10">
                 {!isPurchased ? (
                   <>
-                    <div className="text-3xl font-extrabold text-white">
-                      ₹{desc?.price || 499}
+                    <div className="flex flex-col">
+                      <span className="text-black/30 text-[10px] font-bold uppercase tracking-widest mb-1">Project Fee</span>
+                      <div className="text-5xl font-black text-black tracking-tight">
+                        ₹{desc?.price || 499}
+                      </div>
                     </div>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => initiatePayment(courseData.title)}
                       disabled={isProcessing}
-                      className="flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-[#FF6643] to-[#ff8a65] text-white text-lg font-bold rounded-2xl hover:from-[#e65c00] hover:to-[#FF6643] transition-all shadow-lg shadow-[#FF6643]/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="h-[90px] px-16 bg-black text-white text-xl font-black uppercase tracking-tight rounded-full flex justify-center items-center shadow-2xl hover:bg-gray-900 transition-all disabled:opacity-50"
                     >
-                      {isProcessing ? <><Loader2 size={20} className="animate-spin" /> Processing...</> : <><ShoppingCart size={20} /> Buy Course</>}
+                      {isProcessing ? <Loader2 size={28} className="animate-spin" /> : <><ShoppingCart className="mr-4" size={28} /> Get Access</>}
                     </motion.button>
                   </>
                 ) : (
-                  <div className="flex items-center gap-4">
-                    <div className="px-6 py-3 bg-[#FF6643]/10 border border-[#FF6643]/30 rounded-2xl flex items-center gap-2">
-                      <CheckCircle size={20} className="text-[#FF6643]" />
-                      <span className="text-[#FF6643] font-bold text-lg">Course Purchased</span>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
+                    <div className="h-[90px] px-10 bg-gray-50 border border-gray-100 rounded-full flex items-center gap-4">
+                      <CheckCircle size={28} className="text-black" />
+                      <span className="text-black font-black uppercase tracking-widest text-xs">Unlocked</span>
                     </div>
                     {courseData.phases?.[0]?.modules?.[0] && (
                       <Link href={`/modules/${courseData.phases[0].modules[0].id}`}>
                         <motion.button 
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className="flex items-center gap-2 px-10 py-4 bg-[#FF6643] text-white text-lg font-bold rounded-2xl hover:bg-[#e65c00] transition-all shadow-lg hover:-translate-y-0.5"
+                          className="h-[90px] px-16 bg-black text-white text-xl font-black uppercase tracking-tight rounded-full flex justify-center items-center shadow-2xl hover:bg-gray-900 transition-all"
                         >
-                          <ArrowRight size={20} /> Continue Learning
+                          Continue Learning <ArrowRight className="ml-4" size={28} />
                         </motion.button>
                       </Link>
                     )}
@@ -423,208 +406,173 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                 )}
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Payment success banner */}
-          {isPurchased && (
-            <div className="mb-8 p-4 bg-gradient-to-r from-orange-50 to-amber-50 border border-[#FF6643]/20 rounded-2xl text-center flex items-center justify-center gap-2">
-              <PartyPopper size={20} className="text-[#FF6643]" />
-              <span className="text-[#FF6643] font-bold text-lg">You have full access to this course!</span>
-            </div>
-          )}
+          {/* ===== Main Content Area ===== */}
+          <section className="bg-white py-24 px-6 md:px-12">
+            <div className="max-w-[85vw] mx-auto">
+              
+              {isPurchased && (
+                  <div className="mb-20">
+                     <div className="flex justify-between items-end mb-8">
+                        <h2 className="text-3xl font-black text-black tracking-tight uppercase">Program Progress</h2>
+                        <span className="text-black font-black text-2xl">{Math.round((completedModules/totalModules)*100)}%</span>
+                     </div>
+                     <ProgressBar completed={completedModules} total={totalModules} />
+                  </div>
+              )}
 
-          {/* Progress Bar */}
-          {isPurchased && totalModules > 0 && (
-            <div className="mb-10 px-6">
-              <ProgressBar completed={completedModules} total={totalModules} />
-            </div>
-          )}
+              <div className="grid lg:grid-cols-[400px_1fr] gap-20 items-start">
+                  
+                  {/* Left Column: Sidebar (if purchased) or Highlights */}
+                  <div className="space-y-12 sticky top-36">
+                      {isPurchased ? (
+                          <Sidebar
+                            phases={courseData.phases || []}
+                            completedModuleIds={completedModuleIds}
+                          />
+                      ) : (
+                          <div className="bg-[#FBFBFB] p-12 rounded-[50px] border border-gray-100">
+                             <h3 className="text-xl font-black text-black uppercase tracking-widest mb-10">Benefits</h3>
+                             <ul className="space-y-8">
+                                {['Industry Certificates', 'Expert AI Mentorship', 'Live Community Access', 'Lifetime Repository Updates'].map((item, idx) => (
+                                    <li key={idx} className="flex items-start gap-6">
+                                        <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center shrink-0 mt-1">
+                                            <CheckCircle size={14} className="text-white" />
+                                        </div>
+                                        <span className="text-black/60 font-bold text-lg leading-tight">{item}</span>
+                                    </li>
+                                ))}
+                             </ul>
+                          </div>
+                      )}
+                      
+                      {/* AI Mentor Trigger */}
+                      <div className="bg-gray-50 p-12 rounded-[50px] border border-gray-100 group transition-all hover:border-black/10">
+                          <h3 className="text-xl font-black text-black uppercase tracking-widest mb-6">AI Mentor v2.0</h3>
+                          <p className="text-black/40 font-bold text-base mb-10">Personalized feedback and code debugging instantly.</p>
+                          <div className="w-16 h-16 bg-black rounded-3xl flex items-center justify-center transition-transform group-hover:rotate-12">
+                              <Sparkles className="text-white" size={32} />
+                          </div>
+                      </div>
+                  </div>
 
-          {/* ===== Course Content (Modules) — Only visible after purchase ===== */}
-          {isPurchased ? (
-            <div className="grid md:grid-cols-[300px_1fr] gap-8">
-              {/* Sidebar */}
-              <div className="order-2 md:order-1">
-                <Sidebar
-                  phases={courseData.phases || []}
-                  completedModuleIds={completedModuleIds}
-                />
-              </div>
+                  {/* Right Column: Roadmap / Curriculum */}
+                  <div className="space-y-16">
+                      <div className="flex items-center justify-between">
+                         <h2 className="text-5xl font-black text-black tracking-tighter uppercase">Curriculum</h2>
+                      </div>
 
-              {/* Main Content */}
-              <div className="order-1 md:order-2">
-                <div className="py-4">
-                  <h2 className="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-[#FF6643] pl-4">
-                    Course Roadmap
-                  </h2>
-                  <div className="space-y-6">
-                    {(() => {
-                      const phases = [...(courseData.phases || [])];
-                      if (DB_COURSE_IDS.includes(courseId) && phases.length > 0) {
-                        const lastPhase = { ...phases[phases.length - 1] };
-                        lastPhase.modules = [
-                          ...lastPhase.modules,
-                          {
-                            id: 9999, // Special ID for certificate
-                            title: 'Claim Your Certificate',
-                            isCertificate: true
+                      <div className="space-y-6">
+                        {(() => {
+                          const phases = [...(courseData.phases || [])];
+                          if (DB_COURSE_IDS.includes(courseId) && phases.length > 0) {
+                            const lastPhase = { ...phases[phases.length - 1] };
+                            lastPhase.modules = [...lastPhase.modules, { id: 9999, title: 'Award Ceremony & Certificate', isCertificate: true }];
+                            phases[phases.length - 1] = lastPhase;
                           }
-                        ];
-                        phases[phases.length - 1] = lastPhase;
-                      }
 
-                      return phases.map((phase: any) => {
-                        const isExpanded = expandedPhases.has(phase.id);
-                        const totalModulesInPhase = phase.modules.length;
-                        const completedInPhase = phase.modules.filter((m: any) => completedModuleIds.has(m.id)).length;
-                        const progressPercent = totalModulesInPhase > 0 ? (completedInPhase / totalModulesInPhase) * 100 : 0;
+                          return phases.map((phase: any) => {
+                            const isExpanded = expandedPhases.has(phase.id);
+                            const totalModulesInPhase = phase.modules.length;
+                            const completedInPhase = phase.modules.filter((m: any) => completedModuleIds.has(m.id)).length;
+                            const isPhaseComplete = totalModulesInPhase > 0 && totalModulesInPhase === completedInPhase;
 
-                        return (
-                          <div key={phase.id} className="mb-4">
-                            <button
-                              onClick={() => togglePhase(phase.id)}
-                              className="w-full flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all text-left group"
-                            >
-                              <span className="font-bold text-gray-800 text-lg">{phase.title}</span>
+                            return (
+                              <div key={phase.id} className="group">
+                                <button
+                                  onClick={() => togglePhase(phase.id)}
+                                  className={`w-full flex items-center justify-between p-7 rounded-[30px] border transition-all text-left ${
+                                    isExpanded ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-100 hover:border-black/20'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-8">
+                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black transition-colors ${
+                                        isExpanded ? 'bg-black text-white' : isPhaseComplete ? 'bg-black text-white' : 'bg-gray-100 text-black/20'
+                                     }`}>
+                                        {isPhaseComplete ? '✓' : phase.phase_order}
+                                     </div>
+                                     <span className="font-black text-xl uppercase tracking-tight text-black">
+                                        {phase.title}
+                                     </span>
+                                  </div>
 
-                              <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-sm font-medium text-gray-400">
-                                    {completedInPhase}/{totalModulesInPhase}
-                                  </span>
-                                  <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden hidden sm:block">
-                                    <div
-                                      className="h-full bg-[#FF6643] transition-all duration-500"
-                                      style={{ width: `${progressPercent}%` }}
+                                  <div className="flex items-center gap-8">
+                                    <div className="hidden sm:flex flex-col items-end opacity-40">
+                                      <span className="text-[10px] font-black uppercase tracking-widest">Phases</span>
+                                      <span className="text-sm font-black">{completedInPhase}/{totalModulesInPhase}</span>
+                                    </div>
+                                    <ChevronDown
+                                      size={24}
+                                      className={`transition-transform duration-500 ${isExpanded ? 'rotate-180 text-black' : 'text-black/20'}`}
                                     />
                                   </div>
-                                </div>
-                                <ChevronDown
-                                  size={18}
-                                  className={`text-gray-300 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-                                />
+                                </button>
+
+                                {isExpanded && (
+                                  <div className="mt-4 px-4 space-y-3 animate-in fade-in slide-in-from-top-4 duration-400">
+                                    {phase.modules.map((mod: any) => {
+                                      const isCertificate = mod.id === 9999;
+                                      const isCompleted = completedModuleIds.has(mod.id);
+                                      const isCourseFullyCompleted = (progressData?.percentage || 0) === 100;
+                                      const isLocked = !isPurchased || (isCertificate && !isCourseFullyCompleted);
+
+                                      return (
+                                        <Link
+                                          key={mod.id}
+                                          href={isLocked ? '#' : isCertificate ? `/modules/${mod.id}?courseId=${courseId}` : `/modules/${mod.id}`}
+                                          onClick={(e) => isLocked && e.preventDefault()}
+                                          className={`flex items-center gap-5 p-6 rounded-[24px] border-2 transition-all ${
+                                            isCompleted || (isCertificate && isCourseFullyCompleted)
+                                            ? 'bg-white border-black text-black'
+                                            : isLocked
+                                              ? 'bg-gray-50 border-transparent text-black/10 cursor-not-allowed'
+                                              : 'bg-white border-gray-50 text-black/40 hover:border-black/10 hover:text-black group/mod'
+                                          }`}
+                                        >
+                                          <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-[9px] transition-all ${
+                                             isCompleted ? 'bg-black text-white' : 'bg-gray-100 text-black/20 group-hover/mod:bg-black group-hover/mod:text-white'
+                                          }`}>
+                                             {isCompleted ? '✓' : mod.module_order || '•'}
+                                          </div>
+                                          <span className="font-black text-lg tracking-tight uppercase">
+                                            {mod.title}
+                                          </span>
+                                          {!isLocked && <ArrowRight className="ml-auto opacity-0 group-hover/mod:opacity-100 transition-all translate-x-[-15px] group-hover/mod:translate-x-0" size={28} />}
+                                          {isLocked && <Lock className="ml-auto opacity-20" size={24} />}
+                                        </Link>
+                                      );
+                                    })}
+                                  </div>
+                                )}
                               </div>
-                            </button>
-
-                            {isExpanded && (
-                              <div className="mt-2 space-y-2">
-                                {phase.modules.map((mod: any) => {
-                                  const isCertificate = mod.id === 9999;
-                                  const isCompleted = completedModuleIds.has(mod.id);
-                                  const isCourseFullyCompleted = (progressData?.percentage || 0) === 100;
-                                  const isLocked = isCertificate && !isCourseFullyCompleted;
-
-                                  return (
-                                    <Link
-                                      key={mod.id}
-                                      href={isLocked ? '#' : isCertificate ? `/modules/${mod.id}?courseId=${courseId}` : `/modules/${mod.id}`}
-                                      onClick={(e) => isLocked && e.preventDefault()}
-                                      className={`flex items-center gap-3 p-4 rounded-xl transition-all border ${isCompleted || (isCertificate && isCourseFullyCompleted)
-                                        ? 'bg-green-50/50 border-green-100 text-green-700 shadow-sm'
-                                        : isLocked
-                                          ? 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed'
-                                          : 'bg-white border-gray-100 text-gray-600 hover:border-[#FF6643]/30 hover:shadow-md hover:-translate-y-0.5 group'
-                                        }`}
-                                    >
-                                      {isCertificate ? (
-                                        isCourseFullyCompleted ? (
-                                          <CheckCircle size={18} className="text-green-500" />
-                                        ) : (
-                                          <Lock size={18} className="text-gray-400" />
-                                        )
-                                      ) : isCompleted ? (
-                                        <span className="text-green-500 font-bold">✓</span>
-                                      ) : (
-                                        <span className={`w-2 h-2 rounded-full ${isLocked ? 'bg-gray-300' : 'bg-[#FF6643]'}`} />
-                                      )}
-                                      <span className="font-medium">
-                                        {mod.title}
-                                      </span>
-                                      {!isLocked && <span className="ml-auto text-[#FF6643] opacity-40 group-hover:opacity-100 transition-opacity">→</span>}
-                                    </Link>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      });
-                    })()}
-                  </div>
-                </div>
-
-                {/* ===== AI MENTOR (Botpress) ===== */}
-                <div className="mt-10 bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-[24px] border border-purple-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
+                            );
+                          });
+                        })()}
                       </div>
-                      <div>
-                        <h3 className="font-bold text-purple-800 text-lg">AI Mentor</h3>
-                        <p className="text-purple-600 text-sm">Ask questions about {courseData.title}</p>
+
+                      {/* AI Mentor Workspace */}
+                      <div className="mt-20 pt-20 border-t border-gray-100">
+                         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
+                            <div>
+                               <h2 className="text-5xl font-black text-black tracking-tighter uppercase mb-4">Neural Hub</h2>
+                               <p className="text-black/40 font-bold text-xl">Instant technical assistance at your fingertips.</p>
+                            </div>
+                            <div className="px-6 py-2 bg-gray-50 text-black/30 text-[10px] font-black uppercase tracking-widest rounded-full border border-gray-100">Connection: Secure</div>
+                         </div>
+                         
+                         <div className="rounded-[60px] overflow-hidden border border-gray-100 bg-white shadow-2xl">
+                            <iframe
+                              src="https://cdn.botpress.cloud/webchat/v3.0/shareable.html?configUrl=https://files.bpcontent.cloud/2025/02/02/16/20250202160648-VCUOL1UL.json"
+                              frameBorder="0"
+                              className="w-full h-[700px] grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+                            ></iframe>
+                         </div>
                       </div>
-                    </div>
                   </div>
-                  <div className="rounded-2xl overflow-hidden shadow-lg border border-purple-100">
-                    <iframe
-                      src="https://cdn.botpress.cloud/webchat/v3.0/shareable.html?configUrl=https://files.bpcontent.cloud/2025/02/02/16/20250202160648-VCUOL1UL.json"
-                      frameBorder="0"
-                      className="w-full h-[500px]"
-                    ></iframe>
-                  </div>
-                </div>
               </div>
             </div>
-          ) : (
-            /* Module preview when not purchased */
-            <div className="py-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-[#FF6643] pl-4">
-                What You&apos;ll Learn
-              </h2>
-              <div className="space-y-4">
-                {(courseData.phases || []).map((phase: any) => {
-                  const totalModulesInPhase = phase.modules.length;
-                  return (
-                    <div key={phase.id} className="mb-4">
-                      <div className="w-full flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl shadow-sm text-left">
-                        <span className="font-bold text-gray-800 text-lg">{phase.title}</span>
-                        <div className="flex items-center gap-4">
-                          <span className="text-sm font-medium text-gray-400">
-                            {totalModulesInPhase} Modules
-                          </span>
-                          <Lock size={18} className="text-gray-300" />
-                        </div>
-                      </div>
-                      <div className="mt-2 space-y-2 opacity-60 ml-4 pl-4 border-l-2 border-gray-100">
-                        {phase.modules.map((mod: any) => (
-                          <div
-                            key={mod.id}
-                            className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-xl border border-transparent text-gray-400"
-                          >
-                            <Lock size={16} className="text-gray-300" />
-                            <span className="font-medium text-sm">{mod.title}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Buy CTA at bottom */}
-              <div className="mt-10 text-center">
-                <button
-                  onClick={() => initiatePayment(courseData.title)}
-                  disabled={isProcessing}
-                  className="flex items-center gap-2 justify-center px-12 py-5 bg-gradient-to-r from-[#FF6643] to-[#ff8a65] text-white text-xl font-bold rounded-2xl hover:from-[#e65c00] hover:to-[#FF6643] transition-all shadow-lg shadow-[#FF6643]/30 hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {isProcessing ? <><Loader2 size={22} className="animate-spin" /> Processing...</> : <><ShoppingCart size={22} /> Buy Course — ₹499</>}
-                </button>
-                <p className="mt-3 text-gray-400 text-sm">One-time payment • Lifetime access</p>
-              </div>
-            </div>
-          )}
+          </section>
         </motion.main>
 
         <Footer />
@@ -632,18 +580,18 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     );
   }
 
-  // ===== Static Course/Roadmap View (IDs 5-8) — UNCHANGED =====
+  // ===== Static Roadmap View (IDs 5-8) =====
   if (!staticCourse) {
     return (
-      <div>
-        <Header />
-        <div className="max-w-[85vw] mx-auto py-20 text-center">
-          <h1 className="text-4xl font-bold mb-4">Course Not Found</h1>
-          <Link href="/">
-            <button className="bg-[#FF6643] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#e65c00] transition-colors">
-              Back to Home
-            </button>
-          </Link>
+      <div className="min-h-screen bg-white">
+        <Header2 />
+        <div className="max-w-[85vw] mx-auto py-32 text-center">
+            <h1 className="text-5xl font-black mb-12 uppercase tracking-tighter">Project Nullified</h1>
+            <Link href="/">
+                <button className="h-[80px] px-16 bg-black text-white text-xl font-black uppercase tracking-tight rounded-full hover:bg-gray-800 transition-all">
+                    Return to Laboratory
+                </button>
+            </Link>
         </div>
         <Footer />
       </div>
@@ -651,21 +599,32 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-white">
       <Header2 />
 
-      <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="max-w-[85vw] mx-auto py-12">
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
-            {staticCourse.title}
-          </h1>
-          <p className="text-lg text-gray-600 leading-relaxed max-w-4xl">
-            {staticCourse.longDescription || staticCourse.description}
-          </p>
-        </div>
+      <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="w-full">
+        {/* Banner Hero for Static Roadmaps (White Background) */}
+        <section className="bg-white pt-48 pb-24 px-6 md:px-12 border-b border-gray-100">
+           <div className="max-w-[85vw] mx-auto">
+              <h1 className="text-6xl md:text-9xl font-black text-black mb-16 tracking-tighter leading-[0.85] uppercase">
+                {staticCourse.title}
+              </h1>
+              <p className="text-2xl md:text-3xl text-black/40 font-medium leading-[1.1] max-w-5xl uppercase tracking-tighter">
+                {staticCourse.longDescription || staticCourse.description}
+              </p>
+           </div>
+        </section>
 
-        {/* Interactive Company-Type Roadmap */}
-        <CompanyRoadmap courseId={courseId} />
+        <section className="py-32 px-6 bg-[#FBFBFB]">
+            <div className="max-w-[85vw] mx-auto">
+                <div className="mb-20">
+                   <h2 className="text-5xl font-black text-black tracking-tighter uppercase mb-2">Neural Blueprint</h2>
+                   <p className="text-black/30 font-bold text-xl uppercase tracking-tight">Select your professional tier.</p>
+                </div>
+                {/* Roadmap background refinement within CompanyRoadmap */}
+                <CompanyRoadmap courseId={courseId} />
+            </div>
+        </section>
       </motion.main>
 
       <Footer />

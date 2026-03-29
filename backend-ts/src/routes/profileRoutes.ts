@@ -4,6 +4,8 @@ import {
   login,
   getProfile,
   logout,
+  googleAuth,
+  googleSignupComplete,
 } from '../controllers/profileController';
 import { jwtWebMiddleware } from '../middleware/jwt';
 
@@ -36,5 +38,19 @@ router.get('/profile', jwtWebMiddleware, getProfile);
  * @access  Private
  */
 router.post('/logout', jwtWebMiddleware, logout);
+
+/**
+ * @route   POST /Profile/google-auth
+ * @desc    Check Google account and Login/Signup
+ * @access  Public
+ */
+router.post('/google-auth', googleAuth);
+
+/**
+ * @route   POST /Profile/google-signup-complete
+ * @desc    Finalize Google signup with username/branch
+ * @access  Public
+ */
+router.post('/google-signup-complete', googleSignupComplete);
 
 export default router;
