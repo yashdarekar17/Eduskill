@@ -389,7 +389,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
                     <div className="h-[90px] px-10 bg-gray-50 border border-gray-100 rounded-full flex items-center gap-4">
                       <CheckCircle size={28} className="text-black" />
-                      <span className="text-black font-black uppercase tracking-widest text-xs">Unlocked</span>
+                      <span className="text-black font-black tracking-widest text-xs">Unlocked</span>
                     </div>
                     {courseData.phases?.[0]?.modules?.[0] && (
                       <Link href={`/modules/${courseData.phases[0].modules[0].id}`}>
@@ -492,7 +492,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                                      }`}>
                                         {isPhaseComplete ? '✓' : phase.phase_order}
                                      </div>
-                                     <span className="font-black text-xl uppercase tracking-tight text-black">
+                                     <span className="font-black text-xl tracking-tight text-black">
                                         {phase.title}
                                      </span>
                                   </div>
@@ -535,7 +535,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                                           }`}>
                                              {isCompleted ? '✓' : mod.module_order || '•'}
                                           </div>
-                                          <span className="font-black text-lg tracking-tight uppercase">
+                                          <span className="font-black text-lg tracking-tight">
                                             {mod.title}
                                           </span>
                                           {!isLocked && <ArrowRight className="ml-auto opacity-0 group-hover/mod:opacity-100 transition-all translate-x-[-15px] group-hover/mod:translate-x-0" size={28} />}
@@ -609,7 +609,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
               <h1 className="text-6xl md:text-9xl font-black text-black mb-16 tracking-tighter leading-[0.85] uppercase">
                 {staticCourse.title}
               </h1>
-              <p className="text-2xl md:text-3xl text-black/40 font-medium leading-[1.1] max-w-5xl uppercase tracking-tighter">
+              <p className="text-2xl md:text-3xl text-black/40 font-medium leading-[1.1] max-w-5xl tracking-tighter">
                 {staticCourse.longDescription || staticCourse.description}
               </p>
            </div>
@@ -619,7 +619,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
             <div className="max-w-[85vw] mx-auto">
                 <div className="mb-20">
                    <h2 className="text-5xl font-black text-black tracking-tighter uppercase mb-2">Neural Blueprint</h2>
-                   <p className="text-black/30 font-bold text-xl uppercase tracking-tight">Select your professional tier.</p>
+                   <p className="text-black/30 font-bold text-xl tracking-tight">Select your professional tier.</p>
                 </div>
                 {/* Roadmap background refinement within CompanyRoadmap */}
                 <CompanyRoadmap courseId={courseId} />

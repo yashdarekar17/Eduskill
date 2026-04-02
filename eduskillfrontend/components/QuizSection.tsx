@@ -142,7 +142,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                 </div>
 
                 {quizError && (
-                    <div className="mb-6 p-4 bg-gray-50 border border-gray-100 rounded-2xl text-black/40 text-[10px] font-bold uppercase tracking-widest flex items-center gap-3 justify-center">
+                    <div className="mb-6 p-4 bg-gray-50 border border-gray-100 rounded-2xl text-black/40 text-[10px] font-bold tracking-widest flex items-center gap-3 justify-center">
                         <AlertTriangle size={14} className="text-black" />
                         {quizError}
                     </div>
@@ -180,7 +180,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                         <motion.div variants={itemVariants} key={q.id} className="space-y-6">
                             <div className="flex items-start gap-4">
                                 <span className="text-black/20 font-bold text-2xl tracking-tighter shrink-0">{String(idx + 1).padStart(2, '0')}.</span>
-                                <h4 className="font-bold text-black text-xl uppercase tracking-tight leading-tight pt-1">
+                                <h4 className="font-bold text-black text-xl tracking-tight leading-tight pt-1">
                                     {q.question_text}
                                 </h4>
                             </div>
@@ -205,7 +205,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                                             `}>
                                                 {isSelected ? <div className="w-2 h-2 bg-black rounded-full" /> : <span className="text-[10px] font-bold">{key}</span>}
                                             </div>
-                                            <span className="font-bold text-sm uppercase tracking-tight">{val as string}</span>
+                                            <span className="font-bold text-sm tracking-tight">{val as string}</span>
                                         </button>
                                     );
                                 })}
@@ -248,7 +248,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                             <div className="grid md:grid-cols-2 gap-4">
                                 {result.weaknesses.map((w, i) => (
                                     <div key={i} className="flex items-center justify-between p-6 rounded-3xl bg-gray-50 border border-gray-100">
-                                        <div className="font-bold text-black uppercase tracking-tight text-sm">{w.topic}</div>
+                                        <div className="font-bold text-black tracking-tight text-sm">{w.topic}</div>
                                         <span className={`px-4 py-1.5 text-[10px] font-bold rounded-full uppercase tracking-widest
                                             ${w.status === 'Strong' ? 'bg-black text-white' : 'border border-black/10 text-black/40'}
                                         `}>

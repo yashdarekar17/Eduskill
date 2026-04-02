@@ -267,7 +267,7 @@ export default function Home() {
       {/* Core Modules Bento Section */}
       <section className="hidden md:block max-w-[95vw] mx-auto py-20 px-6">
         <div className="mb-16">
-          <h2 className="text-6xl font-black text-black tracking-tighter mb-4">Core Modules.</h2>
+          <h2 className="text-6xl font-black text-black tracking-tighter mb-4 uppercase">Core Modules.</h2>
           <p className="text-xl text-black/40 font-bold max-w-2xl leading-relaxed">
             Curated learning paths designed to accelerate your career through AI-enhanced mentorship and structured curriculum.
           </p>
@@ -292,7 +292,7 @@ export default function Home() {
                 </span>
               </div>
               <h3 className="text-4xl font-black text-white mb-4 uppercase tracking-tighter">Creative Thinking</h3>
-              <p className="max-w-md text-white/60 font-bold text-sm mb-8 uppercase leading-relaxed">
+              <p className="max-w-md text-white/60 font-bold text-sm mb-8 leading-relaxed">
                 Master the art of divergent thinking and complex problem solving through design methodology.
               </p>
               <button className="px-8 py-3 bg-white text-black rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">
@@ -401,7 +401,7 @@ export default function Home() {
         <div className="max-w-[95vw] mx-auto px-6">
           <div className="flex flex-col items-center text-center mb-24">
             <h2 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-none">ROADMAPS</h2>
-            <p className="max-w-xl text-white/40 font-bold text-lg uppercase tracking-tight italic">
+            <p className="max-w-xl text-white/40 font-bold text-lg tracking-tight italic">
               Uncover the logical path between your current status and job-ready technical competence.
             </p>
           </div>
@@ -435,7 +435,7 @@ export default function Home() {
           <div className="relative group max-w-4xl mx-auto bg-white/5 border border-white/10 p-12 rounded-[50px] text-center backdrop-blur-sm overflow-hidden hover:border-white/20 transition-all">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
             <h3 className="text-3xl font-black mb-6 uppercase">WANT SOMETHING BUILT JUST FOR YOU?</h3>
-            <p className="text-white/40 font-bold mb-10 max-w-lg mx-auto uppercase tracking-wide text-xs">Answer a few quick questions so the AI can build the most robust and personalized career map for you.</p>
+            <p className="text-white/40 font-bold mb-10 max-w-lg mx-auto tracking-wide text-xs">Answer a few quick questions so the AI can build the most robust and personalized career map for you.</p>
             <Link href="/ai-roadmap">
               <button className="px-12 py-5 bg-white text-black rounded-full font-black uppercase tracking-[0.2em] shadow-2xl hover:scale-105 active:scale-95 transition-all text-sm">
                 ✨ Generate AI Roadmap

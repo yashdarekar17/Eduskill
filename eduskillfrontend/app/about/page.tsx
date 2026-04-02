@@ -76,7 +76,7 @@ export default function About() {
                         <div className="space-y-16">
                             <div className="space-y-6">
                                 <h2 className="text-4xl lg:text-6xl font-black text-black tracking-tighter uppercase">STRICT TECHNICAL<br />BREAKDOWN.</h2>
-                                <p className="text-xl text-black/40 leading-relaxed font-bold uppercase tracking-tight">
+                                <p className="text-xl text-black/40 leading-relaxed font-bold tracking-tight">
                                     Performance-first architecture focused on interactive mentorship and cognitive clarity.
                                 </p>
                             </div>
@@ -121,12 +121,12 @@ export default function About() {
                                     <div className="space-y-2">
                                         <h5 className="font-black text-black text-xs uppercase tracking-widest">Adaptive Fluidity</h5>
                                         <div className="h-1 w-8 bg-black/10 mb-2"></div>
-                                        <p className="text-[13px] text-black/40 font-bold uppercase">Dynamic pace adjustment based on technical mastery.</p>
+                                        <p className="text-[13px] text-black/40 font-bold">Dynamic pace adjustment based on technical mastery.</p>
                                     </div>
                                     <div className="space-y-2">
                                         <h5 className="font-black text-black text-xs uppercase tracking-widest">Secure Integrity</h5>
                                         <div className="h-1 w-8 bg-black/10 mb-2"></div>
-                                        <p className="text-[13px] text-black/40 font-bold uppercase">Robust authentication protocols for mission-critical access.</p>
+                                        <p className="text-[13px] text-black/40 font-bold">Robust authentication protocols for mission-critical access.</p>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ export default function About() {
                                     <BarChart3 className="w-10 h-10 text-white/20" />
                                     <h4 className="text-3xl font-black uppercase tracking-tighter">ANALYTICS ENGINE</h4>
                                 </div>
-                                <p className="text-white/40 leading-relaxed font-bold uppercase text-sm tracking-wide">
+                                <p className="text-white/40 leading-relaxed font-bold text-sm tracking-wide">
                                     Backend-driven mastery scores. Correlating quiz delta with completion trajectories to generate pure technical competence metrics.
                                 </p>
                             </div>
@@ -151,21 +151,21 @@ export default function About() {
                 <div className="absolute inset-0 tutorly-grid opacity-10"></div>
                 <div className="max-w-screen-xl mx-auto px-6 relative z-10 space-y-12">
                     <h2 className="text-6xl lg:text-9xl font-black text-white tracking-tighter leading-none">ENGINEERED<br />FOR HUMANS.</h2>
-                    <p className="text-white/40 text-xl max-w-4xl mx-auto leading-relaxed font-bold uppercase tracking-tight italic">
+                    <p className="text-white/40 text-xl max-w-4xl mx-auto leading-relaxed font-bold tracking-tight italic">
                         Design philosophy centered on "Structured Simplification". utilizing white space and premium typography to eliminate information overload.
                     </p>
                     <div className="flex flex-wrap justify-center gap-12 pt-16 border-t border-white/10">
                         <div className="text-center">
                             <div className="text-5xl font-black text-white mb-2 tracking-tighter">100%</div>
-                            <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">Type Safe</div>
+                            <div className="text-[10px] text-white/40 font-black tracking-[0.3em]">Type Safe</div>
                         </div>
                         <div className="text-center">
                             <div className="text-5xl font-black text-white mb-2 tracking-tighter">AI-READY</div>
-                            <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">Core Architecture</div>
+                            <div className="text-[10px] text-white/40 font-black tracking-[0.3em]">Core Architecture</div>
                         </div>
                         <div className="text-center">
                             <div className="text-5xl font-black text-white mb-2 tracking-tighter">MODERN</div>
-                            <div className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">Next-Gen Stack</div>
+                            <div className="text-[10px] text-white/40 font-black tracking-[0.3em]">Next-Gen Stack</div>
                         </div>
                     </div>
                 </div>

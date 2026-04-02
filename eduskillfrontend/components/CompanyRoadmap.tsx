@@ -274,7 +274,7 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
                        }`}>
                           {isTopicComplete ? '✓' : idx + 1}
                        </div>
-                       <span className={`font-bold text-lg uppercase tracking-tight transition-colors ${isExpanded ? 'text-black' : 'text-black/40 group-hover:text-black'}`}>
+                       <span className={`font-bold text-lg tracking-tight transition-colors ${isExpanded ? 'text-black' : 'text-black/40 group-hover:text-black'}`}>
                           {topic.name}
                        </span>
                     </div>
@@ -313,7 +313,7 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
                               }`}>
                                 {isCompleted && <Check size={10} className="text-black" strokeWidth={4} />}
                               </div>
-                              <span className="font-bold text-xs uppercase tracking-tight">
+                              <span className="font-bold text-xs tracking-tight">
                                 {sub.name}
                               </span>
                             </button>
@@ -327,7 +327,7 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
             })
           ) : (
             <div className="py-20 text-center">
-               <p className="text-black/20 font-bold uppercase tracking-widest text-xs">Curriculum syncing in progress...</p>
+               <p className="text-black/20 font-bold tracking-widest text-xs">Curriculum syncing in progress...</p>
             </div>
           )}
         </motion.div>

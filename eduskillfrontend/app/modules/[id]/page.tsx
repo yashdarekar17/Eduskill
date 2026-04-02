@@ -142,7 +142,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                 <Header2 />
                 <div className="max-w-[85vw] mx-auto py-32 text-center">
                     <Loader2 size={32} className="animate-spin text-black mx-auto mb-6" />
-                    <p className="text-black font-bold uppercase tracking-widest text-xs">Accessing Sequence...</p>
+                    <p className="text-black font-bold tracking-widest text-xs">Accessing Sequence...</p>
                 </div>
                 <Footer />
             </div>
@@ -180,7 +180,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                                 <Award size={64} />
                             </div>
 
-                            <h1 className="text-4xl md:text-6xl font-bold uppercase tracking-tight mb-6 leading-tight text-black">
+                            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-black">
                                 Level 100 <br /> Achieved
                             </h1>
                             

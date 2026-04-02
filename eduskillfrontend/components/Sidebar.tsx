@@ -95,7 +95,7 @@ export default function Sidebar({ phases, completedModuleIds, activeModuleId }: 
                                                 ) : (
                                                     <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-gray-300'}`} />
                                                 )}
-                                                <span className="font-bold uppercase tracking-tight">{mod.title}</span>
+                                                <span className="font-bold tracking-tight">{mod.title}</span>
                                             </Link>
                                         );
                                     })}

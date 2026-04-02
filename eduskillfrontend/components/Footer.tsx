@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="w-full max-w-[1400px] mx-auto py-32 px-6 border-t border-black/5 mt-32">
-      <div className="mb-16 text-black font-black uppercase text-xs tracking-widest">
+      <div className="mb-16 text-black font-black text-xs tracking-widest">
         Questions? Call{" "}
         <a href="tel:0008009191694" className="underline hover:text-black/60 transition-colors">
           000-800-919-1694
@@ -9,7 +9,7 @@ export default function Footer() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-        <ul className="space-y-4 text-[13px] font-bold text-black/40 uppercase tracking-tight">
+        <ul className="space-y-4 text-[13px] font-bold text-black/40 tracking-tight">
           <li><a href="#" className="hover:text-black transition-colors">FAQ</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Investor Relations</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Privacy</a></li>
@@ -28,14 +28,14 @@ export default function Footer() {
           </li>
         </ul>
 
-        <ul className="space-y-4 text-[13px] font-bold text-black/40 uppercase tracking-tight">
+        <ul className="space-y-4 text-[13px] font-bold text-black/40 tracking-tight">
           <li><a href="#" className="hover:text-black transition-colors">Help Centre</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Media Centre</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Jobs</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Ways to Watch</a></li>
         </ul>
 
-        <ul className="space-y-4 text-[13px] font-bold text-black/40 uppercase tracking-tight">
+        <ul className="space-y-4 text-[13px] font-bold text-black/40 tracking-tight">
           <li><a href="#" className="hover:text-black transition-colors">Terms of Service</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Contact Us</a></li>
           <li><a href="#" className="hover:text-black transition-colors">Account</a></li>
@@ -44,11 +44,11 @@ export default function Footer() {
 
         <div className="flex flex-col justify-end items-end">
           <span className="text-[40px] font-black text-black tracking-tighter leading-none mb-4">EDUSKILL.</span>
-          <div className="text-[10px] text-black/20 font-black uppercase tracking-[0.4em]">Learn and Build</div>
+          <div className="text-[10px] text-black/20 font-black tracking-[0.4em]">Learn and Build</div>
         </div>
       </div>
 
-      <div className="mt-20 pt-10 border-t border-black/5 text-[10px] font-black text-black/20 uppercase tracking-[0.2em]">
+      <div className="mt-20 pt-10 border-t border-black/5 text-[10px] font-black text-black/20 tracking-[0.2em]">
         © 2026 Eduskill. All rights reserved. Premium Learning Experience.
       </div>
     </footer>
