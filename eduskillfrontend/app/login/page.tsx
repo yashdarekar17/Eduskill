@@ -60,12 +60,12 @@ export default function LoginPage() {
     setError('');
     try {
       const res = await api.googleAuth(credentialResponse.credential, 'login');
-      
+
       if (res.needs_completion) {
         setGoogleUserData(res.userData);
-        setCompletionData({ 
+        setCompletionData({
           username: res.userData.suggestedUsername,
-          branch: '' 
+          branch: ''
         });
         setIsCompletingGoogleSignup(true);
       } else {
@@ -103,12 +103,12 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
       <AnimatePresence mode="wait">
         {!isCompletingGoogleSignup ? (
-          <motion.div 
+          <motion.div
             key="login"
-            initial="hidden" 
-            animate="visible" 
+            initial="hidden"
+            animate="visible"
             exit={{ opacity: 0, x: -20 }}
-            variants={fadeInUp} 
+            variants={fadeInUp}
             className="w-full max-w-[420px] bg-white rounded-[40px] border border-gray-100 shadow-xl p-8 md:p-10 space-y-8"
           >
             <div className="text-center space-y-3">
@@ -179,30 +179,30 @@ export default function LoginPage() {
               </button>
 
               <div className="flex flex-col items-center gap-4 pt-6 border-t border-gray-50">
-                 <div className="w-full flex justify-center">
-                    <GoogleLogin
-                      onSuccess={handleGoogleSuccess}
-                      onError={() => {
-                        setError('Google Login Failed');
-                      }}
-                      useOneTap={false}
-                      theme="outline"
-                      shape="pill"
-                      width="340px"
-                    />
-                 </div>
-                 
-                 <div className="text-xs font-bold text-black/40">
-                   New operative?{' '}
-                   <Link href="/signup" className="text-black font-bold underline underline-offset-4 hover:text-black/60 transition-colors uppercase tracking-widest text-[10px]">
-                     Register Core
-                   </Link>
-                 </div>
+                <div className="w-full flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => {
+                      setError('Google Login Failed');
+                    }}
+                    useOneTap={false}
+                    theme="outline"
+                    shape="pill"
+                    width="340px"
+                  />
+                </div>
+
+                <div className="text-xs font-bold text-black/40">
+                  New operative?{' '}
+                  <Link href="/signup" className="text-black font-bold underline underline-offset-4 hover:text-black/60 transition-colors uppercase tracking-widest text-[10px]">
+                    Register Core
+                  </Link>
+                </div>
               </div>
             </form>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             key="completion"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -234,7 +234,7 @@ export default function LoginPage() {
                       placeholder="USERNAME"
                       required
                       value={completionData.username}
-                      onChange={(e) => setCompletionData({...completionData, username: e.target.value.toUpperCase()})}
+                      onChange={(e) => setCompletionData({ ...completionData, username: e.target.value.toUpperCase() })}
                       className="w-full pl-14 pr-6 py-4 rounded-full border border-gray-100 bg-gray-50/50 font-bold text-black focus:outline-none focus:border-black focus:bg-white transition-all uppercase text-sm"
                     />
                   </div>
@@ -249,7 +249,7 @@ export default function LoginPage() {
                     <select
                       required
                       value={completionData.branch}
-                      onChange={(e) => setCompletionData({...completionData, branch: e.target.value})}
+                      onChange={(e) => setCompletionData({ ...completionData, branch: e.target.value })}
                       className="w-full pl-14 pr-6 py-4 rounded-full border border-gray-100 bg-gray-50/50 font-bold text-black focus:outline-none focus:border-black focus:bg-white appearance-none transition-all uppercase text-sm"
                     >
                       <option value="" disabled>SELECT BRANCH</option>

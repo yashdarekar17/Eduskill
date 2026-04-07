@@ -55,10 +55,10 @@ export default function Sidebar({ phases, completedModuleIds, activeModuleId }: 
                             >
                                 <span
                                     className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black tracking-tighter transition-colors ${phaseCompleted
-                                            ? 'bg-black text-white'
-                                            : phasePartial
-                                                ? 'bg-gray-800 text-white'
-                                                : 'bg-gray-100 text-gray-400'
+                                        ? 'bg-black text-white'
+                                        : phasePartial
+                                            ? 'bg-gray-800 text-white'
+                                            : 'bg-gray-100 text-gray-400'
                                         }`}
                                 >
                                     {phaseCompleted ? '✓' : phase.phase_order}
@@ -84,10 +84,10 @@ export default function Sidebar({ phases, completedModuleIds, activeModuleId }: 
                                                 key={mod.id}
                                                 href={`/modules/${mod.id}`}
                                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs transition-all ${isActive
-                                                        ? 'bg-black text-white font-black'
-                                                        : isCompleted
-                                                            ? 'text-black/40 hover:text-black hover:bg-gray-50'
-                                                            : 'text-gray-400 hover:text-black hover:bg-gray-50'
+                                                    ? 'bg-black text-white font-black'
+                                                    : isCompleted
+                                                        ? 'text-black/40 hover:text-black hover:bg-gray-50'
+                                                        : 'text-gray-400 hover:text-black hover:bg-gray-50'
                                                     }`}
                                             >
                                                 {isCompleted ? (

@@ -6,13 +6,13 @@ import { Brain, Target, Lightbulb, Loader2, AlertTriangle, CheckCircle, XCircle,
 import { motion } from 'framer-motion';
 
 const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
 };
 
 interface QuizQuestion {
@@ -184,7 +184,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
                                     {q.question_text}
                                 </h4>
                             </div>
-                            
+
                             <div className="grid md:grid-cols-2 gap-3 pl-12">
                                 {Object.entries(optionsObj).map(([key, val]) => {
                                     const isSelected = answers[q.id] === key;
