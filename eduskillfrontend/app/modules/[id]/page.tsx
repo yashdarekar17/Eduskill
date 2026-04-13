@@ -10,10 +10,12 @@ import { api } from '@/lib/api';
 import { getStaticModuleContent } from '@/lib/moduleContent';
 import { Award, Download, Loader2, CheckCircle, ArrowRight, ArrowLeft, Trophy, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import AskMentorChat from '@/components/AskMentorChat';
+
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
 export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
@@ -174,7 +176,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                 <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="flex-grow max-w-[85vw] mx-auto w-full py-20 flex items-center justify-center">
                     <div className="w-full max-w-[800px] bg-white border border-gray-100 rounded-[50px] p-12 md:p-20 relative overflow-hidden shadow-2xl">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gray-50 rounded-full blur-[80px] -mr-20 -mt-20" />
-                        
+
                         <div className="relative z-10 flex flex-col items-center text-center">
                             <div className="mb-10 p-6 bg-black text-white rounded-[32px] shadow-xl rotate-6 animate-pulse">
                                 <Award size={64} />
@@ -183,7 +185,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-black">
                                 Level 100 <br /> Achieved
                             </h1>
-                            
+
                             <p className="text-lg md:text-xl text-black/40 font-bold max-w-xl mb-12 leading-relaxed">
                                 You have successfully mastercoded every phase of <span className="text-black">{moduleData.course_title}</span>.
                             </p>
@@ -196,7 +198,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                                 >
                                     {generating ? <Loader2 size={24} className="animate-spin" /> : <><Download size={20} className="mr-3" /> Export Diploma</>}
                                 </button>
-                                
+
                                 <div className="h-[75px] px-8 bg-gray-50 border border-gray-100 rounded-full flex items-center gap-3">
                                     <Trophy size={20} className="text-black/20" />
                                     <span className="text-black font-bold uppercase tracking-widest text-[10px] whitespace-nowrap">Core Mastery</span>
@@ -215,7 +217,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
         <div className="min-h-screen bg-white flex flex-col">
             <Header2 />
             <motion.main initial="hidden" animate="visible" variants={fadeInUp} className="flex-grow max-w-[85vw] mx-auto w-full py-12">
-                
+
                 {/* Protocol Breadcrumb */}
                 <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-black/20 mb-10">
                     <Link href="/" className="hover:text-black transition-colors">Lab</Link>
@@ -280,7 +282,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                                 <p className="text-black/40 font-bold text-base text-sm">Test core concepts integration.</p>
                             </div>
                         </div>
-                        <QuizSection 
+                        <QuizSection
                             moduleId={moduleId}
                             courseId={moduleData.course_id}
                             moduleTitle={moduleData.title}
@@ -296,7 +298,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                             <ArrowLeft size={16} /> Directory
                         </button>
                     </Link>
-                    
+
                     {nextModuleId && (
                         <Link href={`/modules/${nextModuleId}?courseId=${moduleData.course_id}`}>
                             <button className="h-[75px] px-12 bg-black text-white rounded-full font-bold uppercase tracking-tight text-lg flex items-center gap-4 hover:bg-gray-900 shadow-xl transition-all">
@@ -307,6 +309,7 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                 </div>
             </motion.main>
             <Footer />
+            {moduleData?.course_id && <AskMentorChat courseId={moduleData.course_id} />}
         </div>
     );
 }

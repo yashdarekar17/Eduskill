@@ -5,12 +5,14 @@ export interface DailyTask {
   title: string;
   description: string;
   milestone_id: string;
+  month: string;
   completed: boolean;
 }
 
 export interface MonthlyGoal {
   month: string;
   focus: string;
+  milestone_id?: string;
   deliverables?: string[];
 }
 
@@ -64,6 +66,7 @@ Required JSON format:
     {
       "month": "Month 1",
       "focus": "Focus Area",
+      "milestone_id": "m1",
       "deliverables": ["Deliverable 1"]
     }
   ],
@@ -74,6 +77,7 @@ Required JSON format:
       "title": "Task Title",
       "description": "Specific actionable item",
       "milestone_id": "m1",
+      "month": "Month 1",
       "completed": false
     }
   ]
@@ -81,10 +85,14 @@ Required JSON format:
 
 Rules:
 1. Generate exactly 4 levels of detail (milestones, monthly, weekly, daily tasks).
-2. 'daily_tasks' must have 'milestone_id' matching one of the 'long_term_milestones' ids.
-3. Incorporate the user's specific answers into the learning path.
-4. Ensure 'completed' is false for all tasks.
-5. Do NOT include any text outside the JSON object.`;
+2. Each 'monthly_goals' entry MUST have a 'milestone_id' linking it to a 'long_term_milestones' entry.
+3. Each 'daily_tasks' entry MUST have both 'milestone_id' AND 'month' fields.
+4. The 'month' field in daily_tasks MUST exactly match one of the 'month' values in monthly_goals.
+5. Daily tasks MUST be directly relevant to the focus area of their corresponding month. For example, if Month 1 focus is "Web Development Fundamentals", then Month 1 tasks should be about HTML, CSS, and basic web concepts — NOT unrelated topics.
+6. Generate at least 2 tasks per month so every month has actionable items in the quest log.
+7. Incorporate the user's specific answers into the learning path.
+8. Ensure 'completed' is false for all tasks.
+9. Do NOT include any text outside the JSON object.`;
 
   const userPrompt = `The user is building a roadmap for "${courseKey}" targeting "${companyType}" companies.
 

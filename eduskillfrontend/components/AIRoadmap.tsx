@@ -43,6 +43,7 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
   
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selectedMilestone, setSelectedMilestone] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,9 +127,18 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
   const milestones = aiRoadmap?.long_term_milestones || [];
   const dailyTasks = aiRoadmap?.daily_tasks || [];
   const monthlyGoals = aiRoadmap?.monthly_goals || [];
-  const filteredTasks = selectedMilestone
-      ? dailyTasks.filter((t: any) => t.milestone_id === selectedMilestone)
-      : dailyTasks;
+
+  // Filter tasks: prefer month-based filtering (new data), fall back to milestone-based (old data)
+  const filteredTasks = (() => {
+    if (selectedMonth) {
+      const byMonth = dailyTasks.filter((t: any) => t.month === selectedMonth);
+      if (byMonth.length > 0) return byMonth;
+    }
+    if (selectedMilestone) {
+      return dailyTasks.filter((t: any) => t.milestone_id === selectedMilestone);
+    }
+    return dailyTasks;
+  })();
 
   return (
     <div className="w-full">
@@ -273,9 +283,23 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                     {monthlyGoals.map((mg: any, i: number) => (
-                                        <div key={i} className="group bg-[#FBFBFB] p-8 rounded-[32px] border border-gray-100 hover:border-black transition-all">
-                                            <span className="bg-black text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 inline-block">{mg.month}</span>
-                                            <p className="font-black text-black text-xl uppercase tracking-tight leading-none group-hover:tracking-normal transition-all">{mg.focus}</p>
+                                        <div
+                                            key={i}
+                                            onClick={() => setSelectedMonth(selectedMonth === mg.month ? null : mg.month)}
+                                            className={`group cursor-pointer p-8 rounded-[32px] border-2 transition-all ${
+                                                selectedMonth === mg.month
+                                                ? 'bg-black border-black text-white shadow-xl'
+                                                : 'bg-[#FBFBFB] border-gray-100 hover:border-black'
+                                            }`}
+                                        >
+                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 inline-block ${
+                                                selectedMonth === mg.month
+                                                ? 'bg-white text-black'
+                                                : 'bg-black text-white'
+                                            }`}>{mg.month}</span>
+                                            <p className={`font-black text-xl uppercase tracking-tight leading-none transition-all ${
+                                                selectedMonth === mg.month ? 'text-white' : 'text-black group-hover:tracking-normal'
+                                            }`}>{mg.focus}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -285,11 +309,26 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
 
                     {/* Bottom Section: Quest Log */}
                     <div className="space-y-10">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white">
-                                <Target size={24} />
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white">
+                                    <Target size={24} />
+                                </div>
+                                <div>
+                                    <h2 className="text-4xl font-black text-black uppercase tracking-tighter">Quest Log</h2>
+                                    {selectedMonth && (
+                                        <p className="text-black/40 font-bold text-sm tracking-tight mt-1">Showing tasks for {selectedMonth}</p>
+                                    )}
+                                </div>
                             </div>
-                            <h2 className="text-4xl font-black text-black uppercase tracking-tighter">Quest Log</h2>
+                            {selectedMonth && (
+                                <button
+                                    onClick={() => setSelectedMonth(null)}
+                                    className="px-6 py-3 bg-gray-100 text-black font-bold text-[10px] uppercase tracking-widest rounded-full hover:bg-gray-200 transition-all"
+                                >
+                                    Show All
+                                </button>
+                            )}
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
