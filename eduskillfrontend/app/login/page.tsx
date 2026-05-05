@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api'
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Lock, User, Loader2, Sparkles, Binary } from 'lucide-react';
@@ -21,6 +21,15 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isSessionExpired = searchParams.get('expired') === 'true';
+
+  // Show session expired message if redirected due to token expiry
+  useEffect(() => {
+    if (isSessionExpired) {
+      setError('Your session has expired. Please login again.');
+    }
+  }, [isSessionExpired]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

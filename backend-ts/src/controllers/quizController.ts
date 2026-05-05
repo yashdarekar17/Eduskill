@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/db';
 import { quizService, QuizAttemptAnswer } from '../services/quizService';
+import { getOrSet } from '../config/redis';
 
 // Interfaces for typing req.user if you use a middleware
 interface AuthRequest extends Request {
@@ -20,17 +21,20 @@ export const quizController = {
                 return res.status(400).json({ success: false, message: 'Invalid courseId' });
             }
 
-            const result = await pool.query(
-                `SELECT id, module_id, title, created_at 
-                 FROM quizzes 
-                 WHERE course_id = $1 
-                 ORDER BY created_at ASC`,
-                [courseId]
-            );
+            const quizzes = await getOrSet(`quizzes:course:${courseId}`, 600, async () => {
+                const result = await pool.query(
+                    `SELECT id, module_id, title, created_at 
+                     FROM quizzes 
+                     WHERE course_id = $1 
+                     ORDER BY created_at ASC`,
+                    [courseId]
+                );
+                return result.rows;
+            });
 
             return res.status(200).json({
                 success: true,
-                quizzes: result.rows,
+                quizzes,
             });
         } catch (error) {
             console.error('Error fetching quizzes:', error);
@@ -47,25 +51,26 @@ export const quizController = {
                 return res.status(400).json({ success: false, message: 'Invalid quizId' });
             }
 
-            // Notice we do NOT send correct_option to the client.
-            const result = await pool.query(
-                `SELECT id, question, option_a, option_b, option_c, option_d, topic
-                 FROM quiz_questions 
-                 WHERE quiz_id = $1`,
-                [quizId]
-            );
+            const formattedQuestions = await getOrSet(`quizzes:${quizId}:questions`, 1800, async () => {
+                const result = await pool.query(
+                    `SELECT id, question, option_a, option_b, option_c, option_d, topic
+                     FROM quiz_questions 
+                     WHERE quiz_id = $1`,
+                    [quizId]
+                );
 
-            const formattedQuestions = result.rows.map(row => ({
-                id: row.id,
-                question_text: row.question,
-                options: {
-                    a: row.option_a,
-                    b: row.option_b,
-                    c: row.option_c,
-                    d: row.option_d
-                },
-                topic: row.topic
-            }));
+                return result.rows.map(row => ({
+                    id: row.id,
+                    question_text: row.question,
+                    options: {
+                        a: row.option_a,
+                        b: row.option_b,
+                        c: row.option_c,
+                        d: row.option_d
+                    },
+                    topic: row.topic
+                }));
+            });
 
             return res.status(200).json({
                 success: true,

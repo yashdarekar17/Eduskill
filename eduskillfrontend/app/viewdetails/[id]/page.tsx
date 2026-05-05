@@ -236,22 +236,11 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     const title = courseTitle || staticCourse?.title || 'Course';
     setIsProcessing(true);
     try {
-      const res = await fetch('https://eduskill-1.onrender.com/createOrder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: 499,
-          name: title,
-          description: `Full access to ${title}`,
-        }),
-      });
-
-      const data = await res.json();
-      if (!data.success) {
-        alert('Something went wrong while creating order');
-        setIsProcessing(false);
-        return;
-      }
+      const data = await api.createOrder({
+        amount: 499,
+        name: title,
+        description: `Full access to ${title}`,
+      }, token);
 
       const options = {
         key: data.key_id,
@@ -262,10 +251,23 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
         order_id: data.order_id,
         handler: async function (response: any) {
           try {
-            await api.purchaseCourse(courseId, token);
-            setIsPurchased(true);
+            // Step 1: Verify Payment on Server
+            const verifyRes = await api.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }, token);
+
+            if (verifyRes.success) {
+              // Step 2: Record purchase only after successful verification
+              await api.purchaseCourse(courseId, token);
+              setIsPurchased(true);
+            } else {
+              alert('Payment verification failed. Please contact support.');
+            }
           } catch (err) {
-            console.error('Failed to save purchase:', err);
+            console.error('Payment Processing Error:', err);
+            alert('Error processing payment. Please contact support.');
           }
           setIsProcessing(false);
         },
@@ -526,10 +528,10 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                                       href={isLocked ? '#' : isCertificate ? `/modules/${mod.id}?courseId=${courseId}` : `/modules/${mod.id}`}
                                       onClick={(e) => isLocked && e.preventDefault()}
                                       className={`flex items-center gap-5 p-6 rounded-[24px] border-2 transition-all ${isCompleted || (isCertificate && isCourseFullyCompleted)
-                                          ? 'bg-white border-black text-black'
-                                          : isLocked
-                                            ? 'bg-gray-50 border-transparent text-black/10 cursor-not-allowed'
-                                            : 'bg-white border-gray-50 text-black/40 hover:border-black/10 hover:text-black group/mod'
+                                        ? 'bg-white border-black text-black'
+                                        : isLocked
+                                          ? 'bg-gray-50 border-transparent text-black/10 cursor-not-allowed'
+                                          : 'bg-white border-gray-50 text-black/40 hover:border-black/10 hover:text-black group/mod'
                                         }`}
                                     >
                                       <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-[9px] transition-all ${isCompleted ? 'bg-black text-white' : 'bg-gray-100 text-black/20 group-hover/mod:bg-black group-hover/mod:text-white'

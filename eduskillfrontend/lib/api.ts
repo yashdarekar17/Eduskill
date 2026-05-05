@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://eduskill-1.onrender.com";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface LoginFormData {
   username: string;
@@ -11,6 +11,41 @@ export interface SignupFormData {
   Branch: string;
   Email: string;
   password: string;
+}
+
+// ===== Session Expiry Handler =====
+function forceLogout() {
+  if (typeof window === "undefined") return;
+
+  // Clear all auth data
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("token");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userUsername");
+  localStorage.removeItem("userInitial");
+  localStorage.removeItem("userBranch");
+
+  // Redirect to login (only if not already there)
+  if (!window.location.pathname.startsWith("/login")) {
+    window.location.href = "/login?expired=true";
+  }
+}
+
+/**
+ * Wrapper around fetch that auto-detects 401 (expired JWT) and forces logout.
+ * Use this for all authenticated API calls.
+ */
+async function authFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+  const response = await fetch(input, init);
+
+  if (response.status === 401) {
+    forceLogout();
+    throw new Error("Session expired. Please login again.");
+  }
+
+  return response;
 }
 
 export const api = {
@@ -85,17 +120,35 @@ export const api = {
     return response.json();
   },
 
-  async createOrder(data: { name: string; amount: number; description?: string }) {
-    const response = await fetch(`${API_BASE_URL}/createOrder`, {
+  async createOrder(data: { name: string; amount: number; description?: string }, token: string) {
+    const response = await authFetch(`${API_BASE_URL}/createOrder`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       throw new Error("Failed to create order");
+    }
+
+    return response.json();
+  },
+
+  async verifyPayment(data: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }, token: string) {
+    const response = await authFetch(`${API_BASE_URL}/verifyPayment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Payment verification failed");
     }
 
     return response.json();
@@ -122,7 +175,7 @@ export const api = {
 
   // ===== Progress (Auth required) =====
   async markModuleComplete(moduleId: number, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/progress/complete`, {
+    const response = await authFetch(`${API_BASE_URL}/api/progress/complete`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -133,7 +186,7 @@ export const api = {
   },
 
   async submitQuiz(data: { module_id: number; score: number; total: number; weak_topics?: string[] }, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/progress/quiz`, {
+    const response = await authFetch(`${API_BASE_URL}/api/progress/quiz`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -144,7 +197,7 @@ export const api = {
   },
 
   async getUserProgress(courseId: number, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/progress/${courseId}`, {
+    const response = await authFetch(`${API_BASE_URL}/api/progress/${courseId}`, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
     });
@@ -154,7 +207,7 @@ export const api = {
 
   // ===== Course Purchase =====
   async purchaseCourse(courseId: number, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/courses/purchase`, {
+    const response = await authFetch(`${API_BASE_URL}/api/courses/purchase`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -165,7 +218,7 @@ export const api = {
   },
 
   async getPurchasedCourses(token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/courses/purchased`, {
+    const response = await authFetch(`${API_BASE_URL}/api/courses/purchased`, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
     });
@@ -175,7 +228,7 @@ export const api = {
 
   // ===== Manual Quizzes =====
   async getQuizzesByCourse(courseId: number, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/quizzes/course/${courseId}`, {
+    const response = await authFetch(`${API_BASE_URL}/api/quizzes/course/${courseId}`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -185,7 +238,7 @@ export const api = {
   },
 
   async getQuizQuestions(quizId: number, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/quizzes/${quizId}/questions`, {
+    const response = await authFetch(`${API_BASE_URL}/api/quizzes/${quizId}/questions`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -195,7 +248,7 @@ export const api = {
   },
 
   async submitQuizAttempt(quizId: number, answers: any[], token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/quizzes/${quizId}/attempt`, {
+    const response = await authFetch(`${API_BASE_URL}/api/quizzes/${quizId}/attempt`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -206,7 +259,7 @@ export const api = {
   },
 
   async getModuleWeakness(moduleId: number, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/quizzes/weakness/${moduleId}`, {
+    const response = await authFetch(`${API_BASE_URL}/api/quizzes/weakness/${moduleId}`, {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -222,7 +275,7 @@ export const api = {
     topic_name: string;
     subtopic_name: string;
   }, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/roadmap/toggle`, {
+    const response = await authFetch(`${API_BASE_URL}/api/roadmap/toggle`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -233,7 +286,7 @@ export const api = {
   },
 
   async getRoadmapProgress(courseKey: string, companyType: string, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/roadmap/${courseKey}/${companyType}`, {
+    const response = await authFetch(`${API_BASE_URL}/api/roadmap/${courseKey}/${companyType}`, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
     });
@@ -242,7 +295,7 @@ export const api = {
   },
 
   async getStartedRoadmaps(token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/roadmap/started`, {
+    const response = await authFetch(`${API_BASE_URL}/api/roadmap/started`, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
     });
@@ -251,7 +304,7 @@ export const api = {
   },
 
   async getProfile(token: string) {
-    const response = await fetch(`${API_BASE_URL}/Profile/profile`, {
+    const response = await authFetch(`${API_BASE_URL}/Profile/profile`, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
     });
@@ -268,7 +321,7 @@ export const api = {
     },
     token: string
   ) {
-    const response = await fetch(`${API_BASE_URL}/api/roadmap/personalized/generate`, {
+    const response = await authFetch(`${API_BASE_URL}/api/roadmap/personalized/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -285,7 +338,7 @@ export const api = {
     data: { course_key: string; task_id: string; },
     token: string
   ) {
-    const response = await fetch(`${API_BASE_URL}/api/roadmap/personalized/toggle-task`, {
+    const response = await authFetch(`${API_BASE_URL}/api/roadmap/personalized/toggle-task`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
@@ -300,7 +353,7 @@ export const api = {
 
 
   async getAiRoadmap(courseKey: string, token: string) {
-    const response = await fetch(`${API_BASE_URL}/api/roadmap/personalized/${courseKey}`, {
+    const response = await authFetch(`${API_BASE_URL}/api/roadmap/personalized/${courseKey}`, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       credentials: "include",
     });
@@ -309,7 +362,7 @@ export const api = {
   },
   // ===== Certificate =====
   async generateCertificate(data: { userId: number; courseId: number; name: string; course: string }, token: string) {
-    const res = await fetch(`${API_BASE_URL}/api/certificate/generate`, {
+    const res = await authFetch(`${API_BASE_URL}/api/certificate/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

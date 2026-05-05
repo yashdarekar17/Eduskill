@@ -3,6 +3,7 @@ import { pool } from '../config/db';
 import { createUser, comparePassword } from '../models/Profile';
 import { generateToken } from '../middleware/jwt';
 import { OAuth2Client } from 'google-auth-library';
+import { getOrSet } from '../config/redis';
 
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
@@ -152,12 +153,14 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    // Select all columns EXCEPT password
-    const result = await pool.query(
-      'SELECT id, name, username, branch, email, created_at FROM profiles WHERE id = $1',
-      [userId]
-    );
-    const user = result.rows[0];
+    // Cached profile lookup (5 min TTL)
+    const user = await getOrSet(`user:${userId}:profile`, 300, async () => {
+      const result = await pool.query(
+        'SELECT id, name, username, branch, email, created_at FROM profiles WHERE id = $1',
+        [userId]
+      );
+      return result.rows[0] || null;
+    });
 
     if (!user) {
       res.status(404).json({

@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { connectDB } from './config/db';
+import { redis } from './config/redis';
 import profileRoutes from './routes/profileRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import courseRoutes from './routes/courseRoutes';
@@ -17,6 +18,16 @@ const PORT = process.env.PORT || 5000;
 
 // ===== Database Connection =====
 connectDB();
+
+// ===== Redis Connection Check =====
+(async () => {
+  try {
+    await redis.ping();
+    console.log('✅ Upstash Redis Connected Successfully');
+  } catch (err) {
+    console.warn('⚠️  Upstash Redis unavailable — caching disabled:', err);
+  }
+})();
 
 // ===== CORS Configuration =====
 const allowedOrigins = [

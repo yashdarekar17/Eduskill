@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/db';
+import { getOrSet, invalidatePattern } from '../config/redis';
 
 
 
@@ -28,6 +29,9 @@ export const markModuleComplete = async (req: Request, res: Response): Promise<v
        RETURNING *`,
             [userId, module_id]
         );
+
+        // Invalidate all progress caches for this user
+        await invalidatePattern(`user:${userId}:progress:*`);
 
         res.status(200).json({
             success: true,
@@ -72,26 +76,27 @@ export const getUserProgress = async (req: Request, res: Response): Promise<void
             return;
         }
 
-        const totalResult = await pool.query(
-            `SELECT COUNT(m.id) AS total_modules
+        const progress = await getOrSet(`user:${userId}:progress:${courseId}`, 120, async () => {
+            const totalResult = await pool.query(
+                `SELECT COUNT(m.id) AS total_modules
        FROM modules m
        JOIN phases p ON p.id = m.phase_id
        WHERE p.course_id = $1`,
-            [courseId]
-        );
+                [courseId]
+            );
 
-        const completedResult = await pool.query(
-            `SELECT m.id AS module_id, mp.completed, mp.completed_at
+            const completedResult = await pool.query(
+                `SELECT m.id AS module_id, mp.completed, mp.completed_at
        FROM modules m
        JOIN phases p ON p.id = m.phase_id
        LEFT JOIN module_progress mp ON mp.module_id = m.id AND mp.user_id = $1
        WHERE p.course_id = $2
        ORDER BY p.phase_order, m.module_order`,
-            [userId, courseId]
-        );
+                [userId, courseId]
+            );
 
-        const quizResult = await pool.query(
-            `SELECT DISTINCT ON (q.module_id)
+            const quizResult = await pool.query(
+                `SELECT DISTINCT ON (q.module_id)
               q.module_id, qa.score, qa.total, qa.attempted_at
        FROM quiz_attempts qa
        JOIN quizzes q ON q.id = qa.quiz_id
@@ -99,21 +104,24 @@ export const getUserProgress = async (req: Request, res: Response): Promise<void
        JOIN phases p ON p.id = m.phase_id
        WHERE qa.user_id = $1 AND p.course_id = $2
        ORDER BY q.module_id, qa.attempted_at DESC`,
-            [userId, courseId]
-        );
+                [userId, courseId]
+            );
 
-        const totalModules = parseInt(totalResult.rows[0].total_modules);
-        const completedModules = completedResult.rows.filter((r: any) => r.completed).length;
+            const totalModules = parseInt(totalResult.rows[0].total_modules);
+            const completedModules = completedResult.rows.filter((r: any) => r.completed).length;
 
-        res.status(200).json({
-            success: true,
-            progress: {
+            return {
                 total_modules: totalModules,
                 completed_modules: completedModules,
                 percentage: totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0,
                 modules: completedResult.rows,
                 quiz_attempts: quizResult.rows,
-            },
+            };
+        });
+
+        res.status(200).json({
+            success: true,
+            progress,
         });
     } catch (error) {
         console.error('Get progress error:', error);

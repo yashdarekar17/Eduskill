@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { pool } from '../config/db';
+import { getOrSet, invalidateCache } from '../config/redis';
 
 // GET /api/courses — List all courses
 export const getAllCourses = async (_req: Request, res: Response): Promise<void> => {
     try {
-        const result = await pool.query(
-            `SELECT c.id, c.title, c.description,
+        const courses = await getOrSet('courses:all', 600, async () => {
+            const result = await pool.query(
+                `SELECT c.id, c.title, c.description,
               COUNT(DISTINCT p.id) AS phase_count,
               COUNT(DISTINCT m.id) AS module_count
        FROM courses c
@@ -13,11 +15,13 @@ export const getAllCourses = async (_req: Request, res: Response): Promise<void>
        LEFT JOIN modules m ON m.phase_id = p.id
        GROUP BY c.id
        ORDER BY c.id`
-        );
+            );
+            return result.rows;
+        });
 
         res.status(200).json({
             success: true,
-            courses: result.rows,
+            courses,
         });
     } catch (error) {
         console.error('Get courses error:', error);
@@ -33,53 +37,61 @@ export const getCourseById = async (req: Request, res: Response): Promise<void> 
     try {
         const { id } = req.params;
 
-        const courseResult = await pool.query(
-            'SELECT id, title, description FROM courses WHERE id = $1',
-            [id]
-        );
+        const course = await getOrSet(`courses:${id}`, 600, async () => {
+            const courseResult = await pool.query(
+                'SELECT id, title, description FROM courses WHERE id = $1',
+                [id]
+            );
 
-        if (courseResult.rows.length === 0) {
-            res.status(404).json({ success: false, message: 'Course not found' });
-            return;
-        }
+            if (courseResult.rows.length === 0) {
+                return null;
+            }
 
-        const phasesResult = await pool.query(
-            `SELECT
+            const phasesResult = await pool.query(
+                `SELECT
          p.id AS phase_id, p.title AS phase_title, p.phase_order,
          m.id AS module_id, m.title AS module_title, m.module_order
        FROM phases p
        LEFT JOIN modules m ON m.phase_id = p.id
        WHERE p.course_id = $1
        ORDER BY p.phase_order, m.module_order`,
-            [id]
-        );
+                [id]
+            );
 
-        // Group modules under phases
-        const phasesMap = new Map<number, any>();
-        for (const row of phasesResult.rows) {
-            if (!phasesMap.has(row.phase_id)) {
-                phasesMap.set(row.phase_id, {
-                    id: row.phase_id,
-                    title: row.phase_title,
-                    phase_order: row.phase_order,
-                    modules: [],
-                });
+            // Group modules under phases
+            const phasesMap = new Map<number, any>();
+            for (const row of phasesResult.rows) {
+                if (!phasesMap.has(row.phase_id)) {
+                    phasesMap.set(row.phase_id, {
+                        id: row.phase_id,
+                        title: row.phase_title,
+                        phase_order: row.phase_order,
+                        modules: [],
+                    });
+                }
+                if (row.module_id) {
+                    phasesMap.get(row.phase_id).modules.push({
+                        id: row.module_id,
+                        title: row.module_title,
+                        module_order: row.module_order,
+                    });
+                }
             }
-            if (row.module_id) {
-                phasesMap.get(row.phase_id).modules.push({
-                    id: row.module_id,
-                    title: row.module_title,
-                    module_order: row.module_order,
-                });
-            }
+
+            return {
+                ...courseResult.rows[0],
+                phases: Array.from(phasesMap.values()),
+            };
+        });
+
+        if (!course) {
+            res.status(404).json({ success: false, message: 'Course not found' });
+            return;
         }
 
         res.status(200).json({
             success: true,
-            course: {
-                ...courseResult.rows[0],
-                phases: Array.from(phasesMap.values()),
-            },
+            course,
         });
     } catch (error) {
         console.error('Get course error:', error);
@@ -95,25 +107,33 @@ export const getModuleById = async (req: Request, res: Response): Promise<void> 
     try {
         const { id } = req.params;
 
-        const result = await pool.query(
-            `SELECT m.id, m.title, m.content, m.module_order,
+        const module = await getOrSet(`modules:${id}`, 1800, async () => {
+            const result = await pool.query(
+                `SELECT m.id, m.title, m.content, m.module_order,
               p.id AS phase_id, p.title AS phase_title,
               c.id AS course_id, c.title AS course_title
        FROM modules m
        JOIN phases p ON p.id = m.phase_id
        JOIN courses c ON c.id = p.course_id
        WHERE m.id = $1`,
-            [id]
-        );
+                [id]
+            );
 
-        if (result.rows.length === 0) {
+            if (result.rows.length === 0) {
+                return null;
+            }
+
+            return result.rows[0];
+        });
+
+        if (!module) {
             res.status(404).json({ success: false, message: 'Module not found' });
             return;
         }
 
         res.status(200).json({
             success: true,
-            module: result.rows[0],
+            module,
         });
     } catch (error) {
         console.error('Get module error:', error);
@@ -147,6 +167,9 @@ export const purchaseCourse = async (req: Request, res: Response): Promise<void>
             [userId, course_id]
         );
 
+        // Invalidate user's purchased courses cache
+        await invalidateCache(`user:${userId}:purchased`);
+
         res.status(200).json({
             success: true,
             message: 'Course purchased successfully',
@@ -170,12 +193,13 @@ export const getPurchasedCourses = async (req: Request, res: Response): Promise<
             return;
         }
 
-        const result = await pool.query(
-            'SELECT course_id FROM user_courses WHERE user_id = $1',
-            [userId]
-        );
-
-        const courseIds = result.rows.map((row: any) => row.course_id);
+        const courseIds = await getOrSet(`user:${userId}:purchased`, 300, async () => {
+            const result = await pool.query(
+                'SELECT course_id FROM user_courses WHERE user_id = $1',
+                [userId]
+            );
+            return result.rows.map((row: any) => row.course_id);
+        });
 
         res.status(200).json({
             success: true,
