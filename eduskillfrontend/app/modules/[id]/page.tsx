@@ -4,7 +4,7 @@ import Header2 from '@/components/Header2';
 import Footer from '@/components/Footer';
 import QuizSection from '@/components/QuizSection';
 import Link from 'next/link';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getStaticModuleContent } from '@/lib/moduleContent';
@@ -18,7 +18,7 @@ const fadeInUp = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
+function ModuleContent({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const moduleId = parseInt(id);
     const isCertificateModule = moduleId === 9999;
@@ -311,5 +311,17 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
             <Footer />
             {moduleData?.course_id && <AskMentorChat courseId={moduleData.course_id} />}
         </div>
+    );
+}
+
+export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <Loader2 className="animate-spin text-black" size={48} />
+            </div>
+        }>
+            <ModuleContent params={params} />
+        </Suspense>
     );
 }

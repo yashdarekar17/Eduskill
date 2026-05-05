@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api'
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,7 +13,7 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-export default function LoginPage() {
+function LoginContent() {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [completionData, setCompletionData] = useState({ username: '', branch: '' });
   const [googleUserData, setGoogleUserData] = useState<any>(null);
@@ -289,5 +289,17 @@ export default function LoginPage() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="animate-spin text-black" size={48} />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
