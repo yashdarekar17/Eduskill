@@ -177,8 +177,9 @@ export default function CompanyRoadmap({ courseId }: CompanyRoadmapProps) {
         topic_name: topicName,
         subtopic_name: subtopicName,
       }, token);
-    } catch (error: any) {
-      alert(`Failed to save progress: ${error.message || 'Server error'}`);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Server error';
+      alert(`Failed to save progress: ${msg}`);
        setCompletedSet(prev => {
         const next = new Set(prev);
         if (next.has(key)) { next.delete(key); } else { next.add(key); }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Zap, Info, AlertTriangle, ChevronRight, Code, Terminal, FileCode } from 'lucide-react';
+import { BookOpen, Zap } from 'lucide-react';
 
 // --- UI Components for Blog Feel ---
 
@@ -22,9 +22,7 @@ const CodeBlock = ({ code, language = 'javascript' }: { code: string, language?:
     </div>
 );
 
-const MainHeading = ({ children }: { children: React.ReactNode }) => (
-    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mt-12 mb-6 tracking-tight">{children}</h1>
-);
+
 
 const SectionHeading = ({ children, id }: { children: React.ReactNode, id?: string }) => (
     <h2 id={id} className="text-2xl md:text-3xl font-black text-black mt-12 md:mt-20 mb-6 md:mb-8 pb-3 md:pb-4 border-b border-gray-100 uppercase tracking-tighter flex items-center gap-3 md:gap-4">
@@ -142,10 +140,10 @@ const contentMap: Record<number, React.ReactNode> = {
             </Text>
             <SubHeading>Commonly Used Elements</SubHeading>
             <List items={[
-                <span><strong>Headings:</strong> Defined with the <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> tags. <code>&lt;h1&gt;</code> defines the most important heading.</span>,
-                <span><strong>Paragraphs:</strong> Defined with the <code>&lt;p&gt;</code> tag.</span>,
-                <span><strong>Links:</strong> Defined with the <code>&lt;a&gt;</code> tag. The link's destination is specified in the <code>href</code> attribute.</span>,
-                <span><strong>Images:</strong> Defined with the <code>&lt;img&gt;</code> tag. The source file (<code>src</code>), alternative text (<code>alt</code>), width, and height are provided as attributes.</span>
+                <span key="headings"><strong>Headings:</strong> Defined with the <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> tags. <code>&lt;h1&gt;</code> defines the most important heading.</span>,
+                <span key="paragraphs"><strong>Paragraphs:</strong> Defined with the <code>&lt;p&gt;</code> tag.</span>,
+                <span key="links"><strong>Links:</strong> Defined with the <code>&lt;a&gt;</code> tag. The link&apos;s destination is specified in the <code>href</code> attribute.</span>,
+                <span key="images"><strong>Images:</strong> Defined with the <code>&lt;img&gt;</code> tag. The source file (<code>src</code>), alternative text (<code>alt</code>), width, and height are provided as attributes.</span>
             ]} />
 
             <CodeBlock language="html" code={`<!-- Example of Headings and Paragraphs -->
@@ -160,13 +158,13 @@ const contentMap: Record<number, React.ReactNode> = {
 
             <SectionHeading id="attributes">HTML Attributes</SectionHeading>
             <Text>
-                Attributes provide additional information about HTML elements. All HTML elements can have attributes. They are always specified in the start tag and usually come in name/value pairs like: <code>name="value"</code>.
+                Attributes provide additional information about HTML elements. All HTML elements can have attributes. They are always specified in the start tag and usually come in name/value pairs like: <code>name=&quot;value&quot;</code>.
             </Text>
             <List items={[
-                <span>The <strong>href</strong> attribute of <code>&lt;a&gt;</code> specifies the URL of the page the link goes to.</span>,
-                <span>The <strong>src</strong> attribute of <code>&lt;img&gt;</code> specifies the path to the image to be displayed.</span>,
-                <span>The <strong>style</strong> attribute is used to add styles to an element, such as color, font, size, and more.</span>,
-                <span>The <strong>title</strong> attribute provides extra information about an element (displayed as a tooltip when hovering).</span>
+                <span key="href">The <strong>href</strong> attribute of <code>&lt;a&gt;</code> specifies the URL of the page the link goes to.</span>,
+                <span key="src">The <strong>src</strong> attribute of <code>&lt;img&gt;</code> specifies the path to the image to be displayed.</span>,
+                <span key="style">The <strong>style</strong> attribute is used to add styles to an element, such as color, font, size, and more.</span>,
+                <span key="title">The <strong>title</strong> attribute provides extra information about an element (displayed as a tooltip when hovering).</span>
             ]} />
 
             <SectionHeading id="semantic">Semantic HTML</SectionHeading>
@@ -261,13 +259,13 @@ h1 {
 
             <SectionHeading id="box-model">The Box Model</SectionHeading>
             <Text>
-                All HTML elements can be considered as boxes. In CSS, the term "box model" is used when talking about design and layout. The CSS box model is essentially a box that wraps around every HTML element. It consists of: margins, borders, padding, and the actual content.
+                All HTML elements can be considered as boxes. In CSS, the term &quot;box model&quot; is used when talking about design and layout. The CSS box model is essentially a box that wraps around every HTML element. It consists of: margins, borders, padding, and the actual content.
             </Text>
             <List items={[
-                <span><strong>Content</strong> - The content of the box, where text and images appear</span>,
-                <span><strong>Padding</strong> - Clears an area around the content. The padding is transparent</span>,
-                <span><strong>Border</strong> - A border that goes around the padding and content</span>,
-                <span><strong>Margin</strong> - Clears an area outside the border. The margin is transparent</span>
+                <span key="content"><strong>Content</strong> - The content of the box, where text and images appear</span>,
+                <span key="padding"><strong>Padding</strong> - Clears an area around the content. The padding is transparent</span>,
+                <span key="border"><strong>Border</strong> - A border that goes around the padding and content</span>,
+                <span key="margin"><strong>Margin</strong> - Clears an area outside the border. The margin is transparent</span>
             ]} />
             <CodeBlock language="css" code={`div.box {
   width: 300px;
@@ -310,9 +308,9 @@ h1 {
                 Before ES6, JavaScript only had one way to declare variables: <code>var</code>. Today, modern JavaScript uses <code>let</code> and <code>const</code>.
             </Text>
             <List items={[
-                <span><strong>const</strong>: Used for variables that should never change their value (immutable reference).</span>,
-                <span><strong>let</strong>: Used for variables whose values will change over time (e.g., counters in a loop).</span>,
-                <span><strong>var</strong>: The old way. It is function-scoped rather than block-scoped. Best to avoid today.</span>
+                <span key="const"><strong>const</strong>: Used for variables that should never change their value (immutable reference).</span>,
+                <span key="let"><strong>let</strong>: Used for variables whose values will change over time (e.g., counters in a loop).</span>,
+                <span key="var"><strong>var</strong>: The old way. It is function-scoped rather than block-scoped. Best to avoid today.</span>
             ]} />
             <CodeBlock language="javascript" code={`const PI = 3.14159;
 // PI = 3; // This will throw a TypeError
@@ -374,7 +372,7 @@ const upperLanguages = favoriteLanguages.map(lang => lang.toUpperCase());
 const pLanguages = favoriteLanguages.filter(lang => lang.startsWith('P'));`} />
 
             <WarningAlign>
-                Array indices in JavaScript always start at 0, not 1! `favoriteLanguages[0]` will return "JavaScript".
+                Array indices in JavaScript always start at 0, not 1! `favoriteLanguages[0]` will return &quot;JavaScript&quot;.
             </WarningAlign>
         </div>
     )
@@ -393,17 +391,17 @@ const generateFallbackContent = (moduleTitle: string) => (
 
         <SectionHeading id="core-concepts">Core Concepts & Architecture</SectionHeading>
         <Text>
-            Before writing a single line of code, it is vital to understand the "Why" and "How" of {moduleTitle}. Most bugs in complex systems stem from a misunderstanding of the foundational architecture rather than syntax errors.
+            Before writing a single line of code, it is vital to understand the &quot;Why&quot; and &quot;How&quot; of {moduleTitle}. Most bugs in complex systems stem from a misunderstanding of the foundational architecture rather than syntax errors.
         </Text>
         <List items={[
-            <span><strong>Design Philosophy:</strong> Why was this technology created? What specific problem does it solve better than its alternatives?</span>,
-            <span><strong>Lifecycle & Execution:</strong> Understanding how the environment processes, compiles, and executes the code.</span>,
-            <span><strong>Memory Management:</strong> How resources are allocated and garbage collected.</span>
+            <span key="design"><strong>Design Philosophy:</strong> Why was this technology created? What specific problem does it solve better than its alternatives?</span>,
+            <span key="lifecycle"><strong>Lifecycle & Execution:</strong> Understanding how the environment processes, compiles, and executes the code.</span>,
+            <span key="memory"><strong>Memory Management:</strong> How resources are allocated and garbage collected.</span>
         ]} />
 
         <SectionHeading id="implementation">Practical Implementation</SectionHeading>
         <Text>
-            Let's transition from theory to practice. Below is a foundational implementation pattern that represents industry best practices.
+            Let&apos;s transition from theory to practice. Below is a foundational implementation pattern that represents industry best practices.
         </Text>
         <CodeBlock code={`/**
  * Enterprise-grade implementation pattern for ${moduleTitle}

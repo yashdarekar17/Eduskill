@@ -4,10 +4,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useState } from 'react';
 
-interface TrackerProgress {
-  [key: string]: number;
-}
-
 export default function ProgressTrackerPage() {
   const [webDevProgress, setWebDevProgress] = useState(0);
   const [appDevProgress, setAppDevProgress] = useState(0);

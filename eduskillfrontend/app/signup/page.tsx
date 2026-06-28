@@ -14,6 +14,13 @@ const fadeInUp = {
 };
 
 export default function SignupPage() {
+  interface GoogleProfile {
+    name: string;
+    email: string;
+    suggestedUsername?: string;
+    [key: string]: unknown;
+  }
+
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -22,7 +29,7 @@ export default function SignupPage() {
     password: '',
   });
   const [completionData, setCompletionData] = useState({ username: '', branch: '' });
-  const [googleUserData, setGoogleUserData] = useState<any>(null);
+  const [googleUserData, setGoogleUserData] = useState<GoogleProfile | null>(null);
   const [isCompletingGoogleSignup, setIsCompletingGoogleSignup] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,7 +57,17 @@ export default function SignupPage() {
     }
   };
 
-  const handleAuthSuccess = (response: any) => {
+  interface AuthResponse {
+    token: string;
+    user?: {
+      id: number;
+      name: string;
+      email: string;
+      username: string;
+    };
+  }
+
+  const handleAuthSuccess = (response: AuthResponse) => {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('token', response.token);
     if (response.user) {
@@ -63,10 +80,13 @@ export default function SignupPage() {
     router.push('/');
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
     setLoading(true);
     setError('');
     try {
+      if (!credentialResponse.credential) {
+        throw new Error('No credentials returned from Google');
+      }
       const res = await api.googleAuth(credentialResponse.credential, 'signup');
       
       if (res.needs_completion) {
@@ -79,8 +99,8 @@ export default function SignupPage() {
       } else {
         handleAuthSuccess(res);
       }
-    } catch (err: any) {
-      const msg = err.message || 'Google authentication failed.';
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Google authentication failed.';
       setError(msg);
     } finally {
       setLoading(false);
@@ -100,7 +120,7 @@ export default function SignupPage() {
         ...completionData
       });
       handleAuthSuccess(res);
-    } catch (err) {
+    } catch {
       setError('Failed to complete signup.');
     } finally {
       setLoading(false);

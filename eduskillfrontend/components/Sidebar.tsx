@@ -6,7 +6,7 @@ import Link from 'next/link';
 interface SidebarModule {
     id: number;
     title: string;
-    module_order: number;
+    module_order?: number;
 }
 
 interface SidebarPhase {

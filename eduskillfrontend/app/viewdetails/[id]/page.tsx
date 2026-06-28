@@ -1,6 +1,5 @@
 'use client';
 
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -11,7 +10,7 @@ import Sidebar from '@/components/Sidebar';
 import { api } from '@/lib/api';
 import AskMentorChat from '@/components/AskMentorChat';
 import Script from 'next/script';
-import { Clock, Sparkles, Loader2, ShoppingCart, CheckCircle, ArrowRight, Lock, PartyPopper, ChevronDown } from 'lucide-react';
+import { Clock, Sparkles, Loader2, ShoppingCart, CheckCircle, ArrowRight, Lock, ChevronDown } from 'lucide-react';
 import CompanyRoadmap from '@/components/CompanyRoadmap';
 import { motion } from 'framer-motion';
 
@@ -24,8 +23,41 @@ const fadeInUp = {
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
   }
+}
+
+interface CourseModule {
+  id: number;
+  title: string;
+  module_order?: number;
+  isCertificate?: boolean;
+}
+
+interface CoursePhase {
+  id: number;
+  title: string;
+  phase_order: number;
+  modules: CourseModule[];
+}
+
+interface DBCourseData {
+  id: number;
+  title: string;
+  description: string;
+  phases: CoursePhase[];
+}
+
+interface ProgressModule {
+  module_id: number;
+  completed: boolean;
+}
+
+interface ProgressData {
+  modules: ProgressModule[];
+  total_modules: number;
+  completed_modules: number;
+  percentage: number;
 }
 
 // Define interface for Course Details
@@ -166,8 +198,8 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
   const courseId = parseInt(id);
 
   // State for DB-backed courses (IDs 1-4)
-  const [courseData, setCourseData] = useState<any>(null);
-  const [progressData, setProgressData] = useState<any>(null);
+  const [courseData, setCourseData] = useState<DBCourseData | null>(null);
+  const [progressData, setProgressData] = useState<ProgressData | null>(null);
   const [loading, setLoading] = useState(DB_COURSE_IDS.includes(courseId));
   const [expandedPhases, setExpandedPhases] = useState<Set<number>>(new Set());
 
@@ -213,7 +245,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
   useEffect(() => {
     if (courseData?.phases) {
-      setExpandedPhases(new Set(courseData.phases.map((p: any) => p.id)));
+      setExpandedPhases(new Set(courseData.phases.map((p: CoursePhase) => p.id)));
     }
   }, [courseData]);
 
@@ -249,7 +281,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
         name: 'Eduskill',
         description: data.description,
         order_id: data.order_id,
-        handler: async function (response: any) {
+        handler: async function (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) {
           try {
             // Step 1: Verify Payment on Server
             const verifyRes = await api.verifyPayment({
@@ -327,8 +359,8 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
   if (isDBCourse && courseData) {
     const completedModuleIds = new Set<number>(
       (progressData?.modules || [])
-        .filter((m: any) => m.completed)
-        .map((m: any) => m.module_id)
+        .filter((m: ProgressModule) => m.completed)
+        .map((m: ProgressModule) => m.module_id)
     );
 
     const totalModules = progressData?.total_modules || 0;
@@ -479,10 +511,10 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
                         phases[phases.length - 1] = lastPhase;
                       }
 
-                      return phases.map((phase: any) => {
+                      return phases.map((phase: CoursePhase) => {
                         const isExpanded = expandedPhases.has(phase.id);
                         const totalModulesInPhase = phase.modules.length;
-                        const completedInPhase = phase.modules.filter((m: any) => completedModuleIds.has(m.id)).length;
+                        const completedInPhase = phase.modules.filter((m: CourseModule) => completedModuleIds.has(m.id)).length;
                         const isPhaseComplete = totalModulesInPhase > 0 && totalModulesInPhase === completedInPhase;
 
                         return (
@@ -516,7 +548,7 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
 
                             {isExpanded && (
                               <div className="mt-4 px-4 space-y-3 animate-in fade-in slide-in-from-top-4 duration-400">
-                                {phase.modules.map((mod: any) => {
+                                {phase.modules.map((mod: CourseModule) => {
                                   const isCertificate = mod.id === 9999;
                                   const isCompleted = completedModuleIds.has(mod.id);
                                   const isCourseFullyCompleted = (progressData?.percentage || 0) === 100;

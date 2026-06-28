@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, Loader2, AlertCircle, Compass, Target, Milestone, Calendar, ChevronRight, CheckCircle, Circle, Check, Zap } from 'lucide-react';
+import { Sparkles, Loader2, Target, Milestone, Calendar, ChevronRight, CheckCircle, Circle, Zap } from 'lucide-react';
 import { api } from '@/lib/api';
 import { motion } from 'framer-motion';
 
@@ -29,30 +29,47 @@ interface AIRoadmapProps {
   courseId?: number;
 }
 
+interface MilestoneData {
+  id: string;
+  title: string;
+  timeline?: string;
+  description: string;
+}
+
+interface MonthlyGoal {
+  month: string;
+  focus: string;
+}
+
+interface DailyTask {
+  id: string;
+  month?: string;
+  milestone_id?: string;
+  completed: boolean;
+  title: string;
+  description: string;
+}
+
+interface AIRoadmapData {
+  long_term_milestones: MilestoneData[];
+  daily_tasks: DailyTask[];
+  monthly_goals: MonthlyGoal[];
+  weekly_focus?: string;
+}
+
 export default function AIRoadmap({ courseId }: AIRoadmapProps) {
   const router = useRouter();
   const fixedCourse = courseId ? COURSE_ID_MAP[courseId] : undefined;
-  const [activeCourse, setActiveCourse] = useState(fixedCourse || 'webdev');
-  const [searchInput, setSearchInput] = useState(fixedCourse || '');
+  const activeCourse = fixedCourse || 'webdev';
 
-  const [aiRoadmap, setAiRoadmap] = useState<any>(null);
+  const [aiRoadmap, setAiRoadmap] = useState<AIRoadmapData | null>(null);
   const [aiExists, setAiExists] = useState(false);
   const [loadingAi, setLoadingAi] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generateError, setGenerateError] = useState('');
   
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selectedMilestone, setSelectedMilestone] = useState<string | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchInput.trim()) return;
-    const slug = searchInput.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    setActiveCourse(slug);
-    setAiExists(false);
-    setAiRoadmap(null);
-  };
 
   const fetchAiRoadmap = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -86,7 +103,6 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
     if (!token) { router.push('/login'); return; }
 
     setIsGenerating(true);
-    setGenerateError('');
 
     try {
       const res = await api.generateAiRoadmap({
@@ -102,8 +118,8 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
           setSelectedMilestone(res.roadmap.long_term_milestones[0].id);
         }
       }
-    } catch (err: any) {
-      setGenerateError('Generation failed. Please try again.');
+    } catch {
+      // Generation failed
     } finally {
       setIsGenerating(false);
     }
@@ -114,10 +130,10 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
     const token = localStorage.getItem('token');
     if (!token) { router.push('/login'); return; }
     try {
-      setAiRoadmap((prev: any) => ({
+      setAiRoadmap((prev) => prev ? {
         ...prev,
-        daily_tasks: prev.daily_tasks.map((t: any) => t.id === taskId ? { ...t, completed: true } : t)
-      }));
+        daily_tasks: prev.daily_tasks.map((t) => t.id === taskId ? { ...t, completed: true } : t)
+      } : null);
       await api.toggleAiTask({ course_key: activeCourse, task_id: taskId }, token);
     } catch {
        fetchAiRoadmap();
@@ -131,11 +147,11 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
   // Filter tasks: prefer month-based filtering (new data), fall back to milestone-based (old data)
   const filteredTasks = (() => {
     if (selectedMonth) {
-      const byMonth = dailyTasks.filter((t: any) => t.month === selectedMonth);
+      const byMonth = dailyTasks.filter((t) => t.month === selectedMonth);
       if (byMonth.length > 0) return byMonth;
     }
     if (selectedMilestone) {
-      return dailyTasks.filter((t: any) => t.milestone_id === selectedMilestone);
+      return dailyTasks.filter((t) => t.milestone_id === selectedMilestone);
     }
     return dailyTasks;
   })();
@@ -222,7 +238,7 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
                     </div>
                     
                     <div className="flex gap-8 overflow-x-auto pt-6 px-6 pb-12 snap-x -mx-6 -mt-6 no-scrollbar">
-                        {milestones.map((m: any, i: number) => (
+                        {milestones.map((m, i) => (
                             <div key={m.id || i} className="flex items-center shrink-0 snap-start">
                                 <div
                                     onClick={() => setSelectedMilestone(m.id)}
@@ -282,7 +298,7 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
                                     <h2 className="text-4xl font-black text-black uppercase tracking-tighter">Target Matrix</h2>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {monthlyGoals.map((mg: any, i: number) => (
+                                    {monthlyGoals.map((mg, i) => (
                                         <div
                                             key={i}
                                             onClick={() => setSelectedMonth(selectedMonth === mg.month ? null : mg.month)}
@@ -332,7 +348,7 @@ export default function AIRoadmap({ courseId }: AIRoadmapProps) {
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {filteredTasks.map((task: any) => (
+                            {filteredTasks.map((task: DailyTask) => (
                                 <div key={task.id} 
                                     onClick={() => toggleTask(task.id, task.completed)}
                                     className={`group flex items-start p-8 rounded-[32px] border-2 transition-all cursor-pointer ${

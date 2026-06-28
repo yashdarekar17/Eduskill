@@ -1,17 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, LogOut, ChevronDown, LayoutDashboard, ShieldCheck } from 'lucide-react';
+import { LogOut, ChevronDown, LayoutDashboard } from 'lucide-react';
 
 export default function Header2() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [profileInitial, setProfileInitial] = useState('');
-  const [userName, setUserName] = useState('');
   const [showSidebar, setShowSidebar] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -20,11 +18,11 @@ export default function Header2() {
   useEffect(() => {
     const loggedInStatus = localStorage.getItem('isLoggedIn') === 'true';
     const userInitial = localStorage.getItem('userInitial') || 'U';
-    const storedName = localStorage.getItem('userName') || 'User';
 
-    setIsLoggedIn(loggedInStatus);
-    setProfileInitial(userInitial);
-    setUserName(storedName);
+    setTimeout(() => {
+      setIsLoggedIn(loggedInStatus);
+      setProfileInitial(userInitial);
+    }, 0);
   }, []);
 
   useEffect(() => {

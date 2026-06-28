@@ -13,6 +13,23 @@ export interface SignupFormData {
   password: string;
 }
 
+export interface GoogleSignupCompleteData {
+  email?: string;
+  name?: string;
+  picture?: string;
+  suggestedUsername?: string;
+  username: string;
+  branch: string;
+  [key: string]: unknown;
+}
+
+export interface QuizAnswer {
+  question_id: number;
+  selected_option: string;
+  time_taken: number;
+}
+
+
 // ===== Session Expiry Handler =====
 function forceLogout() {
   if (typeof window === "undefined") return;
@@ -85,7 +102,7 @@ export const api = {
     return response.json();
   },
 
-  async googleSignupComplete(data: any) {
+  async googleSignupComplete(data: GoogleSignupCompleteData) {
     const response = await fetch(`${API_BASE_URL}/Profile/google-signup-complete`, {
       method: "POST",
       headers: {
@@ -247,7 +264,7 @@ export const api = {
     return response.json();
   },
 
-  async submitQuizAttempt(quizId: number, answers: any[], token: string) {
+  async submitQuizAttempt(quizId: number, answers: QuizAnswer[], token: string) {
     const response = await authFetch(`${API_BASE_URL}/api/quizzes/${quizId}/attempt`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },

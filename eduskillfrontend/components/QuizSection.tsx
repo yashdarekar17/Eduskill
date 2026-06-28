@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { api } from '@/lib/api';
-import { Brain, Target, Lightbulb, Loader2, AlertTriangle, CheckCircle, XCircle, RefreshCw, Zap } from 'lucide-react';
+import { Brain, Lightbulb, Loader2, AlertTriangle, CheckCircle, RefreshCw, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const containerVariants = {
@@ -18,7 +18,7 @@ const itemVariants = {
 interface QuizQuestion {
     id: number;
     question_text: string;
-    options: string[] | any;
+    options: string[] | Record<string, string>;
     topic: string;
 }
 
@@ -26,7 +26,7 @@ interface QuizSectionProps {
     moduleId: number;
     moduleTitle: string;
     courseId?: number;
-    onSubmit: (data: { module_id: number; score: number; total: number; }) => Promise<any>;
+    onSubmit: (data: { module_id: number; score: number; total: number; }) => Promise<unknown>;
 }
 
 export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit }: QuizSectionProps) {
@@ -59,8 +59,12 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
         setQuizError(null);
 
         try {
+            interface QuizItem {
+                id: number;
+                module_id: number;
+            }
             const quizzesRes = await api.getQuizzesByCourse(courseId, token);
-            const targetQuiz = quizzesRes.quizzes.find((q: any) => q.module_id === moduleId);
+            const targetQuiz = quizzesRes.quizzes.find((q: QuizItem) => q.module_id === moduleId);
 
             if (!targetQuiz) {
                 setQuizError('No quizzes generated for this sequence.');
@@ -77,7 +81,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
             } else {
                 setQuizError('This sequence has no verified queries.');
             }
-        } catch (err: any) {
+        } catch {
             setQuizError('Connection to neural bank failed.');
         } finally {
             setLoadingQuiz(false);
@@ -121,7 +125,7 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
             });
 
             setSubmitted(true);
-        } catch (error) {
+        } catch {
             alert('Submission synchronization failed.');
         } finally {
             setSubmitting(false);
@@ -171,10 +175,16 @@ export default function QuizSection({ moduleId, moduleTitle, courseId, onSubmit 
 
             <div className="space-y-12">
                 {questions.map((q, idx) => {
-                    let optionsObj: any = q.options;
-                    if (typeof q.options === 'string') {
-                        try { optionsObj = JSON.parse(q.options); } catch (e) { optionsObj = {}; }
-                    }
+                let optionsObj: Record<string, string> = {};
+                if (typeof q.options === 'string') {
+                    try { optionsObj = JSON.parse(q.options); } catch { optionsObj = {}; }
+                } else if (Array.isArray(q.options)) {
+                    q.options.forEach((opt, index) => {
+                        optionsObj[String.fromCharCode(65 + index)] = opt;
+                    });
+                } else if (q.options && typeof q.options === 'object') {
+                    optionsObj = q.options as Record<string, string>;
+                }
 
                     return (
                         <motion.div variants={itemVariants} key={q.id} className="space-y-6">

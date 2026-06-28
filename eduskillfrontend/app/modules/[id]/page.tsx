@@ -18,6 +18,29 @@ const fadeInUp = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
+interface CourseModule {
+    id: number;
+    title: string;
+    module_order?: number;
+    course_id?: number;
+}
+
+interface CoursePhase {
+    id: number;
+    title: string;
+    phase_order: number;
+    modules: CourseModule[];
+}
+
+interface ModuleInfo {
+    id?: number;
+    title: string;
+    course_title?: string;
+    course_id?: number;
+    isCertificate?: boolean;
+    phase_title?: string;
+}
+
 function ModuleContent({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const moduleId = parseInt(id);
@@ -25,8 +48,7 @@ function ModuleContent({ params }: { params: Promise<{ id: string }> }) {
     const searchParams = useSearchParams();
     const courseIdParam = searchParams.get('courseId');
 
-    const [moduleData, setModuleData] = useState<any>(null);
-    const [allModules, setAllModules] = useState<any[]>([]);
+    const [moduleData, setModuleData] = useState<ModuleInfo | null>(null);
     const [nextModuleId, setNextModuleId] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
     const [completed, setCompleted] = useState(false);
@@ -35,7 +57,7 @@ function ModuleContent({ params }: { params: Promise<{ id: string }> }) {
 
     useEffect(() => {
         const fetchModule = async () => {
-            let currentModule: any = null;
+            let currentModule: ModuleInfo | null = null;
 
             if (isCertificateModule) {
                 if (courseIdParam) {
@@ -63,21 +85,22 @@ function ModuleContent({ params }: { params: Promise<{ id: string }> }) {
                     currentModule = res.module;
                     setModuleData(currentModule);
 
-                    const courseRes = await api.getCourse(currentModule.course_id);
-                    if (courseRes.success) {
-                        const flattenedModules: any[] = [];
-                        courseRes.course.phases.forEach((phase: any) => {
-                            phase.modules.forEach((mod: any) => {
-                                flattenedModules.push({ ...mod, course_id: currentModule.course_id });
+                    if (currentModule) {
+                        const courseRes = await api.getCourse(currentModule.course_id || 0);
+                        if (courseRes.success) {
+                            const flattenedModules: CourseModule[] = [];
+                            courseRes.course.phases.forEach((phase: CoursePhase) => {
+                                phase.modules.forEach((mod: CourseModule) => {
+                                    flattenedModules.push({ ...mod, course_id: currentModule?.course_id });
+                                });
                             });
-                        });
-                        setAllModules(flattenedModules);
 
-                        const currentIndex = flattenedModules.findIndex(m => m.id === moduleId);
-                        if (currentIndex !== -1 && currentIndex < flattenedModules.length - 1) {
-                            setNextModuleId(flattenedModules[currentIndex + 1].id);
-                        } else if (currentIndex === flattenedModules.length - 1) {
-                            setNextModuleId(9999);
+                            const currentIndex = flattenedModules.findIndex(m => m.id === moduleId);
+                            if (currentIndex !== -1 && currentIndex < flattenedModules.length - 1) {
+                                setNextModuleId(flattenedModules[currentIndex + 1].id);
+                            } else if (currentIndex === flattenedModules.length - 1) {
+                                setNextModuleId(9999);
+                            }
                         }
                     }
                 }

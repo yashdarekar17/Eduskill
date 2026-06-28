@@ -9,24 +9,6 @@ import { api } from '@/lib/api';
 
 import { motion } from 'framer-motion';
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
-};
-
 const courseData = [
   {
     id: 1,
@@ -101,13 +83,15 @@ export default function Home() {
   const charIndexRef = useRef(0);
   const [purchasedIds, setPurchasedIds] = useState<number[]>([]);
   const [startedRoadmaps, setStartedRoadmaps] = useState<string[]>([]);
-  const [debugMsg, setDebugMsg] = useState('Fetching...');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    setIsLoggedIn(loggedIn);
+    
+    setTimeout(() => {
+      setIsLoggedIn(loggedIn);
+    }, 0);
 
     if (token && loggedIn) {
       api.getPurchasedCourses(token)
@@ -122,16 +106,9 @@ export default function Home() {
         .then((res) => {
           if (res.success) {
             setStartedRoadmaps(res.startedCourses);
-            setDebugMsg('Success: ' + JSON.stringify(res.startedCourses));
-          } else {
-            setDebugMsg('API Failed: ' + JSON.stringify(res));
           }
         })
-        .catch((err) => {
-          setDebugMsg('Catch Error: ' + err.message);
-        });
-    } else {
-      setDebugMsg('Not logged in or no token');
+        .catch(() => { });
     }
   }, []);
 
@@ -172,13 +149,6 @@ export default function Home() {
     if (!isLoggedIn) return 'View Details';
     if (purchasedIds.includes(courseId)) return 'Continue Learning';
     return 'Buy Course';
-  };
-
-  const getButtonStyle = (courseId: number) => {
-    if (isLoggedIn && purchasedIds.includes(courseId)) {
-      return 'w-full mt-4 bg-white text-[#FF6643] font-bold py-3 rounded-[20px] hover:bg-gray-200 transition-all shadow-md';
-    }
-    return 'w-full mt-4 bg-[#FF6643] text-white font-bold py-3 rounded-[20px] hover:bg-[#e65c00] transition-colors';
   };
 
   return (
@@ -234,8 +204,8 @@ export default function Home() {
                 "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
                 "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop"
               ].map((url, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 overflow-hidden">
-                  <img src={url} alt="User" className="w-full h-full object-cover" />
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 overflow-hidden relative">
+                  <Image src={url} alt="User" fill className="object-cover" />
                 </div>
               ))}
             </div>

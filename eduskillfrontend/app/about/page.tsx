@@ -2,22 +2,13 @@
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Image from "next/image";
 import Link from "next/link";
 import { 
-    Cpu, 
     Map, 
     MessageSquare, 
-    CheckCircle2, 
     BarChart3, 
-    Zap, 
-    ShieldCheck, 
     Layers, 
-    Globe2, 
-    Code2,
-    Database,
-    Sparkles,
-    ArrowRight
+    Sparkles
 } from "lucide-react";
 import { motion } from 'framer-motion';
 
@@ -29,11 +20,6 @@ const fadeInUp = {
 const fadeInLeft = {
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
-};
-
-const zoomIn = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" as const, delay: 0.2 } }
 };
 
 export default function About() {
@@ -152,7 +138,7 @@ export default function About() {
                 <div className="max-w-screen-xl mx-auto px-6 relative z-10 space-y-12">
                     <h2 className="text-6xl lg:text-9xl font-black text-white tracking-tighter leading-none">ENGINEERED<br />FOR HUMANS.</h2>
                     <p className="text-white/40 text-xl max-w-4xl mx-auto leading-relaxed font-bold tracking-tight italic">
-                        Design philosophy centered on "Structured Simplification". utilizing white space and premium typography to eliminate information overload.
+                        Design philosophy centered on &quot;Structured Simplification&quot;. utilizing white space and premium typography to eliminate information overload.
                     </p>
                     <div className="flex flex-wrap justify-center gap-12 pt-16 border-t border-white/10">
                         <div className="text-center">

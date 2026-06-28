@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-   User,
    BookOpen,
    Github,
    Linkedin,
@@ -15,7 +14,6 @@ import {
    Clock,
    Loader2,
    ArrowRight,
-   Mail,
    ShieldCheck,
    LayoutDashboard,
    Compass,
@@ -25,6 +23,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { api } from '@/lib/api';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const COURSE_META: Record<number, { title: string, image: string, link: string }> = {
    1: { title: 'Web Development', image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop', link: '/viewdetails/1' },
@@ -62,7 +61,7 @@ const ROADMAP_META: Record<string, { title: string, subtitle: string, image: str
 
 export default function DashboardPage() {
    const [activeTab, setActiveTab] = useState<'learning' | 'roadmaps' | 'profile'>('learning');
-   const [courses, setCourses] = useState<any[]>([]);
+   const [courses, setCourses] = useState<number[]>([]);
    const [roadmaps, setRoadmaps] = useState<string[]>([]);
    const [loading, setLoading] = useState(true);
    const [isSaved, setIsSaved] = useState(false);
@@ -85,6 +84,7 @@ export default function DashboardPage() {
       const token = localStorage.getItem('token');
 
       // Load User Info
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUserInfo({
          name: localStorage.getItem('userName') || 'User',
          email: localStorage.getItem('userEmail') || 'user@eduskill.com',
@@ -92,7 +92,6 @@ export default function DashboardPage() {
          branch: localStorage.getItem('userBranch') || 'General'
       });
 
-      // Load Socials
       setSocialLinks({
          github: localStorage.getItem('social_github') || '',
          linkedin: localStorage.getItem('social_linkedin') || '',
@@ -248,8 +247,8 @@ export default function DashboardPage() {
                                     if (!meta) return null;
                                     return (
                                        <div key={courseId} className="group bg-white rounded-[32px] p-8 border border-gray-100 shadow-xl hover:border-black transition-all flex items-center gap-8">
-                                          <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
-                                             <img src={meta.image} alt={meta.title} className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" />
+                                          <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gray-100 shadow-inner relative">
+                                             <Image src={meta.image} alt={meta.title} fill className="object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" />
                                           </div>
                                           <div className="flex-1 space-y-3">
                                              <div className="flex justify-between items-start">
@@ -330,8 +329,8 @@ export default function DashboardPage() {
                                                 </div>
                                              </Link>
                                           </div>
-                                          <div className="absolute bottom-0 right-0 w-64 h-64 -mb-10 -mr-10 opacity-[0.03] grayscale pointer-events-none group-hover:opacity-[0.1] transition-all duration-1000 rotate-12">
-                                             <img src={meta.image} alt="" className="w-full h-full object-cover rounded-full" />
+                                          <div className="absolute bottom-0 right-0 w-64 h-64 -mb-10 -mr-10 opacity-[0.03] grayscale pointer-events-none group-hover:opacity-[0.1] transition-all duration-1000 rotate-12 relative">
+                                             <Image src={meta.image} alt="" fill className="object-cover rounded-full" />
                                           </div>
                                        </div>
                                     );
