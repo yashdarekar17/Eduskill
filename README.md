@@ -137,20 +137,9 @@ cd Eduskill
    cp .env.example .env
    ```
 
-4. Populate `.env` with the following variables:
-   ```env
-   PORT=5000
-   NODE_ENV=development
-   DATABASE_URL=postgresql://username:password@localhost:5432/eduskill?sslmode=require
-   JWT_SECRET=your_jwt_signing_secret
-   UPSTASH_REDIS_REST_URL=https://your-redis-instance.upstash.io
-   UPSTASH_REDIS_REST_TOKEN=your_redis_token
-   NVIDIA_API_KEY=nvapi-your-nvidia-key
-   RAZORPAY_KEY_ID=rzp_test_your_key_id
-   RAZORPAY_KEY_SECRET=your_razorpay_secret
-   ```
+4. Populate `.env` with your backend configurations (Database, JWT, Upstash Redis, NVIDIA API Key, and Razorpay keys).
 
-5. Run database migrations (adds columns like `google_id` and configures passwords):
+5. Run database migrations:
    ```bash
    npm run build
    # run migrations
@@ -176,54 +165,12 @@ cd Eduskill
    npm install
    ```
 
-3. Create your local environment file:
-   ```bash
-   # Create a file named .env.local
-   ```
+3. Create a `.env.local` file and add the required frontend environment configuration (backend URL and Google Client ID).
 
-4. Add the following variables to `.env.local`:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000
-   NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
-   ```
-
-5. Start the Next.js development server (runs on `http://localhost:3000`):
+4. Start the Next.js development server (runs on `http://localhost:3000`):
    ```bash
    npm run dev
    ```
-
----
-
-## 🛜 API Endpoints
-
-### 🔐 Authentication
-* `POST /Profile/signup` - Register a new user with standard credentials.
-* `POST /Profile/login` - Authenticate user and issue JWT.
-* `POST /Profile/google-auth` - Authenticate/Register via Google OAuth.
-* `GET /Profile/profile` - Retrieve authenticated user profile info.
-
-### 📚 Course Operations
-* `GET /api/courses` - List all available courses (cached).
-* `GET /api/courses/:id` - Fetch course syllabus, modules, and phases.
-* `GET /api/courses/modules/:id` - Fetch full markdown content for a module.
-* `POST /api/courses/purchase` - Assign a course to a user's collection.
-* `GET /api/courses/purchased` - Get purchased course IDs for the user.
-
-### 🧩 Quiz & Evaluation
-* `GET /api/quizzes/course/:courseId` - Retrieve quizzes in a course.
-* `GET /api/quizzes/:quizId/questions` - Fetch questions for a specific quiz.
-* `POST /api/quizzes/:quizId/attempt` - Submit student answers and trigger weakness profiling.
-* `GET /api/quizzes/weakness/:moduleId` - Get weakness analysis report for a module.
-
-### 🗺️ AI & Roadmaps
-* `POST /api/roadmap/personalized/generate` - Generate NVIDIA Llama-3.1 roadmap.
-* `GET /api/roadmap/personalized/:courseKey` - Fetch personalized user roadmap.
-* `POST /api/roadmap/personalized/toggle-task` - Toggle completed state of an AI roadmap daily task.
-* `POST /api/roadmap/toggle` - Toggle standard subtopic completeness.
-* `GET /api/roadmap/:courseKey/:companyType` - Get subtopic progress records.
-
-### 🎓 Certification
-* `POST /api/certificate/generate` - Invokes Puppeteer to generate and stream the PDF certificate.
 
 ---
 
@@ -232,13 +179,13 @@ cd Eduskill
 ### Frontend (Vercel)
 1. Import the repository in your Vercel Dashboard.
 2. Select `eduskillfrontend` as the root directory.
-3. Configure the environment variables (`NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_GOOGLE_CLIENT_ID`).
+3. Configure the environment variables.
 4. Vercel automatically detects Next.js settings and deploys.
 
 ### Backend (Render / Railway)
 1. Connect your repository to Render or Railway.
 2. Set the build command to `npm run build` and start command to `npm start`.
-3. Provide the full range of environment variables (PostgreSQL, Upstash, Nvidia API, Razorpay).
+3. Provide the required environment variables (PostgreSQL, Upstash Redis, Nvidia NIM API, Razorpay, etc.).
 4. Ensure your Puppeteer cache directories are configured correctly if deployment fails (handled automatically via the package postinstall script: `npx puppeteer browsers install chrome`).
 
 ---
