@@ -48,37 +48,38 @@ export async function generatePersonalizedRoadmapFromNvidia(
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) throw new Error('GROQ_API_KEY is not set.');
 
-  const systemPrompt = `You are an expert tech career coach and learning roadmap designer.
-You will output ONLY valid JSON — no markdown, no explanation outside the JSON.
+  const systemPrompt = `You are a senior software engineer and career mentor creating a precise, manual, step-by-step learning roadmap. Think like you are writing a handcrafted study plan for a junior developer — every task must be a concrete action they can do TODAY, not a vague topic.
 
-Required JSON format:
+Output ONLY a valid JSON object. No markdown. No prose. No explanation.
+
+JSON SCHEMA:
 {
   "long_term_milestones": [
     {
       "id": "m1",
-      "title": "Milestone Title",
-      "timeline": "Phase 1 / Months 1-3",
-      "description": "...",
-      "skills_to_gain": ["Skill 1"],
+      "title": "Short milestone title",
+      "timeline": "Phase 1 – Months 1–3",
+      "description": "What the developer will be capable of doing by end of this milestone.",
+      "skills_to_gain": ["Skill A", "Skill B"],
       "sub_goals": [
-        { "title": "Sub Goal", "description": "..." }
+        { "title": "Sub-goal title", "description": "Specific sub-goal outcome." }
       ]
     }
   ],
   "monthly_goals": [
     {
       "month": "Month 1",
-      "focus": "Focus Area",
+      "focus": "Exact technology or concept being mastered this month",
       "milestone_id": "m1",
-      "deliverables": ["Deliverable 1"]
+      "deliverables": ["A working project or output that proves mastery"]
     }
   ],
-  "weekly_focus": "The primary learning objective for this week",
+  "weekly_focus": "One crisp sentence: the single most important thing to learn or build THIS week.",
   "daily_tasks": [
     {
       "id": "task1",
-      "title": "Task Title",
-      "description": "Specific actionable item",
+      "title": "Concise task name",
+      "description": "Exact action: e.g. 'Read MDN docs on Flexbox and build a 3-column responsive layout from scratch. Aim for 45 minutes. Commit code to GitHub.'",
       "milestone_id": "m1",
       "month": "Month 1",
       "completed": false
@@ -86,27 +87,37 @@ Required JSON format:
   ]
 }
 
-Rules:
-1. Generate exactly 4 levels of detail (milestones, monthly, weekly, daily tasks).
-2. Each 'monthly_goals' entry MUST have a 'milestone_id' linking it to a 'long_term_milestones' entry.
-3. Each 'daily_tasks' entry MUST have both 'milestone_id' AND 'month' fields.
-4. The 'month' field in daily_tasks MUST exactly match one of the 'month' values in monthly_goals.
-5. Daily tasks MUST be directly relevant to the focus area of their corresponding month. For example, if Month 1 focus is "Web Development Fundamentals", then Month 1 tasks should be about HTML, CSS, and basic web concepts — NOT unrelated topics.
-6. Generate at least 2 tasks per month so every month has actionable items in the quest log.
-7. Incorporate the user's specific answers into the learning path.
-8. Ensure 'completed' is false for all tasks.
-9. Do NOT include any text outside the JSON object.`;
+STRICT RULES:
+1. Every daily_task description must be a CONCRETE ACTION — use verbs: Read, Build, Watch, Practice, Implement, Deploy, Debug, Write. Never say "Learn about X", say "Build X that does Y".
+2. Include resource hints where useful — e.g. "Watch Fireship's 100-second video on X" or "Read the official React docs section on hooks".
+3. Each month must have AT LEAST 4 daily_tasks spread across the learning arc of that month.
+4. Tasks within the same month must follow a logical progression: concept → small exercise → mini-project → review.
+5. milestone_id in both monthly_goals and daily_tasks MUST reference a real id from long_term_milestones.
+6. The 'month' field in daily_tasks MUST exactly match a 'month' value in monthly_goals.
+7. completed is always false.
+8. Tailor everything to the user's exact answers — do NOT generate a generic roadmap.
+9. Output NOTHING outside the JSON object.`;
 
-  const userPrompt = `The user is building a roadmap for "${courseKey}" targeting "${companyType}" companies.
+  const userPrompt = `Create a detailed, handcrafted learning roadmap for the following developer:
 
-USER QUESTIONNAIRE ANSWERS:
-- Dream Job (next 2 years): ${answers.dream_job || 'Not provided'}
-- Primary Skill Gap: ${answers.skill_gap || 'Not provided'}
-- Hours/Week available: ${answers.hours_per_week || 'Not provided'}
-- Current Project: ${answers.current_project || 'Not provided'}
-- Improvement Area: ${answers.improvement_area || 'Not provided'}
+GOAL: Become a "${answers.dream_job || courseKey + ' developer'}" at ${companyType} companies within 2 years.
+COURSE TRACK: ${courseKey}
+TARGET COMPANY TYPE: ${companyType}
 
-Generate a highly personalized, actionable roadmap tailored exactly to these inputs.`;
+DEVELOPER PROFILE:
+• Dream Role: ${answers.dream_job || 'Not specified'}
+• Biggest Skill Gap right now: ${answers.skill_gap || 'Not specified'}
+• Hours available per week to study: ${answers.hours_per_week || 'Not specified'}
+• Current side project or work context: ${answers.current_project || 'Not specified'}
+• Area they most want to improve: ${answers.improvement_area || 'Not specified'}
+
+Generate a roadmap that:
+- Addresses the skill gap FIRST in Month 1 so progress is immediately visible
+- Scales difficulty progressively each month
+- Keeps daily tasks realistic for the hours/week they have available
+- Includes project-based tasks that build a portfolio
+- Prepares them specifically for ${companyType} company interviews and expectations`;
+
 
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -123,7 +134,7 @@ Generate a highly personalized, actionable roadmap tailored exactly to these inp
       response_format: { type: 'json_object' },
       temperature: 0.4,
       top_p: 0.9,
-      max_tokens: 8192,
+      max_tokens: 6000,
     }),
   });
 
