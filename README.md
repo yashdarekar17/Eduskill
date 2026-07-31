@@ -7,7 +7,7 @@ Eduskill is a cutting-edge, AI-powered e-learning and career-acceleration platfo
 ## 🌟 Core Features
 
 ### 🤖 1. AI Personalized Roadmaps
-* **Engine**: Powered by `meta/llama-3.1-70b-instruct` via the **NVIDIA NIM API**.
+* **Engine**: Powered by `openai/gpt-oss-120b` via the **GROQ API**.
 * **Personalization**: Takes user questionnaire inputs—such as target dream job, current skill gaps, weekly time commitments, projects, and specific improvement areas—and builds a custom learning syllabus.
 * **4-Tier Quest Log**: Generates structured Milestones, Monthly Goals, Weekly Focuses, and Daily Tasks (interactive checkboxes) stored persistently in the database.
 
@@ -81,7 +81,7 @@ Eduskill/
 * **Primary Database**: [PostgreSQL](https://www.postgresql.org/) (via `pg` connection pooling)
 * **Caching & Session Storage**: [Upstash Redis](https://upstash.com/)
 * **PDF Compilation**: [Puppeteer](https://pptr.dev/) (headless Chrome engine)
-* **AI Model Pipeline**: Meta Llama-3.1-70b via [NVIDIA Integrated API](https://build.nvidia.com/)
+* **AI Model Pipeline**: openai/gpt-oss-120b via [GROQ API](https://groq.com)
 * **Payment Gateway**: [Razorpay Node SDK](https://razorpay.com/docs/payments/server-integration/nodejs/)
 
 ---
@@ -107,7 +107,7 @@ The platform uses a PostgreSQL schema. Key tables and relationships include:
 * **Node.js**: v18+ is required.
 * **PostgreSQL**: An active local or cloud PostgreSQL instance.
 * **Upstash Redis**: An active Redis REST endpoint.
-* **NVIDIA API Key**: A developer key from NVIDIA Build.
+* **NVIDIA API Key**: A developer key from GROQ Build.
 * **Razorpay Key**: Test/Live credentials from Razorpay dashboard.
 
 ---
@@ -185,7 +185,7 @@ cd Eduskill
 ### Backend (Render / Railway)
 1. Connect your repository to Render or Railway.
 2. Set the build command to `npm run build` and start command to `npm start`.
-3. Provide the required environment variables (PostgreSQL, Upstash Redis, Nvidia NIM API, Razorpay, etc.).
+3. Provide the required environment variables (PostgreSQL, Upstash Redis, GROQ API, Razorpay, etc.).
 4. Ensure your Puppeteer cache directories are configured correctly if deployment fails (handled automatically via the package postinstall script: `npx puppeteer browsers install chrome`).
 
 ---
