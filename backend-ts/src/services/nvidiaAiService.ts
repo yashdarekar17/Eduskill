@@ -1,4 +1,7 @@
-import https from 'https';
+interface GroqApiResponse {
+  error?: { message?: string };
+  choices?: Array<{ message?: { content?: string } }>;
+}
 
 export interface DailyTask {
   id: string;
@@ -42,8 +45,8 @@ export async function generatePersonalizedRoadmapFromNvidia(
   companyType: string,
   answers: { dream_job?: string; skill_gap?: string; hours_per_week?: string; current_project?: string; improvement_area?: string }
 ): Promise<PersonalizedRoadmapResult> {
-  const apiKey = process.env.NVIDIA_API_KEY;
-  if (!apiKey) throw new Error('NVIDIA_API_KEY is not set.');
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error('GROQ_API_KEY is not set.');
 
   const systemPrompt = `You are an expert tech career coach and learning roadmap designer.
 You will output ONLY valid JSON — no markdown, no explanation outside the JSON.
@@ -105,55 +108,41 @@ USER QUESTIONNAIRE ANSWERS:
 
 Generate a highly personalized, actionable roadmap tailored exactly to these inputs.`;
 
-  const payload = JSON.stringify({
-    model: 'meta/llama-3.1-70b-instruct',
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userPrompt },
-    ],
-    temperature: 0.4,
-    top_p: 0.9,
-    max_tokens: 2048,
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'openai/gpt-oss-120b',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      temperature: 0.4,
+      top_p: 0.9,
+      max_tokens: 2048,
+    }),
   });
 
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: 'integrate.api.nvidia.com',
-      path: '/v1/chat/completions',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Length': Buffer.byteLength(payload),
-      },
-    };
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Groq API error (${response.status}): ${errorBody}`);
+  }
 
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        try {
-          const parsed = JSON.parse(data);
-          if (parsed.error) {
-            reject(new Error(`NVIDIA API error: ${parsed.error.message || JSON.stringify(parsed.error)}`));
-            return;
-          }
-          const raw: string = parsed?.choices?.[0]?.message?.content || '';
-          const jsonMatch = raw.match(/\{[\s\S]*\}/);
-          if (!jsonMatch) {
-            reject(new Error('Could not extract JSON from NVIDIA response.'));
-            return;
-          }
-          const result: PersonalizedRoadmapResult = JSON.parse(jsonMatch[0]);
-          resolve(result);
-        } catch (err) {
-          reject(new Error(`Failed to parse NVIDIA response: ${err}`));
-        }
-      });
-    });
+  const parsed = (await response.json()) as GroqApiResponse;
 
-    req.on('error', (err) => reject(new Error(`NVIDIA request failed: ${err.message}`)));
-    req.write(payload);
-    req.end();
-  });
+  if (parsed.error) {
+    throw new Error(`Groq API error: ${parsed.error.message || JSON.stringify(parsed.error)}`);
+  }
+
+  const raw: string = parsed?.choices?.[0]?.message?.content || '';
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error('Could not extract JSON from Groq response.');
+  }
+
+  const result: PersonalizedRoadmapResult = JSON.parse(jsonMatch[0]);
+  return result;
 }
