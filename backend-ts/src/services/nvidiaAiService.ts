@@ -120,9 +120,10 @@ Generate a highly personalized, actionable roadmap tailored exactly to these inp
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
+      response_format: { type: 'json_object' },
       temperature: 0.4,
       top_p: 0.9,
-      max_tokens: 2048,
+      max_tokens: 8192,
     }),
   });
 
@@ -138,11 +139,20 @@ Generate a highly personalized, actionable roadmap tailored exactly to these inp
   }
 
   const raw: string = parsed?.choices?.[0]?.message?.content || '';
-  const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error('Could not extract JSON from Groq response.');
+  if (!raw) {
+    throw new Error('Empty response from Groq API.');
   }
 
-  const result: PersonalizedRoadmapResult = JSON.parse(jsonMatch[0]);
+  // response_format: json_object guarantees valid JSON, but fall back to regex extraction if needed
+  let jsonStr = raw.trim();
+  if (!jsonStr.startsWith('{')) {
+    const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error(`Could not extract JSON from Groq response. Raw: ${jsonStr.slice(0, 200)}`);
+    }
+    jsonStr = jsonMatch[0];
+  }
+
+  const result: PersonalizedRoadmapResult = JSON.parse(jsonStr);
   return result;
 }
