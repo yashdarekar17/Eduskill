@@ -16,19 +16,6 @@ import certificateRoutes from './routes/certificate';
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
 
-// ===== Database Connection =====
-connectDB();
-
-// ===== Redis Connection Check =====
-(async () => {
-  try {
-    await redis.ping();
-    console.log('✅ Upstash Redis Connected Successfully');
-  } catch (err) {
-    console.warn('⚠️  Upstash Redis unavailable — caching disabled:', err);
-  }
-})();
-
 // ===== CORS Configuration =====
 const allowedOrigins = [
   'https://eduskill-w7nx.vercel.app',
@@ -92,8 +79,20 @@ app.use((err: any, _req: any, res: any, _next: any) => {
   });
 });
 
-// ===== Server Start =====
-app.listen(PORT, () => {
+
+const startserver = async()=>{
+  try{
+    // ===== Database Connection =====
+     await connectDB();
+
+     try {
+    await redis.ping();
+    console.log('✅ Upstash Redis Connected Successfully');
+   } catch (err) {
+    console.warn('⚠️  Upstash Redis unavailable — caching disabled:', err);
+   }
+
+  app.listen(PORT, () => {
   console.log(`
 ╔══════════════════════════════════════╗
 ║   Eduskill Backend Server Running    ║
@@ -102,3 +101,14 @@ app.listen(PORT, () => {
 ╚══════════════════════════════════════╝
   `);
 });
+  }catch(err){
+    console.error('❌ Failed to start server:', err);
+    process.exit(1);
+  }
+
+}
+
+startserver();
+
+
+
