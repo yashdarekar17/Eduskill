@@ -21,7 +21,7 @@ export const jwtWebMiddleware = (req: AuthRequest, res: Response, next: NextFunc
     req.user = decoded;
     next();
   } catch (err) {
-    console.error('JWT Error:', err);
+    // console.error('JWT Error:', err);
     res.status(401).json({ error: 'Invalid token' });
   }
 };

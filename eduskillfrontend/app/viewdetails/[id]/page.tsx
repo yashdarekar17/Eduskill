@@ -266,13 +266,17 @@ export default function CourseDetailsPage({ params }: { params: Promise<{ id: st
     }
 
     const title = courseTitle || staticCourse?.title || 'Course';
+    const idempotancykey = crypto.randomUUID();
     setIsProcessing(true);
     try {
       const data = await api.createOrder({
         amount: 499,
         name: title,
         description: `Full access to ${title}`,
-      }, token);
+      }, 
+       token,
+       idempotancykey
+      );
 
       const options = {
         key: data.key_id,

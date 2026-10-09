@@ -137,12 +137,13 @@ export const api = {
     return response.json();
   },
 
-  async createOrder(data: { name: string; amount: number; description?: string }, token: string) {
+  async createOrder(data: { name: string; amount: number; description?: string }, token: string , idempotancykey:string) {
     const response = await authFetch(`${API_BASE_URL}/createOrder`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Idempotency-Key":idempotancykey
       },
       body: JSON.stringify(data),
     });
